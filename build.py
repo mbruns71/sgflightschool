@@ -315,13 +315,8 @@ def render(page):
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">
-          <span class="logo"><img src="/assets/img/logo.webp" width="500" height="172"
-                alt="{SITE['name']}"></span>
-          <img class="dealer-badge dealer-badge--footer"
-               src="/assets/img/sportys-dealer.png" width="310" height="420"
-               alt="Authorized Sporty's Dealer">
-        </div>
+        <span class="logo"><img src="/assets/img/logo.webp" width="500" height="172"
+              alt="{SITE['name']}"></span>
         <p>Friendly, student-first flight training at
            <a href="{SITE['airport_url']}" rel="noopener">Falcon Field Airport</a>
            in Mesa, Arizona.</p>
@@ -339,8 +334,15 @@ def render(page):
       </div>
     </div>
     <div class="footer-areas">
-      <h4>Serving the East Valley</h4>
-      <p>{footer_areas}</p>
+      <div class="footer-areas__text">
+        <h4>Serving the East Valley</h4>
+        <p>{footer_areas}</p>
+      </div>
+      <a class="footer-dealer" href="https://www.sportys.com/" rel="noopener"
+         aria-label="SG Flight School is an authorized Sporty's dealer">
+        <img src="/assets/img/sportys-dealer.png" width="310" height="420"
+             alt="Authorized Sporty's Dealer" loading="lazy">
+      </a>
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 {SITE['name']}. All rights reserved.</span>
