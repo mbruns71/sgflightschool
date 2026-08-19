@@ -10,7 +10,7 @@ No server needed.
 **Live-reloading local server:**
 
 ```bash
-python3 "/Users/mikebruns/Library/CloudStorage/Box-Box/TreKrakenWebSite/SGFlight School/serve.py"
+python3 "/Users/mikebruns/Projects/sgflightschool/serve.py"
 ```
 
 Then visit http://localhost:8788 — this rebuilds first and serves with the same
@@ -103,7 +103,7 @@ relaxed alignment matches the parent domain.
 ### Read enquiries any time
 
 ```bash
-cd "/Users/mikebruns/Library/CloudStorage/Box-Box/TreKrakenWebSite/SGFlight School" && npx wrangler kv key list --binding ENQUIRIES --remote
+cd "/Users/mikebruns/Projects/sgflightschool" && npx wrangler kv key list --binding ENQUIRIES --remote
 ```
 
 Then read one by its key:
@@ -181,7 +181,7 @@ A misconfiguration can therefore never silently lose a lead.
 Wrangler is installed. Deploy the `site/` directory:
 
 ```bash
-cd "/Users/mikebruns/Library/CloudStorage/Box-Box/TreKrakenWebSite/SGFlight School" && npx wrangler pages deploy
+cd "/Users/mikebruns/Projects/sgflightschool" && npx wrangler pages deploy
 ```
 
 Config now lives in `wrangler.toml` (project name, output dir, KV binding), so no
