@@ -21,21 +21,6 @@ def cta(heading, text, primary=("Book a Discovery Flight", BOOK)):
 </section>"""
 
 
-def inline_svg(name, cls=""):
-    """Inline an SVG from site/assets/img so `currentColor` inherits.
-
-    Loading the same file through <img> makes it a separate document, where CSS
-    colour does not cascade in and currentColor falls back to black.
-    """
-    import os as _os
-    path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
-                         "site", "assets", "img", name)
-    with open(path, encoding="utf-8") as f:
-        svg = f.read()
-    svg = svg.replace("<svg ", f'<svg class="{cls}" ' if cls else "<svg ", 1)
-    return svg
-
-
 def pagehead(title, sub):
     return f"""
 <section class="pagehead">
@@ -1872,11 +1857,9 @@ FALCON_FIELD = {
         "Falcon Field Airport (KFFZ)",
         "Two runways, a control tower, and a field that has been training pilots "
         "since 1941. Here's why that matters to you.",
-    ) + f"""
+    ) + """
 <section class="section">
   <div class="wrap narrow">
-    <div class="fieldgrid">
-      <div>
     <h2>The field</h2>
     <p>Falcon Field sits about six miles northeast of downtown Mesa, at a field
        elevation of <strong>1,394 feet</strong>. It has two parallel runways:
@@ -1886,14 +1869,6 @@ FALCON_FIELD = {
        the busiest general aviation fields in Arizona.</p>
     <p>We're in <strong>Hangar 120</strong>, at 4800 E Falcon Dr.
        <a href="/contact">Directions and contact details</a>.</p>
-      </div>
-      <figure class="fieldgrid__map">
-        {inline_svg("kffz-runways.svg", "runway-svg")}
-        <figcaption>Two parallel runways on a 040/220 heading. Not for navigation
-          &mdash; see the <a href="https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/"
-          rel="noopener">current FAA airport diagram</a>.</figcaption>
-      </figure>
-    </div>
 
     <h2>A field built to train pilots &mdash; in 1941</h2>
     <p>Falcon Field didn't grow into a training airport. It was built as one.</p>
