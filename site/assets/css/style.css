@@ -451,3 +451,15 @@ li{margin-bottom:.4em}
 }
 .course-cost strong{display:block;color:var(--ink);font-size:1.12rem}
 .course-cost span{display:block;color:var(--muted);font-size:.88rem;margin-top:3px;line-height:1.5}
+
+/* ---------- Falcon Field: text + runway diagram ---------- */
+.fieldgrid{display:grid;grid-template-columns:1fr 260px;gap:40px;align-items:start}
+.fieldgrid__map{margin:0}
+.fieldgrid__map .runway-svg{width:100%;height:auto;display:block;color:var(--blue)}
+.fieldgrid__map figcaption{
+  margin-top:10px;font-size:.84rem;color:var(--muted);line-height:1.55;
+}
+@media (max-width:760px){
+  .fieldgrid{grid-template-columns:1fr;gap:26px}
+  .fieldgrid__map{max-width:240px}
+}
