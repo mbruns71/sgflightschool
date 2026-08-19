@@ -21,10 +21,22 @@ def cta(heading, text, primary=("Book a Discovery Flight", BOOK)):
 </section>"""
 
 
-def pagehead(title, sub):
+def pagehead(title, sub, badge=False):
+    """Interior page banner. `badge` adds the Sporty's dealer mark on the right."""
+    aside = ""
+    if badge:
+        aside = (
+            '<a class="pagehead__badge" href="https://www.sportys.com/" rel="noopener"'
+            ' aria-label="SG Flight School is an authorized Sporty\'s dealer">'
+            '<img src="/assets/img/sportys-dealer.png" width="310" height="420"'
+            ' alt="Authorized Sporty\'s Dealer"></a>'
+        )
     return f"""
 <section class="pagehead">
-  <div class="wrap"><h1>{title}</h1><p>{sub}</p></div>
+  <div class="wrap pagehead__inner">
+    <div class="pagehead__text"><h1>{title}</h1><p>{sub}</p></div>
+    {aside}
+  </div>
 </section>"""
 
 
@@ -388,6 +400,7 @@ COURSES = {
         "Flight training courses",
         "From your very first flight to a career in the cockpit — every certificate "
         "and rating we offer, taught at your pace.",
+        badge=True,
     ) + f"""
 <section class="section">
   <div class="wrap">

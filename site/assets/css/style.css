@@ -451,3 +451,14 @@ li{margin-bottom:.4em}
 }
 .course-cost strong{display:block;color:var(--ink);font-size:1.12rem}
 .course-cost span{display:block;color:var(--muted);font-size:.88rem;margin-top:3px;line-height:1.5}
+
+/* ---------- Page banner with dealer badge ---------- */
+.pagehead__inner{display:flex;align-items:center;justify-content:space-between;gap:36px}
+.pagehead__text{flex:1 1 auto;min-width:0}
+.pagehead__badge{flex:0 0 auto;display:block;line-height:0}
+.pagehead__badge img{width:118px;height:auto}
+.pagehead__badge:hover{opacity:.88}
+@media (max-width:760px){
+  .pagehead__inner{flex-direction:column;align-items:flex-start;gap:22px}
+  .pagehead__badge img{width:92px}
+}
