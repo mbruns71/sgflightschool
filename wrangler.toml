@@ -1,0 +1,30 @@
+# Cloudflare Pages configuration for sgflightschool.com
+#
+# The site is pre-built static HTML in site/ plus one Pages Function at
+# functions/api/book.js. Note that `functions/` must sit at the project root,
+# NOT inside pages_build_output_dir — Pages will not find it otherwise.
+
+name = "sgflightschool"
+compatibility_date = "2026-08-17"
+pages_build_output_dir = "site"
+
+# Durable store for booking enquiries. Written on every submission so an email
+# misconfiguration can never lose a lead. Read them with:
+#   npx wrangler kv key list --binding ENQUIRIES --remote
+[[kv_namespaces]]
+binding = "ENQUIRIES"
+id = "c35040bbe5574056ac30a9d2207ace35"
+
+# Email notification. Uncomment ONE of the following once configured — until then
+# the Function still stores every submission and tells the visitor to call if
+# they don't hear back.
+#
+# Option A — Cloudflare Email Service (public beta, ~$0.35/1,000, no API key).
+#   Enable Email Service on the account, verify website@sgflightschool.com as a
+#   sending address, then:
+# [[send_email]]
+# name = "SEND_EMAIL"
+#
+# Option B — Resend (free tier 3,000/month). Create an account, verify the
+#   domain, then store the key as a secret rather than putting it in this file:
+#   npx wrangler pages secret put RESEND_API_KEY --project-name=sgflightschool

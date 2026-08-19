@@ -1,0 +1,17 @@
+# Local wrangler state — contains the account id and a local copy of KV data
+.wrangler/
+
+# Generated: rebuilt by `python3 make_standalone.py`
+preview-standalone/
+
+# Generated: content-hashed stylesheet, rebuilt by `python3 build.py`
+site/assets/css/style.*.css
+
+# Local secrets — never commit. The Cloudflare token lives at ~/.sgfs-cf-token
+# and the Resend key is a Cloudflare Pages secret, so neither belongs here.
+*.token
+.env
+.env.*
+
+node_modules/
+.DS_Store

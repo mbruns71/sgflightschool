@@ -1,0 +1,14 @@
+=== PRE-CUTOVER STATE Sun Aug 16 14:49:32 MST 2026 ===
+apex A records:
+  198.185.159.144
+  198.185.159.145
+  198.49.23.144
+  198.49.23.145
+www CNAME:
+  ext-sq.squarespace.com.
+MX:
+  0 sgflightschool-com.mail.protection.outlook.com.
+TXT:
+  "v=spf1 include:secureserver.net -all"
+  "NETORGFT17174974.onmicrosoft.com"
+site status: 200

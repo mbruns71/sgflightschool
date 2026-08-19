@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sgfs-preview",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/private/tmp/claude-501/-Users-mikebruns-Library-CloudStorage-Box-Box-TreKrakenWebSite-SGFlight-School/2315ab72-4426-421f-b975-2a965626aeff/scratchpad/serve_preview.py"],
+      "port": 8788
+    }
+  ]
+}

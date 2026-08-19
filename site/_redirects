@@ -1,0 +1,11 @@
+# Preserve inbound links from the old Squarespace URLs.
+/home              /                 301
+/new-page          /instructors      301
+/fleet-tracker     /aircraft         301
+/cart              https://www.flightcircle.com/shop/dd15a6da8a75  301
+/merchandise       https://www.flightcircle.com/shop/dd15a6da8a75  301
+/instructor        /instructors      301
+/medical           /faa-medical-exam 301
+/ferry             /ferry-service    301
+/gear              https://www.flightcircle.com/shop/dd15a6da8a75  301
+/store             https://www.flightcircle.com/shop/dd15a6da8a75  301
