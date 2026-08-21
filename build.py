@@ -69,22 +69,35 @@ def check_function_constants():
     are duplicated there. Without this check, changing the phone number in one
     place would silently leave the confirmation emails quoting the old one.
     """
-    fn = os.path.join(ROOT, "functions", "api", "book.js")
-    if not os.path.exists(fn):
-        return
-    src = open(fn, encoding="utf-8").read()
     problems = []
-    for label, pattern, expected in (
-        ("PHONE", r'const PHONE = "([^"]+)"', SITE["phone_display"]),
-        ("TO", r'const TO = "([^"]+)"', SITE["email"]),
-    ):
-        m = re.search(pattern, src)
-        if not m:
-            problems.append(f"{label} not found in book.js")
-        elif m.group(1) != expected:
+
+    fn = os.path.join(ROOT, "functions", "api", "book.js")
+    if os.path.exists(fn):
+        src = open(fn, encoding="utf-8").read()
+        for label, pattern, expected in (
+            ("PHONE", r'const PHONE = "([^"]+)"', SITE["phone_display"]),
+            ("TO", r'const TO = "([^"]+)"', SITE["email"]),
+        ):
+            m = re.search(pattern, src)
+            if not m:
+                problems.append(f"{label} not found in functions/api/book.js")
+            elif m.group(1) != expected:
+                problems.append(
+                    f"{label} in functions/api/book.js is {m.group(1)!r} but "
+                    f"siteconfig says {expected!r}"
+                )
+
+    # The browser script hardcodes the number in its failure message — the one
+    # moment a visitor most needs a number that works.
+    cl = os.path.join(OUT, "assets", "js", "book.js")
+    if os.path.exists(cl):
+        src = open(cl, encoding="utf-8").read()
+        nums = set(re.findall(r"\(\d{3}\)\s?\d{3}-\d{4}", src))
+        stale = nums - {SITE["phone_display"]}
+        if stale:
             problems.append(
-                f"{label} in book.js is {m.group(1)!r} but siteconfig says "
-                f"{expected!r}"
+                f"site/assets/js/book.js quotes {sorted(stale)} but siteconfig "
+                f"says {SITE['phone_display']!r}"
             )
     if problems:
         print("\n*** functions/api/book.js is out of sync with siteconfig.py ***")
@@ -94,20 +107,41 @@ def check_function_constants():
         raise SystemExit(1)
 
 
-def hash_css():
-    """Write a content-hashed copy of style.css and return its href."""
-    global CSS_HREF
-    with open(CSS_SRC, "rb") as f:
+# Resolved by hash_asset(): "/assets/js/book.js" -> "/assets/js/book.<hash>.js"
+ASSET_MAP = {}
+
+
+def hash_asset(rel):
+    """Write a content-hashed copy of an asset and return its href.
+
+    Everything under /assets is served `immutable` for a year, so a filename
+    that never changes means an update never reaches an edge cache or a
+    returning visitor. Applies to JS as well as CSS — the booking script quotes
+    the phone number in its failure message, so a stale copy is not cosmetic.
+    """
+    src = os.path.join(OUT, rel.lstrip("/"))
+    with open(src, "rb") as f:
         digest = hashlib.sha256(f.read()).hexdigest()[:10]
-    name = f"style.{digest}.css"
-    dest = os.path.join(os.path.dirname(CSS_SRC), name)
+    base, ext = os.path.splitext(os.path.basename(src))
+    name = f"{base}.{digest}{ext}"
+    d = os.path.dirname(src)
+    dest = os.path.join(d, name)
     if not os.path.exists(dest):
-        shutil.copyfile(CSS_SRC, dest)
-    # drop superseded hashed copies
-    for old in glob.glob(os.path.join(os.path.dirname(CSS_SRC), "style.*.css")):
-        if os.path.basename(old) != name:
-            os.remove(old)
-    CSS_HREF = "/assets/css/" + name
+        shutil.copyfile(src, dest)
+    # drop superseded hashed copies of this asset
+    for stale in glob.glob(os.path.join(d, f"{base}.*{ext}")):
+        b = os.path.basename(stale)
+        if b != name and b != os.path.basename(src):
+            os.remove(stale)
+    href = os.path.dirname(rel) + "/" + name
+    ASSET_MAP[rel] = href
+    return href
+
+
+def hash_css():
+    """Content-hash the stylesheet and remember its href."""
+    global CSS_HREF
+    CSS_HREF = hash_asset("/assets/css/style.css")
     return CSS_HREF
 
 NAV = [
@@ -231,7 +265,8 @@ def render(page):
     )
 
     page_scripts = "".join(
-        f'<script src="{src}" defer></script>' for src in page.get("scripts", [])
+        f'<script src="{ASSET_MAP.get(src, src)}" defer></script>'
+        for src in page.get("scripts", [])
     )
 
     return f"""<!doctype html>
@@ -373,6 +408,8 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     check_function_constants()
     print("stylesheet:", hash_css())
+    if os.path.exists(os.path.join(OUT, "assets", "js", "book.js")):
+        print("script:    ", hash_asset("/assets/js/book.js"))
     for page in content.PAGES:
         slug = page["slug"]
         if slug == "index":

@@ -7,8 +7,8 @@ SITE = {
     # Publishing the real (Montana) number so the site is functional. Swap to a
     # local 480 number before launch — see README "Phone number" — and this is
     # the only line that needs to change.
-    "phone_display": "(406) 609-6798",
-    "phone_href": "+14066096798",
+    "phone_display": "(480) 757-0522",
+    "phone_href": "+14807570522",
     "phone_confirmed": True,
     "street": "4800 E Falcon Dr, Hangar 120",
     "street_confirmed": True,

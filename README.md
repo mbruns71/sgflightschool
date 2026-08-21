@@ -48,7 +48,7 @@ python3 build.py && python3 make_standalone.py
 page and in the LocalBusiness structured data.
 
 **Phone — works, but swap it before launch.** The site currently publishes
-`(406) 609-6798`. That's a Montana area code on a Mesa flight school, which reads
+`(480) 757-0522`. That is the local East Valley number, forwarded as you set up.
 as out-of-town to local callers. Get a **480** number (the East Valley area code)
 and forward it to the 406.
 

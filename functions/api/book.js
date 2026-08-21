@@ -20,7 +20,7 @@ const TO = "info@sgflightschool.com";
 // school's actual email. send.sgflightschool.com keeps Resend fully isolated,
 // and still aligns for DMARC because relaxed alignment matches the org domain.
 const FROM = "website@send.sgflightschool.com";
-const PHONE = "(406) 609-6798";
+const PHONE = "(480) 757-0522";
 
 const FIELDS = ["name", "phone", "email", "interest", "when", "notes"];
 const LIMITS = { name: 120, phone: 40, email: 160, interest: 80, when: 200, notes: 2000 };
