@@ -172,3 +172,65 @@ flights, PPL through CFI, aircraft rental and ferry service.
 7. Add location pages to the site *(ask me — see README)*
 
 Steps 1–2 before step 3. Everything else can happen in any order.
+
+---
+
+## Google Business Profile — video verification script
+
+Google needs one **continuous, unedited** recording that proves three things:
+
+1. **You are where you say you are** — the location is real and matches the address
+2. **The business genuinely operates there** — equipment, signage, activity
+3. **You manage it** — you can access areas the public cannot
+
+A hangar at a towered airport is harder than a storefront, because there's no
+street signage and access is controlled. That controlled access is actually your
+strongest evidence — use it.
+
+### Before you press record
+
+- **Landscape orientation.** Hold the phone sideways.
+- **Clean the lens.** Sounds trivial; a smeared lens fails more takes than anything else.
+- **Mid-morning.** Arizona midday sun blows out highlights and makes signage unreadable.
+- **Have a document ready** — an insurance certificate, aircraft registration, a
+  utility or hangar-lease bill with SG Flight School on it. Hold it steady and
+  close for a good three seconds; a quick flash won't be readable.
+- **Do a practice run.** You cannot pause, cut, or splice. One take, start to finish.
+- **Narrate as you go.** Not required, but it helps a reviewer follow what they're
+  seeing: "This is Hangar 120 at Falcon Field, 4800 East Falcon Drive."
+
+### The take — roughly two to three minutes
+
+1. **Start outside, wide.** Capture the approach to the hangar with the airport
+   environment visible. Say the full address out loud.
+2. **Hangar 120 identifier.** Get the number itself in frame, sharp and held for
+   several seconds. This is the single most important shot in the video.
+3. **Show controlled access.** Film yourself using the gate code, badge, or key to
+   get airside or into the hangar. This is what separates an owner from a
+   passer-by, and it's the evidence Google weights most heavily.
+4. **Walk inside, still recording.** Do not stop. Pan across the space.
+5. **The aircraft, tail numbers legible.** N61574 and N1287U. Get close enough
+   that the registrations are readable, and hold each one.
+6. **Something operational.** A logbook, headsets, the training materials, a
+   whiteboard with schedules — anything that shows a flight school working here
+   rather than a stored aeroplane.
+7. **Your business document.** Held steady, close, in focus, three seconds.
+8. **Finish on the aircraft or the hangar.** Confirm the business name aloud.
+
+### Why these fail
+
+- **Cut or edited footage.** Any splice is an automatic rejection.
+- **Hangar number never clearly shown.** The most common single failure.
+- **No proof of access.** Anyone can film a ramp. Show yourself unlocking something.
+- **Too short.** Under about 30 seconds rarely carries enough evidence.
+- **Vertical and shaky.** Legible beats cinematic.
+- **Documents flashed too fast** to read.
+
+### After you submit
+
+Review typically takes up to about five business days. If it's rejected you can
+try again — read the stated reason carefully first, since it usually names the
+missing element.
+
+**Do not change the business name, address or phone while verification is
+pending.** Edits mid-review restart the process.
