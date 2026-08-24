@@ -150,9 +150,36 @@ li{margin-bottom:.4em}
 }
 
 /* ---------- Page head (interior pages) ---------- */
-.pagehead{background:var(--blue-deep);color:#fff;padding:56px 0}
-.pagehead h1{color:#fff;margin-bottom:.25em}
-.pagehead p{color:#bcd9e6;max-width:44em;margin:0;font-size:1.08rem}
+/* Photo banner. Each page sets --ph-img and --ph-scrim inline; the scrim value
+   is measured per photo so white text always clears 4.5:1 over its brightest
+   region. The gradient eases to ~60% of that on the right so the photograph
+   still reads. */
+.pagehead{
+  position:relative;color:#fff;padding:74px 0;isolation:isolate;
+  background:var(--blue-deep) var(--ph-img,none) center 42% / cover no-repeat;
+}
+.pagehead::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(100deg,
+    rgba(6,44,58,var(--ph-scrim,.78)) 0%,
+    rgba(6,44,58,calc(var(--ph-scrim,.78) * .94)) 38%,
+    rgba(8,59,77,calc(var(--ph-scrim,.78) * .74)) 68%,
+    rgba(8,59,77,calc(var(--ph-scrim,.78) * .6)) 100%);
+}
+.pagehead h1{color:#fff;margin-bottom:.25em;text-shadow:0 1px 18px rgba(0,20,30,.45)}
+.pagehead p{
+  color:#dbeaf2;max-width:44em;margin:0;font-size:1.08rem;
+  text-shadow:0 1px 12px rgba(0,20,30,.5);
+}
+@media (max-width:760px){
+  /* Narrow screens crop hard and text can land anywhere, so go vertical and
+     a little heavier. */
+  .pagehead::before{
+    background:linear-gradient(180deg,
+      rgba(6,44,58,calc(var(--ph-scrim,.78) + .08)) 0%,
+      rgba(8,59,77,calc(var(--ph-scrim,.78) + .04)) 100%);
+  }
+}
 
 /* ---------- Cards / grids ---------- */
 .grid{display:grid;gap:26px}

@@ -21,8 +21,32 @@ def cta(heading, text, primary=("Book a Discovery Flight", BOOK)):
 </section>"""
 
 
-def pagehead(title, sub, badge=False):
-    """Interior page banner. `badge` adds the Sporty's dealer mark on the right."""
+# Banner image per page, with the scrim opacity each one needs. The values come
+# from measuring each photo's brightest region where the text sits: white text
+# needs the composite under ~0.18 luminance to clear 4.5:1. Brighter photo,
+# heavier scrim.
+BANNERS = {
+    # Solved per image against each page's real heading and subtitle boxes, with
+    # a 0.4 margin over the WCAG minimum. Darker photos are not automatically
+    # safer: dual-instruction is dim overall but its windscreen is bright, and
+    # that is exactly where the subtitle lands.
+    "student-controls.webp": 0.92,
+    "dual-instruction.webp": 0.90,
+    "ferry-enroute.jpg": 0.84,
+    "student-smile.webp": 0.80,
+    "az-aerial.webp": 0.79,
+    "sedona.webp": 0.73,
+    "coastline.webp": 0.70,
+}
+
+
+def pagehead(title, sub, badge=False, image="az-aerial.webp"):
+    """Interior page banner.
+
+    `badge` adds the Sporty's dealer mark on the right. `image` selects the
+    background photo; its scrim strength comes from BANNERS.
+    """
+    scrim = BANNERS.get(image, 0.78)
     aside = ""
     if badge:
         aside = (
@@ -32,7 +56,7 @@ def pagehead(title, sub, badge=False):
             ' alt="Authorized Sporty\'s Dealer"></a>'
         )
     return f"""
-<section class="pagehead">
+<section class="pagehead" style="--ph-img:url('/assets/img/{image}');--ph-scrim:{scrim}">
   <div class="wrap pagehead__inner">
     <div class="pagehead__text"><h1>{title}</h1><p>{sub}</p></div>
     {aside}
@@ -401,6 +425,7 @@ COURSES = {
         "From your very first flight to a career in the cockpit — every certificate "
         "and rating we offer, taught at your pace.",
         badge=True,
+        image="dual-instruction.webp",
     ) + f"""
 <section class="section">
   <div class="wrap">
@@ -470,6 +495,7 @@ GETTING_STARTED = {
         "Getting started",
         "Earning a Private Pilot License involves several mandatory steps. Here's the "
         "whole path — and how we make each one as easy as possible.",
+        image="student-controls.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -577,6 +603,7 @@ AIRCRAFT = {
     "body": pagehead(
         "Our aircraft",
         "Two well-equipped Cessna 172M SkyHawk IIs, available for training and rental.",
+        image="ferry-enroute.jpg",
     ) + f"""
 <section class="section">
   <div class="wrap">
@@ -689,6 +716,7 @@ INSTRUCTORS = {
     "body": pagehead(
         "Your instructor",
         "The same one, every lesson — not whoever happens to be on the roster.",
+        image="dual-instruction.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -775,6 +803,7 @@ MEDICAL = {
         "The FAA medical exam",
         "A critical step toward your pilot certificate — and less intimidating than "
         "most people expect.",
+        image="az-aerial.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -873,6 +902,7 @@ FERRY = {
         "Aircraft ferry service",
         "Transporting your aircraft with precision and care — anywhere in the "
         "United States.",
+        image="coastline.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -992,6 +1022,7 @@ ABOUT = {
     "body": pagehead(
         "About SG Flight School",
         "Serious training. Genuinely fun. Here's what we stand for.",
+        image="sedona.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -1063,6 +1094,7 @@ CONTACT = {
         "We'd love to hear from you",
         "Questions about exploring the skies or starting your flying adventure? "
         "Reach out — we're here to help.",
+        image="az-aerial.webp",
     ) + f"""
 <section class="section">
   <div class="wrap">
@@ -1249,6 +1281,7 @@ FAQ = {
         "Questions people actually ask",
         "Straight answers about cost, timelines and requirements — including the "
         "numbers most flight schools would rather you didn't ask about up front.",
+        image="dual-instruction.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -1275,13 +1308,13 @@ FAQ = {
 # airport comparison below is factual.
 
 
-def location_page(slug, city, title, desc, lede, body):
+def location_page(slug, city, title, desc, lede, body, image="sedona.webp"):
     return {
         "slug": slug,
         "title": title,
         "description": desc,
         "og_image": "az-aerial.webp",
-        "body": pagehead(f"Flight training for {city}", lede) + body + cta(
+        "body": pagehead(f"Flight training for {city}", lede, image=image) + body + cta(
             "Come fly with us",
             f"Book a $199 discovery flight from Falcon Field — about a "
             f"{city}-to-cockpit trip worth making.",
@@ -1423,7 +1456,8 @@ CHANDLER = location_page(
        You'll fly the airplane yourself, and you'll know quickly whether the
        drive from Chandler is one you want to make regularly.</p>
   </div>
-</section>""")
+</section>""",
+    image="az-aerial.webp")
 
 TEMPE = location_page(
     "flight-school-tempe-az", "Tempe",
@@ -1510,7 +1544,8 @@ PHOENIX = location_page(
     <p>A <a href="/courses">$199 discovery flight</a> is the low-commitment way to
        find out.</p>
   </div>
-</section>""")
+</section>""",
+    image="ferry-enroute.jpg")
 
 
 # ------------------------------------------------------------------ COST
@@ -1560,6 +1595,7 @@ COST = {
         "What a private pilot license actually costs",
         "Real numbers, updated for 2026 — not an FAA-minimum figure that almost "
         "nobody hits.",
+        image="student-controls.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -1752,6 +1788,7 @@ BOOK_PAGE = {
         "Book a discovery flight",
         "$199, about an hour, and you'll be flying the airplane yourself. "
         "No experience or medical certificate required.",
+        image="student-smile.webp",
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
@@ -1870,6 +1907,7 @@ FALCON_FIELD = {
         "Falcon Field Airport (KFFZ)",
         "Two runways, a control tower, and a field that has been training pilots "
         "since 1941. Here's why that matters to you.",
+        image="az-aerial.webp",
     ) + """
 <section class="section">
   <div class="wrap narrow">
