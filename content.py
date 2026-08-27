@@ -31,6 +31,7 @@ BANNERS = {
     # safer: dual-instruction is dim overall but its windscreen is bright, and
     # that is exactly where the subtitle lands.
     "student-controls.webp": 0.92,
+    "falcon-sunset.jpg": 0.72,
     "dual-instruction.webp": 0.90,
     "ferry-enroute.jpg": 0.84,
     "student-smile.webp": 0.80,
@@ -201,7 +202,7 @@ HOME = {
     </div>
     <div class="grid grid--2">
       <div class="card card--media">
-        <img src="/assets/img/kraken.webp" width="1000" height="508" alt="Cessna 172M Kraken, tail number N61574" loading="lazy">
+        <img src="/assets/img/kraken-ramp.jpg" width="1000" height="508" alt="N61574 &quot;Kraken&quot;, a Cessna 172M SkyHawk II, on the ramp at Falcon Field" loading="lazy">
         <div class="card__inner">
           <span class="aircraft__tail">N61574 &middot; "Kraken"</span>
           <h3>Cessna 172M SkyHawk II</h3>
@@ -214,7 +215,7 @@ HOME = {
         </div>
       </div>
       <div class="card card--media">
-        <img src="/assets/img/nessie.webp" width="1000" height="534" alt="Cessna 172M Nessie, tail number N1287U" loading="lazy">
+        <img src="/assets/img/nessie-sunset.jpg" width="1000" height="534" alt="N1287U &quot;Nessie&quot; on the Falcon Field ramp at sunset, cabin door open" loading="lazy">
         <div class="card__inner">
           <span class="aircraft__tail">N1287U &middot; "Nessie"</span>
           <h3>Cessna 172M SkyHawk II</h3>
@@ -585,6 +586,20 @@ GETTING_STARTED = {
            New students routinely spend hundreds on gear they never use.</p>
         <p><a href="/contact">Ask us</a> what to get before you order anything.</p>
 """) + f"""
+<section class="section section--alt">
+  <div class="wrap narrow">
+    <h2>Where this leads</h2>
+    <figure class="shot">
+      <img src="/assets/img/backcountry.jpg" width="1100" height="825"
+           alt="N1287U parked at a remote Arizona airstrip at golden hour, with a tent
+                pitched beside the aircraft and a lake and mountains behind"
+           loading="lazy">
+      <figcaption>A licence is a door, not a destination. Camping trips to strips you
+        can only reach by air are exactly the sort of thing it opens.</figcaption>
+    </figure>
+  </div>
+</section>
+
 {cta("Step one is easier than you think",
      "Book a discovery flight and find out whether flying is for you — before you "
      "commit to anything.")}
@@ -599,7 +614,7 @@ AIRCRAFT = {
         "Two Cessna 172M SkyHawk IIs available for training and rental at Falcon "
         "Field, Mesa AZ. Wet rates from $160/hour plus $60/hour instruction."
     ),
-    "og_image": "kraken.webp",
+    "og_image": "kraken-ramp.jpg",
     "body": pagehead(
         "Our aircraft",
         "Two well-equipped Cessna 172M SkyHawk IIs, available for training and rental.",
@@ -608,7 +623,7 @@ AIRCRAFT = {
 <section class="section">
   <div class="wrap">
     <div class="aircraft">
-      <img src="/assets/img/kraken.webp" width="1000" height="508" alt="Cessna 172M SkyHawk II, N61574, known as Kraken">
+      <img src="/assets/img/kraken-ramp.jpg" width="1000" height="508" alt="Cessna 172M SkyHawk II, N61574, known as Kraken">
       <div>
         <span class="aircraft__tail">N61574 &middot; "Kraken"</span>
         <h2>Cessna 172M SkyHawk II</h2>
@@ -626,7 +641,7 @@ AIRCRAFT = {
       </div>
     </div>
     <div class="aircraft">
-      <img src="/assets/img/nessie.webp" width="1000" height="534" alt="Cessna 172M SkyHawk II, N1287U, known as Nessie">
+      <img src="/assets/img/nessie-sunset.jpg" width="1000" height="534" alt="Cessna 172M SkyHawk II, N1287U, known as Nessie">
       <div>
         <span class="aircraft__tail">N1287U &middot; "Nessie"</span>
         <h2>Cessna 172M SkyHawk II</h2>
@@ -1026,7 +1041,11 @@ ABOUT = {
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
-    <p class="lead">At SG Flight School, "SG" stands for <strong>Silly Goose</strong>
+    <figure class="shot">
+      <img src="/assets/img/team-booth.jpg" width="1100" height="825" alt="The SG Flight School team at a community event with branded merchandise and the Silly Goose logo" loading="lazy">
+      <figcaption>Out in the community. The goose gets everywhere.</figcaption>
+    </figure>
+    <p class="lead" style="margin-top:34px">At SG Flight School, "SG" stands for <strong>Silly Goose</strong>
        &mdash; a reflection of our belief that learning to fly should be both
        educational and enjoyable.</p>
     <p>We take a light-hearted approach to flight training, creating an environment
@@ -1367,7 +1386,20 @@ GILBERT = location_page(
     <p>Training happens in two <a href="/aircraft">Cessna 172 SkyHawks</a>, one
        with dual Garmin G5s and a Garmin GNS 650 for instrument work.</p>
   </div>
-</section>""")
+</section>
+<section class="section section--alt">
+  <div class="wrap narrow">
+    <figure class="shot">
+      <img src="/assets/img/sedona-trip.jpg" width="1100" height="825"
+           alt="Two SG Flight School students beside N1287U on the ramp at Sedona,
+                red rock cliffs behind them"
+           loading="lazy">
+      <figcaption>Sedona is about 45 minutes away by air. Students fly there on
+        cross-countries — it is a long drive and a short, spectacular flight.</figcaption>
+    </figure>
+  </div>
+</section>
+""")
 
 SCOTTSDALE = location_page(
     "flight-school-scottsdale-az", "Scottsdale",
@@ -1412,7 +1444,20 @@ SCOTTSDALE = location_page(
     <p>Start with a <a href="/courses">$199 discovery flight</a> and see whether
        the drive is worth it before committing to anything.</p>
   </div>
-</section>""")
+</section>
+<section class="section section--alt">
+  <div class="wrap narrow">
+    <figure class="shot">
+      <img src="/assets/img/sedona-trip.jpg" width="1100" height="825"
+           alt="Two SG Flight School students beside N1287U on the ramp at Sedona,
+                red rock cliffs behind them"
+           loading="lazy">
+      <figcaption>Sedona is about 45 minutes away by air. Students fly there on
+        cross-countries — it is a long drive and a short, spectacular flight.</figcaption>
+    </figure>
+  </div>
+</section>
+""")
 
 CHANDLER = location_page(
     "flight-school-chandler-az", "Chandler",
@@ -1456,7 +1501,16 @@ CHANDLER = location_page(
        You'll fly the airplane yourself, and you'll know quickly whether the
        drive from Chandler is one you want to make regularly.</p>
   </div>
-</section>""",
+</section>
+<section class="section section--alt">
+  <div class="wrap narrow">
+    <figure class="shot">
+      <img src="/assets/img/falcon-sunset.jpg" width="1100" height="825" alt="N1287U on the Falcon Field ramp at sunset, with the runway 4R-22L sign lit behind it" loading="lazy">
+      <figcaption>Evening at Falcon Field. Winter is the best flying weather Arizona has, and the light at the end of the day is worth showing up for.</figcaption>
+    </figure>
+  </div>
+</section>
+""",
     image="az-aerial.webp")
 
 TEMPE = location_page(
@@ -1499,7 +1553,20 @@ TEMPE = location_page(
        <a href="/contact">Ask us</a> and we'll be straight with you.</p>
     <p>Start with a <a href="/courses">$199 discovery flight</a>.</p>
   </div>
-</section>""")
+</section>
+<section class="section section--alt">
+  <div class="wrap narrow">
+    <figure class="shot">
+      <img src="/assets/img/sedona-trip.jpg" width="1100" height="825"
+           alt="Two SG Flight School students beside N1287U on the ramp at Sedona,
+                red rock cliffs behind them"
+           loading="lazy">
+      <figcaption>Sedona is about 45 minutes away by air. Students fly there on
+        cross-countries — it is a long drive and a short, spectacular flight.</figcaption>
+    </figure>
+  </div>
+</section>
+""")
 
 PHOENIX = location_page(
     "flight-school-phoenix-az", "Phoenix",
@@ -1544,7 +1611,16 @@ PHOENIX = location_page(
     <p>A <a href="/courses">$199 discovery flight</a> is the low-commitment way to
        find out.</p>
   </div>
-</section>""",
+</section>
+<section class="section section--alt">
+  <div class="wrap narrow">
+    <figure class="shot shot--tall">
+      <img src="/assets/img/first-solo.jpg" width="1100" height="825" alt="A student celebrating on the cowling of N1287U with the Falcon Field control tower behind" loading="lazy">
+      <figcaption>First solo. Whatever brought you to a flight school in the first place, this is the moment it becomes real.</figcaption>
+    </figure>
+  </div>
+</section>
+""",
     image="ferry-enroute.jpg")
 
 
@@ -1709,6 +1785,14 @@ COST = {
 
 <section class="section">
   <div class="wrap narrow">
+    <figure class="shot" style="margin:6px 0 40px">
+      <img src="/assets/img/kraken-ramp.jpg" width="1100" height="825"
+           alt="N61574 on the ramp at Falcon Field with a pilot standing beside it"
+           loading="lazy">
+      <figcaption>N61574 &mdash; $165 an hour wet, and the aircraft most of these
+        numbers are based on.</figcaption>
+    </figure>
+
     <h2>What the other certificates cost</h2>
     <table class="rate-table">
       <thead><tr><th>Certificate</th><th>Typical total</th><th>What that assumes</th></tr></thead>
@@ -1864,7 +1948,11 @@ BOOK_PAGE = {
 
 <section class="section section--alt">
   <div class="wrap narrow">
-    <h2>What happens next</h2>
+    <figure class="shot shot--tall">
+      <img src="/assets/img/first-solo.jpg" width="1100" height="825" alt="A student celebrating on the cowling of N1287U with the Falcon Field control tower behind" loading="lazy">
+      <figcaption>The bit everyone remembers. First solo at Falcon Field.</figcaption>
+    </figure>
+    <h2 style="margin-top:38px">What happens next</h2>
     <ol class="steps">
       <li>
         <h3>We get back to you</h3>
@@ -1907,7 +1995,7 @@ FALCON_FIELD = {
         "Falcon Field Airport (KFFZ)",
         "Two runways, a control tower, and a field that has been training pilots "
         "since 1941. Here's why that matters to you.",
-        image="az-aerial.webp",
+        image="falcon-sunset.jpg",
     ) + """
 <section class="section">
   <div class="wrap narrow">
