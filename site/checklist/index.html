@@ -1,0 +1,3192 @@
+<meta charset="utf-8">
+<title>N61574 Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0E1113">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-title" content="N61574">
+
+<style>
+/* ============================================================
+   N61574 — Cessna 172M Checklist
+   Palette derived from airspeed-indicator arc markings:
+   green arc = normal, yellow arc = caution, red radial = limit
+   ============================================================ */
+
+:root{
+  /* DAY — cool grey-green instrument paper */
+  --bg:#EDEFEC;
+  --surface:#FBFCFA;
+  --surface-2:#E2E7E2;
+  --surface-3:#D5DCD6;
+  --ink:#14181A;
+  --ink-2:#4A544E;
+  --ink-3:#7B857E;
+  --line:#C7CFC9;
+  --line-2:#B2BCB5;
+  --accent:#1B6B45;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#DBEAE1;
+  --caution:#A76A05;
+  --caution-soft:#F6EBD4;
+  --danger:#A6231C;
+  --danger-ink:#FFFFFF;
+  --danger-soft:#F7E0DE;
+  --shadow:0 1px 2px rgba(20,24,26,.06), 0 6px 18px rgba(20,24,26,.06);
+  --rail-bg:#1D2320;
+  --rail-ink:#D6DED8;
+  --rail-ink-2:#8B968F;
+  --rail-line:#333C37;
+  --rail-active:#FBFCFA;
+  --rail-active-ink:#14181A;
+  --rail-title:#F4F7F4;
+
+  --r:10px;
+  --row-h:58px;
+  --fs:1;
+}
+
+/* DARK — matte panel black. System-dark, unless an explicit light choice wins. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1113;
+    --surface:#171B1D;
+    --surface-2:#212729;
+    --surface-3:#2B3234;
+    --ink:#E8EDE9;
+    --ink-2:#A2ADA6;
+    --ink-3:#6F7A74;
+    --line:#2C3335;
+    --line-2:#3B4345;
+    --accent:#35B06E;
+    --accent-ink:#08150E;
+    --accent-soft:#14301F;
+    --caution:#D99A20;
+    --caution-soft:#33270D;
+    --danger:#E85443;
+    --danger-ink:#1A0705;
+    --danger-soft:#361310;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+    --rail-bg:#080A0B;
+    --rail-ink:#D2DAD5;
+    --rail-ink-2:#79847D;
+    --rail-line:#1E2426;
+    --rail-active:#212729;
+    --rail-active-ink:#F2F6F3;
+    --rail-title:#F2F6F3;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1113;
+  --surface:#171B1D;
+  --surface-2:#212729;
+  --surface-3:#2B3234;
+  --ink:#E8EDE9;
+  --ink-2:#A2ADA6;
+  --ink-3:#6F7A74;
+  --line:#2C3335;
+  --line-2:#3B4345;
+  --accent:#35B06E;
+  --accent-ink:#08150E;
+  --accent-soft:#14301F;
+  --caution:#D99A20;
+  --caution-soft:#33270D;
+  --danger:#E85443;
+  --danger-ink:#1A0705;
+  --danger-soft:#361310;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+  --rail-bg:#080A0B;
+  --rail-ink:#D2DAD5;
+  --rail-ink-2:#79847D;
+  --rail-line:#1E2426;
+  --rail-active:#212729;
+  --rail-active-ink:#F2F6F3;
+  --rail-title:#F2F6F3;
+}
+
+/* NIGHT — single-hue red on black to preserve dark adaptation.
+   Deliberately monochrome: no green/amber semantics survive here,
+   emphasis is carried by brightness and weight instead. */
+:root[data-mode="night"]{
+  --bg:#000000;
+  --surface:#080202;
+  --surface-2:#120404;
+  --surface-3:#1B0705;
+  --ink:#DE3F23;
+  --ink-2:#9E2C17;
+  --ink-3:#6B1D0F;
+  --line:#3A1108;
+  --line-2:#521A0C;
+  --accent:#DE3F23;
+  --accent-ink:#000000;
+  --accent-soft:#260904;
+  --caution:#C85A2E;
+  --caution-soft:#260904;
+  --danger:#FF6038;
+  --danger-ink:#000000;
+  --danger-soft:#2E0B04;
+  --shadow:none;
+  --rail-bg:#000000;
+  --rail-ink:#C8391F;
+  --rail-ink-2:#7A2112;
+  --rail-line:#2B0C06;
+  --rail-active:#1B0705;
+  --rail-active-ink:#FF6038;
+  --rail-title:#FF6038;
+}
+
+*{box-sizing:border-box;}
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Barlow","Avenir Next",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:calc(17px * var(--fs));
+  line-height:1.4;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+}
+.cond{ font-family:"Barlow Condensed","Avenir Next Condensed","HelveticaNeue-CondensedBold",Impact,sans-serif; }
+.mono{ font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace; font-variant-numeric:tabular-nums; }
+
+button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+/* ---------- App shell ---------- */
+.app{
+  display:grid;
+  grid-template-columns:236px minmax(0,1fr);
+  min-height:100vh;
+  min-height:100dvh;
+}
+
+/* ---------- Phase rail ---------- */
+.rail{
+  background:var(--rail-bg);
+  color:var(--rail-ink);
+  display:flex;
+  flex-direction:column;
+  position:sticky;
+  top:0;
+  height:100vh;
+  height:100dvh;
+  padding-left:env(safe-area-inset-left);
+}
+.rail-head{
+  padding:18px 16px 14px;
+  border-bottom:1px solid var(--rail-line);
+}
+.tail{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  font-weight:700;
+  font-size:calc(23px * var(--fs));
+  letter-spacing:.06em;
+  color:var(--rail-title);
+  display:block;
+}
+.model{
+  font-size:calc(12px * var(--fs));
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--rail-ink-2);
+  margin-top:2px;
+  font-weight:600;
+}
+.rail-scroll{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:8px 0; }
+.rail-group{
+  font-size:calc(10.5px * var(--fs));
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--rail-ink-2);
+  padding:14px 16px 6px;
+  font-weight:700;
+}
+.rail-btn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  text-align:left;
+  padding:0 16px;
+  min-height:44px;
+  color:var(--rail-ink);
+  border-left:3px solid transparent;
+}
+.rail-btn .num{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(11px * var(--fs));
+  color:var(--rail-ink-2);
+  font-weight:500;
+}
+.rail-btn .nm{
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(19px * var(--fs));
+  font-weight:600;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  flex:1;
+}
+.rail-btn .dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--accent);
+  opacity:0;
+}
+.rail-btn.done .dot{ opacity:1; }
+.rail-btn[aria-current="true"]{
+  background:var(--rail-active);
+  color:var(--rail-active-ink);
+  border-left-color:var(--accent);
+}
+.rail-btn[aria-current="true"] .num{ color:var(--rail-active-ink); }
+
+.rail-emerg{
+  margin:0;
+  padding:0;
+  border-top:1px solid var(--rail-line);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.emerg-btn{
+  display:block;
+  width:100%;
+  background:var(--danger);
+  color:var(--danger-ink);
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-weight:700;
+  font-size:calc(26px * var(--fs));
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:16px 12px;
+  text-align:center;
+}
+.emerg-btn small{
+  display:block;
+  font-family:"Barlow",sans-serif;
+  font-size:calc(11px * var(--fs));
+  letter-spacing:.1em;
+  font-weight:600;
+  opacity:.75;
+  margin-top:1px;
+}
+.emerg-btn:active{ filter:brightness(1.15); }
+
+/* ---------- Top bar ---------- */
+.main{ min-width:0; display:flex; flex-direction:column; }
+.topbar{
+  position:sticky; top:0; z-index:20;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter:saturate(1.4) blur(12px);
+  backdrop-filter:saturate(1.4) blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:10px;
+  padding:8px 16px;
+  padding-right:max(16px, env(safe-area-inset-right));
+  min-height:52px;
+}
+.crumb{
+  flex:1; min-width:0;
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(22px * var(--fs));
+  font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.seg{ display:flex; border:1px solid var(--line-2); border-radius:var(--r); overflow:hidden; }
+.seg button{
+  padding:7px 10px;
+  font-size:calc(11px * var(--fs));
+  font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--ink-2);
+  min-height:36px;
+}
+.seg button + button{ border-left:1px solid var(--line-2); }
+.seg button[aria-pressed="true"]{ background:var(--ink); color:var(--bg); }
+.iconbtn{
+  border:1px solid var(--line-2); border-radius:var(--r);
+  padding:7px 12px; min-height:36px;
+  font-size:calc(11px * var(--fs)); font-weight:700;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--ink-2);
+}
+.iconbtn:active{ background:var(--surface-2); }
+
+/* ---------- Content ---------- */
+.content{
+  flex:1;
+  padding:20px 16px 96px;
+  padding-right:max(16px, env(safe-area-inset-right));
+  max-width:1000px; width:100%;
+}
+.phase-head{ margin-bottom:16px; }
+.eyebrow{
+  font-size:calc(11px * var(--fs));
+  letter-spacing:.18em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:700;
+}
+.phase-title{
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(42px * var(--fs));
+  font-weight:700; text-transform:uppercase; letter-spacing:.01em;
+  line-height:1; margin:2px 0 0; text-wrap:balance;
+}
+.phase-sub{ color:var(--ink-2); margin-top:6px; font-size:calc(15px * var(--fs)); max-width:62ch; }
+
+.progress{
+  display:flex; align-items:center; gap:12px; margin-top:14px;
+}
+.bar{ flex:1; height:6px; background:var(--surface-3); border-radius:99px; overflow:hidden; }
+.bar i{ display:block; height:100%; background:var(--accent); width:0; transition:width .18s ease; }
+.count{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(12px * var(--fs)); color:var(--ink-2); font-variant-numeric:tabular-nums;
+}
+
+/* ---------- Checklist groups ---------- */
+.group{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  margin-top:14px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.group-head{
+  display:flex; align-items:center; gap:10px;
+  width:100%; text-align:left;
+  padding:11px 14px;
+  background:var(--surface-2);
+  border-bottom:1px solid var(--line);
+  min-height:46px;
+}
+.group-head h3{
+  margin:0; flex:1;
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(20px * var(--fs));
+  font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+}
+.group-head .gcount{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(11.5px * var(--fs)); color:var(--ink-3);
+}
+.group-note{
+  padding:10px 14px;
+  background:var(--caution-soft);
+  color:var(--ink);
+  border-bottom:1px solid var(--line);
+  font-size:calc(14px * var(--fs));
+}
+.group-note b{ color:var(--caution); letter-spacing:.08em; text-transform:uppercase; font-size:calc(11.5px * var(--fs)); display:block; margin-bottom:2px; }
+
+ol.items{ list-style:none; margin:0; padding:0; }
+li.item{ border-bottom:1px solid var(--line); }
+li.item:last-child{ border-bottom:none; }
+.row{
+  display:flex; align-items:center; gap:12px;
+  width:100%; text-align:left;
+  min-height:var(--row-h);
+  padding:8px 14px;
+  border-left:3px solid transparent;
+}
+.box{
+  flex:none;
+  width:26px; height:26px;
+  border:2px solid var(--line-2);
+  border-radius:5px;
+  display:grid; place-items:center;
+  transition:background .12s ease, border-color .12s ease;
+}
+.box svg{ width:16px; height:16px; opacity:0; }
+.lbl{
+  flex:1; min-width:0;
+  display:flex; align-items:baseline; gap:0;
+  font-weight:600;
+  font-size:calc(17px * var(--fs));
+  letter-spacing:.005em;
+}
+.lbl .t{ white-space:normal; }
+/* the leader-dot rule — the defining mark of a printed checklist card */
+.lbl .dots{
+  flex:1 1 auto; min-width:14px;
+  border-bottom:2px dotted var(--line-2);
+  margin:0 8px;
+  transform:translateY(-4px);
+}
+.act{
+  flex:none;
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-weight:700; text-transform:uppercase; letter-spacing:.045em;
+  font-size:calc(19px * var(--fs));
+  color:var(--accent);
+  text-align:right;
+  max-width:44%;
+}
+.sub{
+  padding:0 14px 10px 55px;
+  color:var(--ink-2);
+  font-size:calc(14px * var(--fs));
+  margin-top:-4px;
+  max-width:70ch;
+}
+li.item.checked .row{ border-left-color:var(--accent); }
+li.item.checked .box{ background:var(--accent); border-color:var(--accent); }
+li.item.checked .box svg{ opacity:1; }
+li.item.checked .lbl, li.item.checked .act, li.item.checked .sub{ opacity:.42; }
+li.item.next .row{ border-left-color:var(--caution); background:var(--surface-2); }
+
+.group-foot{ display:flex; justify-content:flex-end; padding:8px 14px; border-top:1px solid var(--line); background:var(--surface-2); }
+.linkbtn{ font-size:calc(11.5px * var(--fs)); font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); padding:8px 4px; min-height:40px; }
+
+/* ---------- Emergency ---------- */
+.emerg-index{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; margin-top:16px; }
+.ecard{
+  display:flex; align-items:center; gap:10px;
+  text-align:left;
+  background:var(--surface); border:1px solid var(--line);
+  border-left:4px solid var(--danger);
+  border-radius:var(--r);
+  padding:12px 14px; min-height:62px;
+}
+.ecard .en{ font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace; font-size:calc(12px * var(--fs)); color:var(--ink-3); font-weight:700; }
+.ecard .et{ font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif; font-size:calc(19px * var(--fs)); font-weight:700; text-transform:uppercase; letter-spacing:.03em; line-height:1.05; }
+.ecard.memory{ border-left-color:var(--danger); background:var(--danger-soft); }
+.ecard.memory .et{ color:var(--danger); }
+
+.proc{ margin-top:14px; }
+.proc-head{
+  background:var(--danger); color:var(--danger-ink);
+  border-radius:var(--r) var(--r) 0 0;
+  padding:12px 16px;
+}
+.proc-head h2{
+  margin:0;
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(30px * var(--fs)); font-weight:700;
+  text-transform:uppercase; letter-spacing:.03em; line-height:1.03;
+  text-wrap:balance;
+}
+.proc-head .tag{ font-size:calc(11px * var(--fs)); letter-spacing:.16em; font-weight:700; text-transform:uppercase; opacity:.8; }
+.memblock{
+  border:3px solid var(--danger);
+  border-top:none;
+  background:var(--danger-soft);
+}
+.memblock .memlabel{
+  font-size:calc(11px * var(--fs)); font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--danger); padding:9px 14px 4px;
+}
+.memblock ol.items li.item{ border-bottom-color:color-mix(in srgb, var(--danger) 25%, transparent); }
+.memblock .act{ color:var(--danger); }
+.memblock li.item.checked .box{ background:var(--danger); border-color:var(--danger); }
+.memblock li.item.checked .row{ border-left-color:var(--danger); }
+.memblock li.item.next .row{ border-left-color:var(--danger); background:transparent; }
+
+
+/* ---------- Reference ---------- */
+.ref-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:14px; align-items:start; }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow); }
+.card > h3{
+  margin:0; padding:11px 14px;
+  background:var(--surface-2); border-bottom:1px solid var(--line);
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(20px * var(--fs)); font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+}
+.card .body{ padding:4px 0; }
+.tbl-wrap{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; font-size:calc(15px * var(--fs)); }
+th,td{ text-align:left; padding:9px 14px; border-bottom:1px solid var(--line); vertical-align:baseline; }
+tr:last-child th, tr:last-child td{ border-bottom:none; }
+th{ font-weight:600; color:var(--ink-2); font-size:calc(14.5px * var(--fs)); }
+td.v{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-weight:700; text-align:right; white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+td.v em{ font-style:normal; font-weight:400; color:var(--ink-3); font-size:.85em; }
+.pill{
+  display:inline-block; padding:1px 7px; border-radius:99px;
+  font-size:calc(11px * var(--fs)); font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+}
+.pill.g{ background:var(--accent-soft); color:var(--accent); }
+.pill.y{ background:var(--caution-soft); color:var(--caution); }
+.pill.r{ background:var(--danger-soft); color:var(--danger); }
+
+/* ---------- Weight & balance ---------- */
+.wb{ padding:6px 14px 14px; }
+.wb-row{ display:grid; grid-template-columns:1fr 96px 76px; gap:10px; align-items:center; padding:6px 0; border-bottom:1px solid var(--line); }
+.wb-row:last-of-type{ border-bottom:none; }
+.wb-row label{ font-size:calc(15px * var(--fs)); font-weight:500; }
+.wb-row label small{ display:block; color:var(--ink-3); font-size:calc(12px * var(--fs)); }
+.wb-row input{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(16px * var(--fs)); font-weight:700;
+  width:100%; padding:9px 8px; text-align:right;
+  background:var(--surface-2); color:var(--ink);
+  border:1px solid var(--line-2); border-radius:7px;
+  min-height:44px;
+}
+.wb-row .arm{ font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace; font-size:calc(12.5px * var(--fs)); color:var(--ink-3); text-align:right; }
+.wb-out{ margin-top:12px; border-top:2px solid var(--line-2); padding-top:12px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.wb-out div{ background:var(--surface-2); border-radius:8px; padding:9px 11px; }
+.wb-out span{ display:block; font-size:calc(11px * var(--fs)); letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); font-weight:700; }
+.wb-out b{ font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace; font-size:calc(21px * var(--fs)); font-weight:700; }
+.verdict{ margin-top:10px; padding:11px 13px; border-radius:8px; font-weight:600; font-size:calc(15px * var(--fs)); }
+.verdict.ok{ background:var(--accent-soft); color:var(--accent); }
+.verdict.bad{ background:var(--danger-soft); color:var(--danger); }
+
+/* ---------- Notices ---------- */
+.notice{
+  border:1px solid var(--line); border-left:4px solid var(--caution);
+  background:var(--surface); border-radius:var(--r);
+  padding:12px 15px; font-size:calc(14.5px * var(--fs));
+  color:var(--ink-2); max-width:78ch;
+}
+.notice b{ color:var(--ink); }
+.notice.hard{ border-left-color:var(--danger); }
+
+/* ---------- Modal ---------- */
+.scrim{ position:fixed; inset:0; background:rgba(0,0,0,.62); display:grid; place-items:center; padding:22px; z-index:100; }
+.scrim[hidden]{ display:none; }
+.modal{ background:var(--surface); border:1px solid var(--line-2); border-radius:14px; max-width:560px; width:100%; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,.4); max-height:86vh; overflow:auto; }
+.modal h2{ font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif; font-size:calc(30px * var(--fs)); margin:0 0 8px; text-transform:uppercase; letter-spacing:.03em; }
+.modal p{ color:var(--ink-2); font-size:calc(15px * var(--fs)); }
+.modal .btns{ display:flex; gap:10px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap; }
+.btn{ padding:12px 20px; border-radius:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; font-size:calc(13px * var(--fs)); min-height:48px; border:1px solid var(--line-2); }
+.btn.primary{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.btn.danger{ background:var(--danger); color:var(--danger-ink); border-color:var(--danger); }
+
+/* ---------- Portrait / narrow ---------- */
+@media (max-width:820px){
+  .app{ grid-template-columns:1fr; }
+  .rail{
+    position:sticky; top:0; height:auto;
+    flex-direction:row; align-items:stretch;
+    z-index:30; padding-left:0;
+  }
+  .rail-head{ display:none; }
+  .rail-scroll{ display:flex; overflow-x:auto; overflow-y:hidden; padding:0; }
+  .rail-group{ display:none; }
+  .rail-btn{ width:auto; flex:none; border-left:none; border-bottom:3px solid transparent; padding:0 14px; min-height:52px; }
+  .rail-btn .num{ display:none; }
+  .rail-btn[aria-current="true"]{ border-left-color:transparent; border-bottom-color:var(--accent); }
+  .rail-emerg{ border-top:none; border-left:1px solid var(--rail-line); flex:none; display:flex; }
+  .emerg-btn{ padding:0 16px; font-size:calc(19px * var(--fs)); display:flex; flex-direction:column; justify-content:center; letter-spacing:.06em; }
+  .emerg-btn small{ display:none; }
+  .topbar{ top:52px; }
+  .content{ padding:16px 14px 90px; }
+  .phase-title{ font-size:calc(34px * var(--fs)); }
+  .wb-row{ grid-template-columns:1fr 88px 62px; }
+  .wb-out{ grid-template-columns:1fr; }
+}
+@media (max-width:520px){
+  .lbl{ flex-wrap:wrap; }
+  .act{ max-width:100%; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; }
+}
+@media print{ .rail,.topbar,.group-foot{ display:none; } }
+/* ============================================================
+   SETUP / EDITOR
+   ============================================================ */
+.rail-head{
+  display:block; width:100%; text-align:left;
+  border-bottom:1px solid var(--rail-line);
+}
+.rail-head:active{ background:var(--rail-active); }
+.rail-head .swap{
+  display:block; margin-top:5px;
+  font-size:calc(10.5px * var(--fs)); letter-spacing:.14em; text-transform:uppercase;
+  color:var(--rail-ink-2); font-weight:700;
+}
+
+.tabs{ display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 2px; }
+.tab{
+  padding:9px 15px; border:1px solid var(--line-2); border-radius:99px;
+  font-size:calc(11.5px * var(--fs)); font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-2); min-height:44px;
+}
+.tab[aria-selected="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+
+.ed{ padding:6px 14px 14px; }
+.lblrow{
+  font-size:calc(10.5px * var(--fs)); letter-spacing:.15em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:700; margin:16px 0 4px;
+}
+.ed-row{
+  display:grid; grid-template-columns:1fr 1fr auto; gap:8px;
+  align-items:center; padding:7px 0; border-bottom:1px solid var(--line);
+}
+.ed-row.solo{ grid-template-columns:1fr auto; }
+.ed-row.trio{ grid-template-columns:1fr 1fr 1fr auto; }
+.ed-row:last-of-type{ border-bottom:none; }
+.ed-note{ padding:0 0 8px; border-bottom:1px solid var(--line); }
+
+input.f, select.f, textarea.f{
+  font-family:inherit; font-size:calc(15px * var(--fs));
+  width:100%; padding:10px; min-height:46px;
+  background:var(--surface-2); color:var(--ink);
+  border:1px solid var(--line-2); border-radius:8px;
+}
+select.f{ min-height:50px; font-weight:600; }
+textarea.f{ min-height:190px; font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace; font-size:calc(12px * var(--fs)); line-height:1.45; resize:vertical; }
+input.f.act{
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--accent);
+  /* .act is also a checklist-row class — reset what that rule imposes */
+  text-align:left; max-width:none; flex:auto;
+}
+input.f.note{ font-size:calc(13px * var(--fs)); min-height:40px; color:var(--ink-2); }
+input.f.num{ font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace; font-weight:700; text-align:right; }
+.fieldlbl{ font-size:calc(12px * var(--fs)); color:var(--ink-3); font-weight:600; margin-bottom:3px; display:block; }
+
+.ctl{ display:flex; gap:5px; flex:none; }
+.ctl button{
+  width:44px; height:46px; flex:none;
+  border:1px solid var(--line-2); border-radius:8px;
+  color:var(--ink-2); font-size:calc(16px * var(--fs)); font-weight:700;
+  display:grid; place-items:center;
+}
+.ctl button:active{ background:var(--surface-3); }
+.ctl button.rm{ color:var(--danger); border-color:color-mix(in srgb, var(--danger) 45%, var(--line-2)); }
+.ctl button[disabled]{ opacity:.3; }
+
+.addbtn{
+  display:inline-flex; align-items:center; gap:8px;
+  margin:12px 0 4px; padding:11px 17px;
+  border:1px dashed var(--line-2); border-radius:9px;
+  font-weight:700; font-size:calc(11.5px * var(--fs)); letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-2); min-height:48px;
+}
+.addbtn:active{ background:var(--surface-2); }
+.addbtn.solid{ border-style:solid; border-color:var(--ink); background:var(--ink); color:var(--bg); }
+.addbtn.warn{ border-style:solid; color:var(--danger); border-color:color-mix(in srgb, var(--danger) 45%, var(--line-2)); }
+.btnrow{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+.ac-card{ padding:14px; border-bottom:1px solid var(--line); display:grid; gap:9px; }
+.ac-card:last-child{ border-bottom:none; }
+.ac-card.on{ background:var(--accent-soft); }
+.ac-top{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.ac-tail{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-weight:700; font-size:calc(25px * var(--fs)); letter-spacing:.05em;
+}
+.ac-meta{ color:var(--ink-3); font-size:calc(13px * var(--fs)); flex:1; min-width:120px; }
+.badge{
+  padding:3px 9px; border-radius:99px; background:var(--accent); color:var(--accent-ink);
+  font-size:calc(10.5px * var(--fs)); font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+}
+.badge.mut{ background:var(--surface-3); color:var(--ink-3); }
+
+.chk{ display:flex; align-items:center; gap:10px; min-height:48px; font-weight:600; font-size:calc(15px * var(--fs)); }
+.chk input{ width:24px; height:24px; accent-color:var(--accent); flex:none; }
+
+.undo{
+  position:fixed; left:50%; transform:translateX(-50%);
+  bottom:calc(18px + env(safe-area-inset-bottom)); z-index:60;
+  background:var(--ink); color:var(--bg);
+  border-radius:99px; padding:12px 20px; min-height:48px;
+  display:flex; align-items:center; gap:14px;
+  box-shadow:0 8px 30px rgba(0,0,0,.35);
+  font-size:calc(13.5px * var(--fs)); font-weight:600;
+}
+.undo[hidden]{ display:none; }
+.undo b{ font-weight:700; letter-spacing:.09em; text-transform:uppercase; font-size:calc(12px * var(--fs)); }
+
+.empty{ padding:30px 16px; text-align:center; color:var(--ink-3); }
+.empty p{ max-width:44ch; margin:0 auto 14px; }
+
+@media (max-width:820px){
+  .ed-row{ grid-template-columns:1fr auto; }
+  .ed-row .act{ grid-column:1; }
+  .ed-row.trio{ grid-template-columns:1fr 1fr auto; }
+}
+
+/* ------------------------------------------------------------
+   Portrait corrections. These must come last: the editor rules
+   above are declared after the main portrait block and would
+   otherwise win the cascade.
+   ------------------------------------------------------------ */
+.ed-row > *{ min-width:0; }   /* grid items default to min-width:auto and refuse to shrink */
+
+@media (max-width:820px){
+  /* Collapse the rail header into a compact, tappable tail chip
+     so the aircraft switcher stays reachable in portrait. */
+  .rail-head{
+    display:flex; flex-direction:column; justify-content:center;
+    flex:none; width:auto; padding:0 14px; min-height:52px;
+    border-bottom:none; border-right:1px solid var(--rail-line);
+  }
+  .rail-head .model, .rail-head .swap{ display:none; }
+  .rail-head .tail{ font-size:calc(15px * var(--fs)); letter-spacing:.04em; }
+  /* Grid items size to content by default; without min-width:0 the rail's
+     horizontal phase scroller widens the whole page instead of scrolling. */
+  .rail{ min-width:0; }
+  .rail-scroll{ min-width:0; flex:1; }
+  .ed-row, .ed-row.trio{ grid-template-columns:1fr auto; }
+  .ed-row.trio > div{ grid-column:1; }
+  .ed-row .ctl{ grid-column:2; grid-row:1; align-self:start; }
+}
+
+</style>
+
+<div class="app">
+  <nav class="rail" aria-label="Flight phases">
+    <button class="rail-head" type="button" id="acBtn">
+      <img class="logo-color" alt="SG Flight School" src="data:image/png;base64,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">
+      <span class="logo-mono" role="img" aria-label="SG Flight School"></span>
+      <span class="tail" id="acTail">N61574</span>
+      <span class="model" id="acModel">Cessna 172M &middot; O-320-E2D</span>
+      <span class="swap">Tap to switch aircraft &#8646;</span>
+    </button>
+    <div class="rail-scroll" id="rail"></div>
+    <div class="phasenav" id="phaseNav">
+      <button class="pn-arrow" type="button" data-act="prevPhase" aria-label="Previous list">&lsaquo;</button>
+      <button class="pn-name" type="button" data-act="openPhasePicker">
+        <span class="pn-title" id="pnTitle">Preflight</span>
+        <span class="pn-count" id="pnCount">1 of 18</span>
+      </button>
+      <button class="pn-arrow" type="button" data-act="nextPhase" aria-label="Next list">&rsaquo;</button>
+    </div>
+    <div class="rail-emerg">
+      <button class="emerg-btn" id="emergBtn" type="button">
+        Emergency
+        <small>Tap from any page</small>
+      </button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb" id="crumb">Preflight</div>
+      <div class="seg" role="group" aria-label="Display mode">
+        <button type="button" data-mode="auto"  aria-pressed="true">Auto</button>
+        <button type="button" data-mode="day"   aria-pressed="false">Day</button>
+        <button type="button" data-mode="dusk"  aria-pressed="false">Dusk</button>
+        <button type="button" data-mode="night" aria-pressed="false">Night</button>
+      </div>
+      <button class="iconbtn" id="textBtn" type="button" title="Text size">A&plus;</button>
+      <button class="iconbtn" id="resetAll" type="button">Reset</button>
+    </header>
+    <main class="content" id="content" tabindex="-1"></main>
+  </div>
+</div>
+
+<div class="undo" id="undoBar" hidden><span id="undoMsg">Change made</span><button type="button" id="undoBtn"><b>Undo</b></button></div>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h2 id="mTitle">Before you fly with this</h2>
+    <p>This is a transcription of the <b>N61574 checklist card</b>, laid out for the iPad. It is a convenience aid, not an approved document.</p>
+    <p>The <b>Pilot&rsquo;s Operating Handbook and FAA-approved Airplane Flight Manual carried in the aircraft are authoritative.</b> Where this app and the POH disagree, the POH wins. Verify the numbers on the Reference page against your POH before relying on them, and keep a paper checklist aboard as backup.</p>
+    <p>Checklists you add or edit here are <b>your own work product</b> and are not reviewed by anyone. Check your edits on the ground.</p>
+    <div class="btns">
+      <button class="btn primary" id="ackBtn" type="button">Understood</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ==========================================================
+   BUILT-IN PROFILE \u2014 N61574
+   Transcribed verbatim from "172M Check List.xlsx".
+   This is seed data only; the live copy lives in storage and
+   is editable from Setup.
+   ========================================================== */
+
+
+/* Long-form briefing attached to the "Passenger Brief" item. Editable in
+   Setup > Briefs. Blanks are intentional \u2014 fill them in for N61574. */
+var PAX_BRIEF = [
+"SEAT BELTS AND SEATS",
+"\u2022 Lap belt low and tight across the hips, shoulder harness over the shoulder.",
+"\u2022 This is how it fastens and releases \u2014 please try it now.",
+"\u2022 Seat locked in position and upright for takeoff and landing.",
+"",
+"DOORS AND EXITS",
+"\u2022 Two doors. The handle works like this \u2014 please try it.",
+"\u2022 Doors stay closed and latched in flight. If one pops open it is loud but it is not an emergency \u2014 I will deal with it. Do not grab for it.",
+"\u2022 If I call \u201cEVACUATE\u201d: unlatch, get out, move well clear of the aircraft, away from the propeller.",
+"",
+"FIRE EXTINGUISHER AND SURVIVAL GEAR",
+"\u2022 Fire extinguisher is located ________________.",
+"\u2022 First aid and survival kit is located ________________.",
+"\u2022 The ELT is behind the baggage compartment.",
+"",
+"AIR, COMFORT AND AIRSICKNESS",
+"\u2022 Fresh air vents are here, cabin heat is here \u2014 ask any time.",
+"\u2022 Tell me early if you start to feel unwell. Sick bags are ________________.",
+"\u2022 Looking outside at the horizon helps more than looking down.",
+"",
+"HEADSETS AND TALKING",
+"\u2022 Press to talk is here. Radio calls are not for us \u2014 I will tell you what matters.",
+"\u2022 I may need to interrupt you. Please stop talking immediately when I do.",
+"\u2022 STERILE COCKPIT: no conversation during taxi, takeoff, approach and landing, below 1000 feet, or any time I say \u201cSTANDBY\u201d.",
+"",
+"TRAFFIC WATCH",
+"\u2022 Please help me look for other aircraft \u2014 more eyes are genuinely useful.",
+"\u2022 Call them by clock position and high or low: \u201ctraffic, two o\u2019clock, slightly low\u201d.",
+"",
+"DO NOT TOUCH",
+"\u2022 Controls, throttle, switches and door handles \u2014 please keep clear unless I ask.",
+"\u2022 Keep your feet flat on the floor and off the rudder pedals.",
+"\u2022 Nothing loose in the cabin. Stow bags, phones and hats.",
+"",
+"THE PROPELLER",
+"\u2022 Never approach or leave the aircraft while the propeller is turning.",
+"\u2022 Walk around behind the wing, never toward the nose.",
+"",
+"QUESTIONS",
+"\u2022 Any questions before we start?"
+].join("\n");
+
+var SEED_CL = [
+{id:"preflight", n:"01", name:"Preflight", sub:"Walkaround flow: cabin first, then left wing, empennage, right wing, nose.", groups:[
+  {t:"Cabin", items:[
+    ["Documents","A.R.O.W.","Airworthiness &middot; Registration &middot; Operating limitations &middot; Weight &amp; balance"],
+    ["Fire Extinguisher","Check"],
+    ["Control Locks","Remove"],
+    ["Magnetos","Off"],
+    ["Avionics Master","Off"],
+    ["Master","On"],
+    ["Fuel Quantity Indicators","Check"],
+    ["Flaps","Down"],
+    ["Lights &amp; Pitot Heat","On"],
+    ["Check Lights, then","Off"],
+    ["Master","Off"],
+    ["Fuel Selector","Both"],
+    ["Baggage Door","Secure"]
+  ]},
+  {t:"Left Wing", items:[
+    ["Tire, Brake, Strut","Check"],
+    ["Fuel Sump","Drain &amp; Check"],
+    ["Fuel Quantity","Visual Check"],
+    ["Fuel Cap","Secure"],
+    ["Pitot Tube","Check"],
+    ["Fuel Tank Vent","Clear"],
+    ["Stall Warning Port","Check Clear"],
+    ["Wing Tie-Down","Remove"],
+    ["Aileron","Check"],
+    ["Flap","Check"]
+  ]},
+  {t:"Empennage (Tail)", items:[
+    ["Tail Tie-Down","Remove"],
+    ["Control Surfaces","Free, Clear"]
+  ]},
+  {t:"Right Wing", items:[
+    ["Flap","Check"],
+    ["Aileron","Free, Clear"],
+    ["Wing Tie-Down","Remove"],
+    ["Tire, Brake, Strut","Check"],
+    ["Fuel Sump","Drain &amp; Check"],
+    ["Fuel Quantity","Visual Check"],
+    ["Fuel Filler Cap","Secure"]
+  ]},
+  {t:"Nose", items:[
+    ["Engine Oil","Check (6&ndash;8)"],
+    ["Fuel Strainer","Drain &amp; Check"],
+    ["Prop &amp; Spinner","Check"],
+    ["Air Inlets","Check"],
+    ["Nose Wheel &amp; Strut","Check"],
+    ["Static Port","Check"]
+  ]}
+]},
+
+{id:"beforestart", n:"02", name:"Before Start", groups:[
+  {t:"Before Start", items:[
+    ["Preflight","Complete"],
+    ["Passenger Brief","Complete","",PAX_BRIEF],
+    ["Seats, Seat Belts","Secure"],
+    ["Fuel Selector","Both"],
+    ["Avionics / Switches","Off"],
+    ["Brakes","Hold"],
+    ["Circuit Breakers","All In"]
+  ]}
+]},
+
+{id:"start", n:"03", name:"Starting", groups:[
+  {t:"Starting", items:[
+    ["Mixture","Rich"],
+    ["Carburetor Heat","Cold"],
+    ["Beacon","On"],
+    ["Master","On"],
+    ["Prime","As Required"],
+    ["Throttle","Open 1/8&Prime;"],
+    ["&ldquo;CLEAR PROP!&rdquo;","Call"],
+    ["Magnetos","Start"],
+    ["Oil Pressure","Check"],
+    ["Throttle","1000 RPM"],
+    ["Mixture","Lean"],
+    ["Flaps","Up"]
+  ]}
+]},
+
+{id:"afterstart", n:"04", name:"After Start", groups:[
+  {t:"After Start", items:[
+    ["Avionics","On"],
+    ["GPS","Check Current"],
+    ["Comms","ATIS / AWOS / Clearance"],
+    ["Altimeter","Set"],
+    ["Transponder","Set Code"],
+    ["WAAS / RAIM","Check"]
+  ]}
+]},
+
+{id:"taxi", n:"05", name:"Taxi", groups:[
+  {t:"Taxi", items:[
+    ["Airport Diagram","Out"],
+    ["Taxi Clearance","Obtain / Brief"],
+    ["Brakes","Test"],
+    ["Turn Instruments","Check"]
+  ]}
+]},
+
+{id:"runup", n:"06", name:"Before Takeoff", sub:"Run-up.", groups:[
+  {t:"Before Takeoff (Run Up)", items:[
+    ["Brakes","Hold"],
+    ["Doors, Windows","Closed &amp; Locked"],
+    ["Flight Controls","Free &amp; Correct"],
+    ["Flight Instruments","Check"],
+    ["Fuel Selector","Both"],
+    ["Trim","Takeoff"],
+    ["Mixture","Rich"],
+    ["Throttle","1700 RPM"],
+    ["Magnetos","Check (150 / 50)","Max drop 150 RPM &middot; max difference 50 RPM"],
+    ["Carburetor Heat","Check"],
+    ["Engine Instruments","Check"],
+    ["Ammeter","Check"],
+    ["Idle","Check"],
+    ["Throttle","1000 RPM"],
+    ["Radios","Set"],
+    ["Departure","Brief"],
+    ["Abort Plan","Ready"]
+  ]}
+]},
+
+{id:"takeoff", n:"07", name:"Takeoff", groups:[
+  {t:"Takeoff", items:[
+    ["Flaps","As Required"],
+    ["Mixture","Rich"],
+    ["Lights","As Required"],
+    ["Throttle","Full"],
+    ["Rotate","55 kts (Vr)"]
+  ]}
+]},
+
+{id:"climb", n:"08", name:"Climb", sub:"After takeoff.", groups:[
+  {t:"After Takeoff / Climb", items:[
+    ["Flaps","Up"],
+    ["Throttle","Full"],
+    ["Mixture","Lean above 3000&prime;"],
+    ["Airspeed","74 KIAS"],
+    ["Engine Instruments","Check"]
+  ]}
+]},
+
+{id:"cruise", n:"09", name:"Cruise", groups:[
+  {t:"Cruise", items:[
+    ["Power","Set (75% max)"],
+    ["Trim","Set"],
+    ["Mixture","Lean"],
+    ["Landing Lights","Off"]
+  ]}
+]},
+
+{id:"descent", n:"10", name:"Descent", groups:[
+  {t:"Descent", items:[
+    ["Mixture","Adjust"],
+    ["Carburetor Heat","As Required"],
+    ["Landing Light","On"],
+    ["Seat, Seat Belts, Harnesses","Secure"]
+  ]}
+]},
+
+{id:"beforelanding", n:"11", name:"Before Landing", groups:[
+  {t:"Before Landing", items:[
+    ["Fuel Selector","Both"],
+    ["Mixture","Rich"],
+    ["Carburetor Heat","As Required"]
+  ]}
+]},
+
+{id:"goaround", n:"12", name:"Go Around", sub:"Missed approach.", groups:[
+  {t:"Go Around / Missed Approach", items:[
+    ["Throttle","Full"],
+    ["Carb Heat","Cold"],
+    ["Flaps","(if &gt;20&deg;) Set 20&deg;"],
+    ["Pitch","Establish Climb"],
+    ["Flaps","Up"],
+    ["Report","Go Around / Missed"]
+  ]}
+]},
+
+{id:"afterlanding", n:"13", name:"After Landing", groups:[
+  {t:"After Landing", items:[
+    ["Carburetor Heat","Cold"],
+    ["Flaps","Up"],
+    ["Mixture","Lean"],
+    ["Landing Lights","Off"],
+    ["Trim","Takeoff"]
+  ]}
+]},
+
+{id:"securing", n:"14", name:"Securing", groups:[
+  {t:"Securing", items:[
+    ["Avionics Master","Off"],
+    ["Lights","Off, Beacon On"],
+    ["Magnetos","Ground Check"],
+    ["Mixture","Idle Cutoff"],
+    ["Magnetos","Off"],
+    ["Master","Off"],
+    ["Control Lock","Install"]
+  ]}
+]}
+];
+var SEED_EM = [
+{id:"eng-fail-to", n:"E1", t:"Engine Failure After Takeoff", mem:true, items:[
+  ["Airspeed","65 kts"],
+  ["Mixture","Idle Cutoff"],
+  ["Fuel Selector","Off"],
+  ["Magnetos","Off"],
+  ["Flaps","As Desired"],
+  ["Master","Off"]
+]},
+
+{id:"eng-fail-flight", n:"E2", t:"Engine Failure During Flight", mem:true, items:[
+  ["Airspeed","65 kts"],
+  ["Carburetor Heat","On"],
+  ["Fuel Selector","Both"],
+  ["Mixture","Rich"],
+  ["Primer","In &amp; Locked"],
+  ["Magnetos","Both or Start"]
+]},
+
+{id:"forced-landing", n:"E3", t:"Emergency Landing, No Power", mem:true, items:[
+  ["Airspeed","65 kts"],
+  ["Mixture","Idle Cutoff"],
+  ["Fuel Selector","Off"],
+  ["Magnetos","Off"],
+  ["Declare","Freq / Squawk / ELT","121.5 &middot; 7700 &middot; activate ELT"],
+  ["Flaps","As Required","40&deg; recommended"],
+  ["Master","Off"],
+  ["Doors","Unlatched"],
+  ["Touchdown","Slightly Tail Low"],
+  ["Brakes","Apply Heavily"]
+]},
+
+{id:"precautionary", n:"E4", t:"Precautionary Landing With Power", items:[
+  ["Landing Area","Select &amp; Inspect"],
+  ["Declare","Freq / Squawk / ELT"],
+  ["Avionics &amp; Electrical","Off"],
+  ["Flaps","As Required","40&deg; recommended"],
+  ["Master Switch","Off"],
+  ["Doors","Unlatched"],
+  ["Ignition Switch","Off"],
+  ["Brakes","Apply Heavily"]
+]},
+
+{id:"ditching", n:"E5", t:"Ditching", items:[
+  ["Radio","Mayday on 121.5"],
+  ["Squawk","7700"],
+  ["#","Approach"],
+  ["High Winds, Heavy Seas","Into Wind"],
+  ["Light Winds, Heavy Swells","Parallel"],
+  ["#","Configuration"],
+  ["Flaps","20&deg;"],
+  ["Power","300 ft/min Descent @ 55 kts"],
+  ["Doors","Unlatch"],
+  ["Touchdown","Level Attitude"],
+  ["Face","Cushion"],
+  ["Airplane","Evacuate"]
+]},
+
+{id:"fire-start", n:"E6", t:"Fire During Start", items:[
+  ["Cranking","Continue"],
+  ["#","If engine starts"],
+  ["Power","1700 RPM"],
+  ["Engine","Shutdown"],
+  ["#","If engine fails to start"],
+  ["Throttle","Full Open"],
+  ["Mixture","Idle Cutoff"],
+  ["Cranking","Continue"],
+  ["Fire Extinguisher","Obtain"],
+  ["Engine","Secure"],
+  ["Master","Off"],
+  ["Magnetos","Off"],
+  ["Fuel Selector","Off"],
+  ["Fire Extinguisher","Use"]
+]},
+
+{id:"fire-engine", n:"E7", t:"Engine Fire In Flight", mem:true, items:[
+  ["Mixture","Idle Cutoff"],
+  ["Fuel Selector","Off"],
+  ["Master","Off"],
+  ["Cabin Heat &amp; Air","Off"],
+  ["Airspeed","100 KIAS or More","To extinguish"],
+  ["Forced Landing","Execute"]
+]},
+
+{id:"fire-elec", n:"E8", t:"Electrical Fire In Flight", mem:true, items:[
+  ["Master","Off"],
+  ["Avionics","Off"],
+  ["All Other Switches","Off","Except magnetos"],
+  ["Vents, Cabin Air / Heat","Closed"],
+  ["Fire Extinguisher","Activate"],
+  ["#","If fire is out"],
+  ["Vents","Open"],
+  ["Flight","Terminate"]
+]},
+
+{id:"fire-cabin", n:"E9", t:"Cabin Fire", items:[
+  ["Master","Off"],
+  ["Vents, Cabin Air / Heat","Off"],
+  ["Fire Extinguisher","Activate"],
+  ["#","If fire is out"],
+  ["Vents","Open"],
+  ["Flight","Terminate"]
+]},
+
+{id:"fire-wing", n:"E10", t:"Wing Fire", items:[
+  ["Navigation Lights","Off"],
+  ["Strobes","Off"],
+  ["Pitot Heat","Off"],
+  ["Side Slip","Away From Fire"],
+  ["Land","As Soon As Possible"]
+]},
+
+{id:"ammeter-high", n:"E11", t:"Ammeter Shows Excessive Rate Of Charge", sub:"Full-scale deflection.", items:[
+  ["Alternator","Off"],
+  ["Nonessential Electrical","Off"],
+  ["Flight","Terminate"]
+]},
+
+{id:"low-volt", n:"E12", t:"Low Voltage Light During Flight", sub:"Ammeter indicates discharge.", items:[
+  ["Avionics Master","Off"],
+  ["Master","Off (Both Sides)"],
+  ["Master","On"],
+  ["Low-Voltage Light","Check Off"],
+  ["Avionics Master","On"],
+  ["#","If low-voltage light illuminates again"],
+  ["Alternator","Off"],
+  ["Nonessential Radio / Electrical","Off"],
+  ["Flight","Terminate"]
+]},
+
+{id:"spin", n:"E13", t:"Spin Recovery", mem:true, items:[
+  ["Throttle","Immediately Closed"],
+  ["Ailerons","Neutral"],
+  ["Rudder","Opposite Direction"],
+  ["Elevator","Briskly Forward"],
+  ["#","Once rotation stops"],
+  ["Rudder","Neutral"],
+  ["Pitch","Slowly To Level"],
+  ["Climb","As Required"]
+]},
+
+{id:"fouled-plugs", n:"E14", t:"Cleaning Fouled Spark Plugs", items:[
+  ["Throttle","2000 RPM"],
+  ["Mixture","Lean For RPM Drop"],
+  ["Maintain","60 Seconds"],
+  ["Mixture","Full Rich"],
+  ["Throttle","1700 RPM"],
+  ["Magnetos","Check"]
+]}
+];
+var SEED_VS = [
+  ["Vne","Never exceed","160","kts"],
+  ["Vno","Max structural cruise","128","kts"],
+  ["Va","Maneuvering &mdash; 2300 lb","97","kts"],
+  ["Va","Maneuvering &mdash; 1950 lb","89","kts"],
+  ["Va","Maneuvering &mdash; 1600 lb","80","kts"],
+  ["Vfe","Max flaps extended","85","kts"],
+  ["Vr","Rotation","55","kts"],
+  ["Vx","Best angle of climb","64","kts"],
+  ["Vy","Best rate of climb","74","kts"],
+  ["Vs","Stall, clean","47","kts"],
+  ["Vso","Stall, landing config","41","kts"],
+  ["&mdash;","Best glide","65","kts"],
+  ["&mdash;","Max window open","160","kts"],
+  ["&mdash;","Max demonstrated crosswind","15","kts"]
+];
+var SEED_WB = [
+  {k:"empty",  label:"Empty Weight",      note:"From this aircraft's weight &amp; balance sheet", arm:null, save:true},
+  {k:"front",  label:"Front Seats",       note:"Pilot &amp; front passenger",  arm:37},
+  {k:"rear",   label:"Rear Seats",        note:"",                             arm:73},
+  {k:"fuel",   label:"Fuel",              note:"Gallons &middot; 6 lb/gal &middot; 48 usable", arm:48, gal:true},
+  {k:"bag1",   label:"Baggage Area 1",    note:"Max 120 lb",                   arm:95,  max:120},
+  {k:"bag2",   label:"Baggage Area 2",    note:"Max 50 lb",                    arm:123, max:50}
+];
+
+/* "Numbers in the flow" \u2014 pulled from the N61574 card's own values. */
+var SEED_NUM = [
+  ["Run-up RPM","1700",""],
+  ["Magneto drop &mdash; max","150","rpm"],
+  ["Magneto split &mdash; max","50","rpm"],
+  ["Idle / taxi","1000","rpm"],
+  ["Prime throttle position","1/8","in"],
+  ["Engine oil","6&ndash;8","qt"],
+  ["Cruise power","75","% max"],
+  ["Lean above","3000","ft"],
+  ["Climb speed","74","kias"],
+  ["Ditching descent","300","fpm @ 55 kt"],
+  ["Engine fire &mdash; airspeed","100+","kias"]
+];
+
+/* Envelope for the built-in 172M. Editable per aircraft in Setup. */
+var SEED_ENV = { maxGross:2300, aftLimit:47.3, fwdLow:35.0, fwdLowW:1950, fwdHigh:38.5, fwdHighW:2300, minW:1400 };
+
+/* ==========================================================
+   SHORT / SOFT FIELD PROCEDURES
+   NOT on the N61574 card. Compiled from standard Cessna 172M
+   POH technique; speeds are taken from the card's own V-speed
+   table so the two never disagree.
+   ========================================================== */
+var SEED_SHORT_TO = {
+  id:"shortfield-to", n:"07A", name:"Short Field Takeoff",
+  sub:"Not on the N61574 card &mdash; compiled from 172M POH technique. Verify against your POH before use.",
+  groups:[{ t:"Short Field Takeoff &mdash; Maximum Performance", items:[
+    ["Before Takeoff Checks","Complete"],
+    ["Wing Flaps","10&deg;"],
+    ["Brakes","Hold"],
+    ["Throttle","Full Open"],
+    ["Mixture","Rich","Lean for maximum RPM above 3000 ft density altitude"],
+    ["Engine Instruments","Check Green","Confirm full static RPM before releasing the brakes"],
+    ["Brakes","Release"],
+    ["Elevator","Slightly Tail Low"],
+    ["Rotate","55 KIAS (Vr)"],
+    ["Climb","64 KIAS (Vx)","Hold Vx until all obstacles are cleared"],
+    ["Wing Flaps","Retract Slowly","After obstacles are cleared, at a safe altitude"],
+    ["Climb","74 KIAS (Vy)"]
+  ]}]
+};
+
+var SEED_SOFT_TO = {
+  id:"softfield-to", n:"07B", name:"Soft Field Takeoff",
+  sub:"Not on the N61574 card &mdash; compiled from 172M POH technique. Verify against your POH before use.",
+  groups:[{ t:"Soft Field Takeoff", items:[
+    ["Before Takeoff Checks","Complete","Run up on a firm surface; avoid stopping once on the soft surface"],
+    ["Wing Flaps","10&deg;"],
+    ["Elevator","Full Aft"],
+    ["Throttle","Advance Smoothly","Keep the aeroplane rolling &mdash; do not stop"],
+    ["Mixture","Rich"],
+    ["Nose Wheel","Lift Off Early"],
+    ["Lift Off","At Lowest Possible Airspeed"],
+    ["Attitude","Level Off In Ground Effect","Accelerate in ground effect before climbing away"],
+    ["Climb","64 KIAS (Vx) If Obstacle","Otherwise accelerate to 74 KIAS (Vy)"],
+    ["Wing Flaps","Retract Slowly","After clear of obstacles, at a safe altitude"]
+  ]}]
+};
+
+var SEED_SHORT_LDG = {
+  id:"shortfield-ldg", n:"11A", name:"Short Field Landing",
+  sub:"Not on the N61574 card &mdash; compiled from 172M POH technique. Verify against your POH before use.",
+  groups:[{ t:"Short Field Landing &mdash; Maximum Performance", items:[
+    ["Before Landing Checks","Complete"],
+    ["Airspeed","65&ndash;75 KIAS","Flaps up, downwind and base"],
+    ["Wing Flaps","Full (40&deg;)","Below 85 KIAS (Vfe)"],
+    ["Airspeed","60 KIAS","Stabilised, with full flaps"],
+    ["Aiming Point","Select","Plan to touch down at or just beyond the threshold"],
+    ["Power","As Required","Maintain a stabilised approach path"],
+    ["Power","Idle","Once the obstacle is cleared"],
+    ["Touchdown","Mains First, Minimum Speed"],
+    ["Brakes","Apply Heavily"],
+    ["Wing Flaps","Retract","Puts weight on the wheels and improves braking"],
+    ["Elevator","Hold Aft"],
+    ["Directional Control","Rudder"]
+  ]}]
+};
+
+var SEED_SOFT_LDG = {
+  id:"softfield-ldg", n:"11B", name:"Soft Field Landing",
+  sub:"Not on the N61574 card &mdash; compiled from 172M POH technique. Verify against your POH before use.",
+  groups:[{ t:"Soft Field Landing", items:[
+    ["Before Landing Checks","Complete"],
+    ["Wing Flaps","Full (40&deg;)","Below 85 KIAS (Vfe)"],
+    ["Airspeed","65 KIAS"],
+    ["Power","Carry Into The Flare","A little power cushions the touchdown"],
+    ["Touchdown","Mains First, Minimum Speed"],
+    ["Elevator","Hold Nose Wheel Off","For as long as elevator authority allows"],
+    ["Power","As Required","Enough to keep rolling through the soft surface"],
+    ["Brakes","Minimum Required"],
+    ["Wing Flaps","Retract When Clear","Of the soft surface"],
+    ["Elevator","Full Aft For Taxi"]
+  ]}]
+};
+
+/* Inserted by phase id rather than index so a reordered list still lands right. */
+function withFieldProcs(phases){
+  var out = phases.slice();
+  function after(id, add){
+    var i = -1;
+    for(var k=0;k<out.length;k++){ if(out[k].id===id){ i=k; break; } }
+    if(i<0) i = out.length-1;
+    out.splice.apply(out, [i+1, 0].concat(add));
+  }
+  after("takeoff",       [clone(SEED_SHORT_TO),  clone(SEED_SOFT_TO)]);
+  after("beforelanding", [clone(SEED_SHORT_LDG), clone(SEED_SOFT_LDG)]);
+  return out;
+}
+
+
+/* ==========================================================
+   STORAGE + AIRCRAFT MODEL
+   ========================================================== */
+/* Bumped on every published build. version.json on the server carries the
+   same string; the app compares the two to know whether it is current. */
+var APP_VERSION = "2026.08.26-2";
+var updateInfo = null;
+
+var LS = {
+  get:function(k,d){ try{ var v=localStorage.getItem("n61574."+k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+  set:function(k,v){ try{ localStorage.setItem("n61574."+k, JSON.stringify(v)); return true; }catch(e){ return false; } },
+  del:function(k){ try{ localStorage.removeItem("n61574."+k); }catch(e){} }
+};
+
+function uid(p){ return (p||"x") + Math.random().toString(36).slice(2,8) + (Date.now()%100000).toString(36); }
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+function seedAircraft(){
+  return {
+    id: uid("ac"),
+    tail:"N61574", model:"Cessna 172M", engine:"O-320-E2D",
+    builtin:true,
+    phases: withFieldProcs(clone(SEED_CL)),
+    emerg:  clone(SEED_EM),
+    vspeeds: clone(SEED_VS),
+    numbers: clone(SEED_NUM),
+    env: clone(SEED_ENV),
+    stations: clone(SEED_WB).map(function(s){
+      return { k:s.k, label:s.label, note:s.note||"", arm:(s.arm==null?null:s.arm), max:(s.max||0), gal:!!s.gal };
+    })
+  };
+}
+
+function blankAircraft(){
+  return {
+    id: uid("ac"),
+    tail:"NEW", model:"", engine:"",
+    builtin:false,
+    phases: [ { id:uid("p"), n:"01", name:"Preflight", sub:"",
+                groups:[ { t:"Cabin", items:[ ["Documents","Check",""] ] } ] } ],
+    emerg: [],
+    vspeeds: [],
+    numbers: [],
+    /* Limits deliberately zeroed \u2014 an unconfigured envelope must not
+       silently inherit the 172M's numbers. */
+    env: { maxGross:0, aftLimit:0, fwdLow:0, fwdLowW:0, fwdHigh:0, fwdHighW:0 },
+    stations: [
+      { k:"empty", label:"Empty Weight", note:"From this aircraft's weight &amp; balance sheet", arm:null, max:0, gal:false },
+      { k:"front", label:"Front Seats",  note:"", arm:0, max:0, gal:false },
+      { k:"rear",  label:"Rear Seats",   note:"", arm:0, max:0, gal:false },
+      { k:"fuel",  label:"Fuel",         note:"Gallons &middot; 6 lb/gal", arm:0, max:0, gal:true },
+      { k:"bag1",  label:"Baggage",      note:"", arm:0, max:0, gal:false }
+    ]
+  };
+}
+
+/* ---------- Load / migrate ---------- */
+var DB = LS.get("db", null);
+
+if(!DB){
+  var seed = seedAircraft();
+  DB = { v:1, active:seed.id, list:[seed] };
+  /* Carry over v1 data (single hardcoded aircraft) if present. */
+  var oldChecks = LS.get("checks", null);
+  if(oldChecks && oldChecks.length){ LS.set("checks."+seed.id, oldChecks); }
+  var oldWB = LS.get("wb", null);
+  if(oldWB){ LS.set("wbvals."+seed.id, oldWB); }
+  LS.set("db", DB);
+}
+/* Guard against a corrupted or emptied list. */
+if(!DB.list || !DB.list.length){ var s2=seedAircraft(); DB.list=[s2]; DB.active=s2.id; }
+if(!byId(DB.list, DB.active)) DB.active = DB.list[0].id;
+
+/* One-time additions to profiles already in storage. Guarded by a flag so a
+   deliberate deletion is never silently undone. */
+DB.mig = DB.mig || {};
+if(!DB.mig.fieldProcs){
+  DB.list.forEach(function(a){
+    if(a.builtin && !byId(a.phases, "shortfield-to")) a.phases = withFieldProcs(a.phases);
+  });
+  DB.mig.fieldProcs = 1;
+}
+/* The guard above only caught profiles flagged builtin, so a DUPLICATE of
+   N61574 never received the field procedures. Key off the card's own phase
+   ids instead, which duplicates keep and blank aircraft never have. */
+if(!DB.mig.fieldProcs2){
+  DB.list.forEach(function(a){
+    if(byId(a.phases,"takeoff") && !byId(a.phases,"shortfield-to")) a.phases = withFieldProcs(a.phases);
+  });
+  DB.mig.fieldProcs2 = 1;
+}
+if(!DB.mig.paxBrief){
+  DB.list.forEach(function(a){
+    if(!a.builtin) return;
+    a.phases.forEach(function(p){
+      p.groups.forEach(function(g){
+        g.items.forEach(function(it){
+          if(it[0]==="Passenger Brief" && !(it[3] && String(it[3]).trim())){
+            if(it[2]==null) it[2]="";
+            it[3] = PAX_BRIEF;
+          }
+        });
+      });
+    });
+  });
+  DB.mig.paxBrief = 1;
+}
+/* Same gap for the passenger briefing. */
+if(!DB.mig.paxBrief2){
+  DB.list.forEach(function(a){
+    a.phases.forEach(function(p){ p.groups.forEach(function(g){ g.items.forEach(function(it){
+      if(it[0]==="Passenger Brief" && !(it[3] && String(it[3]).trim())){
+        if(it[2]==null) it[2]="";
+        it[3] = PAX_BRIEF;
+      }
+    }); }); });
+  });
+  DB.mig.paxBrief2 = 1;
+}
+/* Envelope floor for the CG chart, derived so it suits any aircraft. */
+DB.list.forEach(function(a){
+  if(a.env && a.env.minW == null){
+    a.env.minW = a.env.maxGross ? Math.max(0, a.env.maxGross - 900) : 0;
+  }
+});
+LS.set("db", DB);
+
+function byId(list,id){ for(var i=0;i<list.length;i++){ if(list[i].id===id) return list[i]; } return null; }
+function AC(){ return byId(DB.list, DB.active) || DB.list[0]; }
+function saveDB(){
+  if(!LS.set("db", DB)) toast("Storage full \u2014 change not saved");
+}
+
+/* ---------- Per-aircraft check state ---------- */
+var checks = {};
+function loadChecks(){
+  checks = {};
+  (LS.get("checks."+DB.active, []) || []).forEach(function(k){ checks[k]=1; });
+}
+function saveChecks(){ LS.set("checks."+DB.active, Object.keys(checks)); }
+loadChecks();
+
+/* ---------- Undo (one deep, structural edits only) ---------- */
+var undoSnap = null, undoTimer = null;
+var undoBar = document.getElementById("undoBar");
+var undoMsg = document.getElementById("undoMsg");
+
+function snapshot(msg){
+  undoSnap = JSON.stringify(DB);
+  undoMsg.textContent = msg || "Change made";
+  undoBar.hidden = false;
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(function(){ undoBar.hidden = true; }, 9000);
+}
+function toast(msg){ undoMsg.textContent = msg; undoBar.hidden=false; clearTimeout(undoTimer); undoTimer=setTimeout(function(){ undoBar.hidden=true; },4000); }
+document.getElementById("undoBtn").addEventListener("click", function(){
+  if(!undoSnap) { undoBar.hidden=true; return; }
+  DB = JSON.parse(undoSnap);
+  undoSnap = null; undoBar.hidden = true;
+  saveDB(); loadChecks(); render();
+});
+
+/* ==========================================================
+   VIEW STATE
+   ========================================================== */
+var view = LS.get("view","");
+var setupTab = "aircraft";
+var edPhase = null, edProc = null;
+var textStep = LS.get("text",0);
+var mode = LS.get("mode","auto");
+
+var content = document.getElementById("content");
+var crumb   = document.getElementById("crumb");
+var railEl  = document.getElementById("rail");
+var scrim   = document.getElementById("scrim");
+var ackHTML = scrim.querySelector(".modal").innerHTML;
+
+var CHECK_SVG = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function esc(s){ return String(s==null?"":s).replace(/&(?![a-zA-Z#0-9]+;)/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function fwdLimit(env, w){
+  if(!env || !env.maxGross) return 0;
+  if(w <= env.fwdLowW) return env.fwdLow;
+  if(env.fwdHighW <= env.fwdLowW) return env.fwdHigh;
+  if(w >= env.fwdHighW) return env.fwdHigh;
+  return env.fwdLow + (w - env.fwdLowW) * (env.fwdHigh - env.fwdLow) / (env.fwdHighW - env.fwdLowW);
+}
+
+/* ==========================================================
+   FLYING VIEWS
+   ========================================================== */
+
+function hasBrief(it){ return !!(it && it[3] && String(it[3]).trim()); }
+
+/* The gap between the item and its response is the tap target for a briefing. */
+function dotsHTML(it){
+  if(!hasBrief(it)) return '<span class="dots" aria-hidden="true"></span>';
+  return '<span class="dots" aria-hidden="true"></span>'
+       + '<span class="brief-chip">Brief</span>'
+       + '<span class="dots" aria-hidden="true"></span>';
+}
+
+function itemFromKey(key){
+  var k = String(key||"").split(":");
+  try{
+    if(k[0]==="em"){
+      var e = byId(AC().emerg, k[1]);
+      return e ? e.items[+k[2]] : null;
+    }
+    var p = byId(AC().phases, k[0]);
+    return p ? p.groups[+k[1]].items[+k[2]] : null;
+  }catch(err){ return null; }
+}
+
+function openBrief(title, text){
+  openModal('<h2>'+esc(title)+'</h2><div class="brieftext">'+esc(text)+'</div>'
+    + '<div class="btns"><button class="btn primary" id="cancelBtn" type="button">Close</button></div>');
+}
+
+function itemHTML(key, it, isNext, isMem){
+  if(it[0]==="#"){
+    return '<li class="item cond-item"><div class="cond-head">'+esc(it[1])+'</div></li>';
+  }
+  var on = !!checks[key];
+  var cls = "item" + (on?" checked":"") + ((!on && isNext)?" next":"");
+  var h = '<li class="'+cls+'" data-key="'+esc(key)+'">'
+    + '<button class="row" type="button" aria-pressed="'+on+'">'
+    + '<span class="box" style="color:var(--'+(isMem?"danger-ink":"accent-ink")+')">'+CHECK_SVG+'</span>'
+    + '<span class="lbl"><span class="t">'+esc(it[0])+'</span>'+dotsHTML(it)+'</span>'
+    + '<span class="act">'+esc(it[1])+'</span>'
+    + '</button>';
+  if(it[2]) h += '<div class="sub">'+esc(it[2])+'</div>';
+  return h + '</li>';
+}
+
+function renderChecklist(p){
+  var total=0, done=0, firstUnchecked=null;
+  p.groups.forEach(function(g,gi){
+    g.items.forEach(function(it,ii){
+      if(it[0]==="#") return;
+      total++;
+      var k = p.id+":"+gi+":"+ii;
+      if(checks[k]) done++; else if(!firstUnchecked) firstUnchecked=k;
+    });
+  });
+
+  var h = '<div class="phase-head">'
+    + '<div class="eyebrow">Phase '+esc(p.n)+'</div>'
+    + '<h1 class="phase-title">'+esc(p.name)+'</h1>'
+    + (p.sub?'<p class="phase-sub">'+esc(p.sub)+'</p>':'')
+    + '<div class="progress"><div class="bar"><i style="width:'+(total?Math.round(done/total*100):0)+'%"></i></div>'
+    + '<span class="count">'+done+' / '+total+'</span></div></div>';
+
+  if(!p.groups.length){
+    return h + '<div class="empty"><p>This phase has no sections yet.</p>'
+      + '<button class="addbtn solid" type="button" data-act="gotoSetupPhase" data-id="'+esc(p.id)+'">Edit in Setup</button></div>';
+  }
+
+  p.groups.forEach(function(g,gi){
+    var gt=0, gd=0;
+    g.items.forEach(function(it,ii){ if(it[0]==="#") return; gt++; if(checks[p.id+":"+gi+":"+ii]) gd++; });
+    h += '<section class="group"><div class="group-head"><h3>'+esc(g.t)+'</h3><span class="gcount">'+gd+'/'+gt+'</span></div><ol class="items">';
+    g.items.forEach(function(it,ii){
+      var k = p.id+":"+gi+":"+ii;
+      h += itemHTML(k, it, k===firstUnchecked, false);
+    });
+    h += '</ol><div class="group-foot"><button class="linkbtn" type="button" data-clear="'+esc(p.id+":"+gi)+'">Clear section</button></div></section>';
+  });
+  return h;
+}
+
+function renderEmergIndex(){
+  var em = AC().emerg;
+  var h = '<div class="phase-head">'
+    + '<div class="eyebrow">Emergency</div>'
+    + '<h1 class="phase-title">Emergency Procedures</h1>'
+    + '<p class="phase-sub">Red-flagged procedures are do-from-memory items. Fly the airplane first, then run the list.</p></div>'
+    + '<div class="notice hard"><b>Aviate. Navigate. Communicate.</b> Maintain aircraft control before reaching for the iPad.</div>';
+  if(!em.length){
+    return h + '<div class="empty"><p>No emergency procedures are defined for '+esc(AC().tail)+'.</p>'
+      + '<button class="addbtn solid" type="button" data-act="gotoSetup" data-tab="emerg">Add them in Setup</button></div>';
+  }
+  h += '<div class="emerg-index">';
+  em.forEach(function(e){
+    h += '<button class="ecard'+(e.mem?" memory":"")+'" type="button" data-proc="'+esc(e.id)+'">'
+       + '<span class="en">'+esc(e.n)+'</span><span class="et">'+esc(e.t)+'</span></button>';
+  });
+  return h + '</div>';
+}
+
+function renderProc(e){
+  var firstUnchecked=null;
+  e.items.forEach(function(it,ii){
+    if(it[0]==="#") return;
+    var k="em:"+e.id+":"+ii;
+    if(!checks[k] && !firstUnchecked) firstUnchecked=k;
+  });
+  var h = '<button class="linkbtn" type="button" data-proc="__index">&larr; All emergencies</button>'
+    + '<section class="proc"><div class="proc-head">'
+    + '<div class="tag">'+esc(e.n)+(e.mem?' &middot; Memory Items':'')+'</div>'
+    + '<h2>'+esc(e.t)+'</h2>'
+    + (e.sub?'<div class="tag" style="opacity:.9;letter-spacing:.04em;text-transform:none;font-size:calc(14px * var(--fs))">'+esc(e.sub)+'</div>':'')
+    + '</div>'
+    + '<div class="'+(e.mem?"memblock":"group")+'" style="border-radius:0 0 var(--r) var(--r);margin-top:0">'
+    + (e.mem?'<div class="memlabel">Do from memory &mdash; then confirm here</div>':'')
+    + '<ol class="items">';
+  e.items.forEach(function(it,ii){
+    h += itemHTML("em:"+e.id+":"+ii, it, ("em:"+e.id+":"+ii)===firstUnchecked, !!e.mem);
+  });
+  h += '</ol><div class="group-foot"><button class="linkbtn" type="button" data-clear="em:'+esc(e.id)+'">Clear</button></div></div></section>';
+  return h;
+}
+
+function renderRef(){
+  var a = AC();
+  var h = '<div class="phase-head"><div class="eyebrow">Reference &middot; '+esc(a.tail)+'</div>'
+    + '<h1 class="phase-title">Reference</h1></div><div class="ref-grid">';
+
+  if(a.vspeeds.length){
+    h += '<div class="card"><h3>V-Speeds</h3><div class="tbl-wrap"><table><tbody>';
+    a.vspeeds.forEach(function(v){
+      h += '<tr><th><span class="mono" style="font-weight:700">'+esc(v[0])+'</span> &nbsp;'+esc(v[1])+'</th><td class="v">'+esc(v[2])+' <em>'+esc(v[3])+'</em></td></tr>';
+    });
+    h += '</tbody></table></div></div>';
+  }
+
+  if(a.numbers.length){
+    h += '<div class="card"><h3>Numbers In The Flow</h3><div class="tbl-wrap"><table><tbody>';
+    a.numbers.forEach(function(v){
+      h += '<tr><th>'+esc(v[0])+'</th><td class="v">'+esc(v[1])+' <em>'+esc(v[2]||"")+'</em></td></tr>';
+    });
+    h += '</tbody></table></div></div>';
+  }
+
+  h += '<div class="card"><h3>Squawk &amp; Frequencies</h3><div class="tbl-wrap"><table><tbody>'
+    + '<tr><th>VFR</th><td class="v">1200</td></tr>'
+    + '<tr><th>Emergency <span class="pill r">Mayday</span></th><td class="v">7700</td></tr>'
+    + '<tr><th>Lost communications</th><td class="v">7600</td></tr>'
+    + '<tr><th>Unlawful interference</th><td class="v">7500</td></tr>'
+    + '<tr><th>Emergency frequency</th><td class="v">121.5</td></tr>'
+    + '<tr><th>ELT / SAR</th><td class="v">121.5</td></tr>'
+    + '</tbody></table></div></div>';
+
+  h += '<div class="card"><h3>Light Gun Signals</h3><div class="tbl-wrap"><table>'
+    + '<thead><tr><th>Signal</th><th>In flight</th><th>On ground</th></tr></thead><tbody>'
+    + '<tr><th><span class="pill g">Steady green</span></th><td>Cleared to land</td><td>Cleared for takeoff</td></tr>'
+    + '<tr><th><span class="pill g">Flashing green</span></th><td>Return for landing</td><td>Cleared to taxi</td></tr>'
+    + '<tr><th><span class="pill r">Steady red</span></th><td>Give way, continue circling</td><td>Stop</td></tr>'
+    + '<tr><th><span class="pill r">Flashing red</span></th><td>Airport unsafe, do not land</td><td>Taxi clear of runway</td></tr>'
+    + '<tr><th><span class="pill y">Flashing white</span></th><td>&mdash;</td><td>Return to starting point</td></tr>'
+    + '<tr><th><span class="pill y">Alt. red / green</span></th><td>Exercise extreme caution</td><td>Exercise extreme caution</td></tr>'
+    + '</tbody></table></div></div>';
+
+  h += '</div>';
+
+  /* ---- Weight & balance lives on its own page now ---- */
+  h += '<h2 class="phase-title" style="font-size:calc(28px * var(--fs));margin-top:30px">Weight &amp; Balance</h2>'
+    + '<div class="notice" style="margin-top:10px"><b>Weight and balance has its own page.</b> '
+    + 'It works out the loading, checks it against '+esc(a.tail)+'&rsquo;s envelope, and plots the result on the CG chart. '
+    + '<button class="linkbtn" type="button" data-act="gotoWB" style="color:var(--accent)">Open Weight &amp; Balance &rarr;</button></div>';
+  if(a.builtin){
+    h += '<div class="notice" style="margin-top:22px"><b>Source.</b> Checklist and V-speeds transcribed from <b>172M Check List.xlsx</b> for N61574; spelling normalized, no procedure changed. Squawk codes, light gun signals and the weight &amp; balance envelope are supplementary reference &mdash; verify against the POH and current AIM.</div>';
+  } else {
+    h += '<div class="notice" style="margin-top:22px"><b>Pilot-entered content.</b> This checklist was created in Setup and has not been checked against any POH. Squawk codes and light gun signals are supplementary reference.</div>';
+  }
+  return h;
+}
+
+/* ==========================================================
+   SETUP \u2014 all paths are addressed relative to DB
+   ========================================================== */
+
+var TABS = [["aircraft","Aircraft"],["list","Checklist"],["emerg","Emergency"],["briefs","Briefs"],["ref","Reference"],["wb","W &amp; B"],["backup","Backup"],["about","About"]];
+
+function activeIndex(){ for(var i=0;i<DB.list.length;i++){ if(DB.list[i].id===DB.active) return i; } return 0; }
+function apath(rest){ return "list."+activeIndex()+"."+rest; }
+
+function getPath(path){
+  var parts=path.split("."), o=DB;
+  for(var i=0;i<parts.length;i++){ if(o==null) return null; o=o[parts[i]]; }
+  return o;
+}
+function setPath(path,val){
+  var parts=path.split("."), o=DB;
+  for(var i=0;i<parts.length-1;i++) o=o[parts[i]];
+  o[parts[parts.length-1]]=val;
+}
+
+function ctl(path,i,len){
+  return '<div class="ctl">'
+   + '<button type="button" data-act="mv" data-path="'+path+'" data-i="'+i+'" data-d="-1"'+(i===0?' disabled':'')+' aria-label="Move up">&uarr;</button>'
+   + '<button type="button" data-act="mv" data-path="'+path+'" data-i="'+i+'" data-d="1"'+(i===len-1?' disabled':'')+' aria-label="Move down">&darr;</button>'
+   + '<button type="button" class="rm" data-act="del" data-path="'+path+'" data-i="'+i+'" aria-label="Delete">&times;</button>'
+   + '</div>';
+}
+function fld(path,val,cls,ph,type){
+  return '<input class="f '+(cls||"")+'" type="'+(type||"text")+'" data-path="'+path+'" '
+    + (type==="number"?'data-type="num" inputmode="decimal" step="any" ':'')
+    + 'value="'+esc(val==null?"":val)+'" placeholder="'+esc(ph||"")+'">';
+}
+
+/* ---------- Aircraft ---------- */
+function setupAircraft(){
+  var h = '<h3>Aircraft</h3><div class="body">';
+  DB.list.forEach(function(a,i){
+    var items=0, grp=0;
+    a.phases.forEach(function(p){ grp+=p.groups.length; p.groups.forEach(function(g){ items+=g.items.length; }); });
+    h += '<div class="ac-card'+(a.id===DB.active?" on":"")+'">'
+      + '<div class="ac-top"><span class="ac-tail">'+esc(a.tail||"\u2014")+'</span>'
+      + (a.id===DB.active?'<span class="badge">In use</span>':'')
+      + (a.builtin?'<span class="badge mut">Built-in</span>':'')
+      + '<span class="ac-meta">'+a.phases.length+' phases &middot; '+grp+' sections &middot; '+items+' items &middot; '+a.emerg.length+' emergencies</span></div>'
+      + '<div class="ed-row trio" style="border:none;padding:0">'
+      + '<div><span class="fieldlbl">Tail number</span>'+fld("list."+i+".tail",a.tail,"","N12345")+'</div>'
+      + '<div><span class="fieldlbl">Model</span>'+fld("list."+i+".model",a.model,"","Cessna 172M")+'</div>'
+      + '<div><span class="fieldlbl">Engine</span>'+fld("list."+i+".engine",a.engine,"","O-320-E2D")+'</div>'
+      + '</div><div class="btnrow">'
+      + (a.id===DB.active?'':'<button class="addbtn solid" type="button" data-act="useAc" data-id="'+esc(a.id)+'">Use this aircraft</button>')
+      + '<button class="addbtn" type="button" data-act="dupAc" data-id="'+esc(a.id)+'">Duplicate</button>'
+      + (DB.list.length>1?'<button class="addbtn warn" type="button" data-act="delAc" data-id="'+esc(a.id)+'">Delete</button>':'')
+      + '</div></div>';
+  });
+  h += '<div class="ed"><div class="btnrow">'
+    + '<button class="addbtn" type="button" data-act="newAc">+ New blank aircraft</button>'
+    + '<button class="addbtn" type="button" data-act="dupAc" data-id="'+esc(DB.active)+'">+ Duplicate current</button>'
+    + '</div><p style="color:var(--ink-3);font-size:calc(13px * var(--fs));margin-top:8px;max-width:64ch">'
+    + 'Duplicating is the quickest way to start a second airplane of the same type &mdash; copy '+esc(AC().tail)+', then change the tail number and correct the differences.</p></div>';
+  return h+'</div>';
+}
+
+/* ---------- Checklist ---------- */
+function itemEditor(base, items, allowHead){
+  var h = '';
+  items.forEach(function(it,ii){
+    var p = base+".items."+ii;
+    if(it[0]==="#"){
+      h += '<div class="ed-row solo"><div><span class="fieldlbl">Condition heading</span>'
+        + fld(p+".1", it[1], "act", "If engine starts") + '</div>'
+        + ctl(base+".items", ii, items.length) + '</div>';
+    } else {
+      h += '<div class="ed-row"><div><span class="fieldlbl">Item</span>'+fld(p+".0", it[0], "", "Fuel Selector")+'</div>'
+        + '<div><span class="fieldlbl">Response</span>'+fld(p+".1", it[1], "act", "Both")+'</div>'
+        + ctl(base+".items", ii, items.length) + '</div>'
+        + '<div class="ed-note">'+fld(p+".2", it[2], "note", "Optional note shown under the item")+'</div>';
+    }
+  });
+  h += '<div class="btnrow"><button class="addbtn" type="button" data-act="addItem" data-path="'+base+'.items">+ Add item</button>';
+  if(allowHead) h += '<button class="addbtn" type="button" data-act="addHead" data-path="'+base+'.items">+ Add heading</button>';
+  return h + '</div>';
+}
+
+function setupList(){
+  var a = AC(), ph = a.phases;
+  var h = '<h3>Checklist</h3><div class="ed">';
+  if(!ph.length){
+    return h + '<p style="color:var(--ink-3)">No phases yet.</p><button class="addbtn solid" type="button" data-act="addPhase">+ Add phase</button></div>';
+  }
+  if(edPhase==null || edPhase>=ph.length) edPhase = 0;
+  h += '<span class="fieldlbl">Editing phase</span><select class="f" data-act="selPhase">';
+  ph.forEach(function(p,i){ h += '<option value="'+i+'"'+(i===edPhase?' selected':'')+'>'+esc(p.n+" \u00B7 "+p.name)+'</option>'; });
+  h += '</select><div class="btnrow"><button class="addbtn" type="button" data-act="addPhase">+ Add phase</button></div>';
+
+  var p = ph[edPhase], bp = apath("phases."+edPhase);
+  h += '<div class="lblrow">Phase</div>'
+    + '<div class="ed-row trio" style="border:none">'
+    + '<div><span class="fieldlbl">Code</span>'+fld(bp+".n",p.n,"","07")+'</div>'
+    + '<div><span class="fieldlbl">Name</span>'+fld(bp+".name",p.name,"","Cruise")+'</div>'
+    + '<div><span class="fieldlbl">Subtitle</span>'+fld(bp+".sub",p.sub,"note","Optional")+'</div>'
+    + ctl(apath("phases"), edPhase, ph.length) + '</div>';
+
+  p.groups.forEach(function(g,gi){
+    var bg = bp+".groups."+gi;
+    h += '<div class="lblrow">Section '+(gi+1)+'</div>'
+      + '<div class="ed-row solo"><div>'+fld(bg+".t",g.t,"act","Section name")+'</div>'
+      + ctl(bp+".groups", gi, p.groups.length) + '</div>'
+      + itemEditor(bg, g.items, false);
+  });
+  h += '<div class="btnrow" style="margin-top:16px"><button class="addbtn" type="button" data-act="addGroup" data-path="'+bp+'.groups">+ Add section</button>'
+    + '<button class="addbtn warn" type="button" data-act="delPhase" data-i="'+edPhase+'">Delete this phase</button></div>';
+  return h+'</div>';
+}
+
+/* ---------- Emergency ---------- */
+function setupEmerg(){
+  var a = AC(), em = a.emerg;
+  var h = '<h3>Emergency Procedures</h3><div class="ed">';
+  if(!em.length){
+    return h + '<p style="color:var(--ink-3)">No emergency procedures yet.</p><button class="addbtn solid" type="button" data-act="addProc">+ Add procedure</button></div>';
+  }
+  if(edProc==null || edProc>=em.length) edProc = 0;
+  h += '<span class="fieldlbl">Editing procedure</span><select class="f" data-act="selProc">';
+  em.forEach(function(e,i){ h += '<option value="'+i+'"'+(i===edProc?' selected':'')+'>'+esc(e.n+" \u00B7 "+e.t)+'</option>'; });
+  h += '</select><div class="btnrow"><button class="addbtn" type="button" data-act="addProc">+ Add procedure</button></div>';
+
+  var e = em[edProc], be = apath("emerg."+edProc);
+  h += '<div class="lblrow">Procedure</div>'
+    + '<div class="ed-row trio" style="border:none">'
+    + '<div><span class="fieldlbl">Code</span>'+fld(be+".n",e.n,"","E7")+'</div>'
+    + '<div><span class="fieldlbl">Title</span>'+fld(be+".t",e.t,"","Engine Fire In Flight")+'</div>'
+    + '<div><span class="fieldlbl">Subtitle</span>'+fld(be+".sub",e.sub,"note","Optional")+'</div>'
+    + ctl(apath("emerg"), edProc, em.length) + '</div>'
+    + '<label class="chk"><input type="checkbox" data-path="'+be+'.mem" data-type="bool"'+(e.mem?" checked":"")+'> '
+    + 'Memory items &mdash; show in red as do-from-memory</label>'
+    + itemEditor(be, e.items, true)
+    + '<div class="btnrow" style="margin-top:16px"><button class="addbtn warn" type="button" data-act="delProc" data-i="'+edProc+'">Delete this procedure</button></div>';
+  return h+'</div>';
+}
+
+/* ---------- Briefings ---------- */
+function setupBriefs(){
+  var a = AC();
+  var h = '<h3>Briefings</h3><div class="ed">'
+    + '<div class="notice" style="margin-bottom:4px">A briefing is long-form text attached to a checklist item. '
+    + 'In flight, that item shows a <b>Brief</b> chip in the gap between the item and its response &mdash; tap it to read the briefing without checking the item off.</div>';
+
+  var any = false;
+  a.phases.forEach(function(p,pi){
+    p.groups.forEach(function(g,gi){
+      g.items.forEach(function(it,ii){
+        if(it[0]==="#" || !hasBrief(it)) return;
+        any = true;
+        var path = apath("phases."+pi+".groups."+gi+".items."+ii+".3");
+        h += '<div class="lblrow">'+esc(p.name)+' \u00b7 '+esc(g.t)+' \u00b7 '+esc(it[0])+'</div>'
+          +  '<textarea class="f brief" data-path="'+path+'" spellcheck="true">'+esc(it[3])+'</textarea>'
+          +  '<div class="btnrow"><button class="addbtn warn" type="button" data-act="delBrief" data-path="'+path+'">Remove this briefing</button></div>';
+      });
+    });
+  });
+  if(!any) h += '<p style="color:var(--ink-3);margin-top:14px">No briefings attached yet.</p>';
+
+  h += '<div class="lblrow">Attach a briefing to an item</div><select class="f" id="briefTarget">';
+  a.phases.forEach(function(p,pi){
+    p.groups.forEach(function(g,gi){
+      g.items.forEach(function(it,ii){
+        if(it[0]==="#") return;
+        var has = hasBrief(it);
+        h += '<option value="'+pi+'.'+gi+'.'+ii+'"'+(has?' disabled':'')+'>'
+          +  esc(p.name+" \u00b7 "+g.t+" \u00b7 "+it[0]) + (has?" (has one)":"") + '</option>';
+      });
+    });
+  });
+  h += '</select><button class="addbtn" type="button" data-act="addBrief">+ Attach briefing</button></div>';
+  return h;
+}
+
+/* ---------- Reference ---------- */
+function setupRef(){
+  var a = AC();
+  var h = '<h3>Reference Tables</h3><div class="ed"><div class="lblrow">V-Speeds</div>';
+  a.vspeeds.forEach(function(v,i){
+    var p = apath("vspeeds."+i);
+    h += '<div class="ed-row trio">'
+      + '<div><span class="fieldlbl">Code</span>'+fld(p+".0",v[0],"","Vy")+'</div>'
+      + '<div><span class="fieldlbl">Label</span>'+fld(p+".1",v[1],"","Best rate of climb")+'</div>'
+      + '<div><span class="fieldlbl">Value</span>'+fld(p+".2",v[2],"num","74")+'</div>'
+      + ctl(apath("vspeeds"), i, a.vspeeds.length) + '</div>'
+      + '<div class="ed-note">'+fld(p+".3",v[3],"note","Unit \u2014 kts")+'</div>';
+  });
+  h += '<button class="addbtn" type="button" data-act="addVs">+ Add V-speed</button>';
+
+  h += '<div class="lblrow">Numbers In The Flow</div>';
+  a.numbers.forEach(function(v,i){
+    var p = apath("numbers."+i);
+    h += '<div class="ed-row trio">'
+      + '<div><span class="fieldlbl">Label</span>'+fld(p+".0",v[0],"","Run-up RPM")+'</div>'
+      + '<div><span class="fieldlbl">Value</span>'+fld(p+".1",v[1],"num","1700")+'</div>'
+      + '<div><span class="fieldlbl">Unit</span>'+fld(p+".2",v[2],"note","rpm")+'</div>'
+      + ctl(apath("numbers"), i, a.numbers.length) + '</div>';
+  });
+  h += '<button class="addbtn" type="button" data-act="addNum">+ Add number</button></div>';
+  return h;
+}
+
+/* ---------- Weight & balance ---------- */
+function setupWB(){
+  var a = AC(), e = a.env, be = apath("env");
+  var h = '<h3>Weight &amp; Balance Limits</h3><div class="ed">'
+    + '<div class="notice hard" style="margin-bottom:6px">These come from <b>'+esc(a.tail)+'&rsquo;s POH and weight &amp; balance sheet</b>. '
+    + 'Wrong numbers here produce a confident, wrong answer &mdash; check every value against the book.</div>'
+    + '<div class="lblrow">Envelope</div>'
+    + '<div class="ed-row trio" style="border:none">'
+    + '<div><span class="fieldlbl">Max gross (lb)</span>'+fld(be+".maxGross",e.maxGross,"num","2300","number")+'</div>'
+    + '<div><span class="fieldlbl">Aft CG limit (in)</span>'+fld(be+".aftLimit",e.aftLimit,"num","47.3","number")+'</div>'
+    + '<div><span class="fieldlbl">Chart floor (lb)</span>'+fld(be+".minW",e.minW,"num","1400","number")+'</div><div></div></div>'
+    + '<div class="ed-row trio" style="border:none">'
+    + '<div><span class="fieldlbl">Fwd limit (in)</span>'+fld(be+".fwdLow",e.fwdLow,"num","35.0","number")+'</div>'
+    + '<div><span class="fieldlbl">at or below (lb)</span>'+fld(be+".fwdLowW",e.fwdLowW,"num","1950","number")+'</div>'
+    + '<div></div><div></div></div>'
+    + '<div class="ed-row trio" style="border:none">'
+    + '<div><span class="fieldlbl">sloping to (in)</span>'+fld(be+".fwdHigh",e.fwdHigh,"num","38.5","number")+'</div>'
+    + '<div><span class="fieldlbl">at (lb)</span>'+fld(be+".fwdHighW",e.fwdHighW,"num","2300","number")+'</div>'
+    + '<div></div><div></div></div>';
+
+  h += '<div class="lblrow">Stations</div>';
+  a.stations.forEach(function(s,i){
+    var p = apath("stations."+i);
+    h += '<div class="ed-row trio">'
+      + '<div><span class="fieldlbl">Station</span>'+fld(p+".label",s.label,"","Rear Seats")+'</div>'
+      + '<div><span class="fieldlbl">Arm (in)</span>'
+      + (s.arm===null
+          ? '<input class="f num" value="pilot enters" disabled>'
+          : fld(p+".arm",s.arm,"num","73","number"))+'</div>'
+      + '<div><span class="fieldlbl">Max (lb, 0 = none)</span>'+fld(p+".max",s.max,"num","0","number")+'</div>'
+      + ctl(apath("stations"), i, a.stations.length) + '</div>'
+      + '<div class="ed-note">'+fld(p+".note",s.note,"note","Optional note")
+      + '<label class="chk"><input type="checkbox" data-path="'+p+'.gal" data-type="bool"'+(s.gal?" checked":"")+'> Entered in gallons (&times; 6 lb)</label></div>';
+  });
+  h += '<button class="addbtn" type="button" data-act="addStation">+ Add station</button></div>';
+  return h;
+}
+
+/* ---------- Backup ---------- */
+function setupBackup(){
+  return '<h3>Backup &amp; Restore</h3><div class="ed">'
+    + '<div class="notice" style="margin-bottom:10px"><b>Everything lives in this browser only.</b> '
+    + 'Clearing Safari website data, or the iPad reclaiming storage, will erase your aircraft. '
+    + 'Copy this text somewhere safe after you make changes &mdash; a note, an email to yourself, anywhere.</div>'
+    + '<span class="fieldlbl">Your data</span>'
+    + '<textarea class="f" id="ioBox" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>'
+    + '<div class="btnrow">'
+    + '<button class="addbtn solid" type="button" data-act="copyData">Copy to clipboard</button>'
+    + '<button class="addbtn" type="button" data-act="fillData">Show current data</button>'
+    + '<button class="addbtn" type="button" data-act="importData">Replace everything with pasted text</button>'
+    + '</div>'
+    + '<div class="lblrow">Reset</div><div class="btnrow">'
+    + '<button class="addbtn" type="button" data-act="resetChecks">Clear all checks</button>'
+    + '<button class="addbtn warn" type="button" data-act="restoreSeed">Add a fresh N61574 from the original card</button>'
+    + '</div>'
+    + '<p style="color:var(--ink-3);font-size:calc(13px * var(--fs));margin-top:10px;max-width:64ch">'
+    + 'The last button adds a brand-new copy of the built-in N61574 checklist as a separate aircraft. '
+    + 'It does not touch anything you have already edited.</p></div>';
+}
+
+function renderSetup(){
+  var ac = AC();
+  var acMeta = esc(ac.model||"") + (ac.engine ? " \u00B7 " + esc(ac.engine) : "");
+  var h = '<div class="phase-head"><div class="eyebrow">Setup &mdash; editing</div>'
+    + '<h1 class="phase-title tail-title">'+esc(ac.tail||"\u2014")+'</h1>'
+    + (acMeta ? '<p class="phase-sub tail-meta">'+acMeta+'</p>' : '')
+    + '<p class="phase-sub">Everything below belongs to this aircraft only. Typed changes save immediately.</p></div>'
+    + '<div class="tabs" role="tablist">';
+  TABS.forEach(function(t){
+    h += '<button class="tab" role="tab" type="button" data-act="setTab" data-tab="'+t[0]+'" aria-selected="'+(setupTab===t[0])+'">'+t[1]+'</button>';
+  });
+  h += '</div><div class="card" style="margin-top:10px">';
+  if(setupTab==="aircraft") h += setupAircraft();
+  else if(setupTab==="list") h += setupList();
+  else if(setupTab==="emerg") h += setupEmerg();
+  else if(setupTab==="about") h += setupAbout();
+  else if(setupTab==="briefs") h += setupBriefs();
+  else if(setupTab==="ref") h += setupRef();
+  else if(setupTab==="wb") h += setupWB();
+  else h += setupBackup();
+  return h + '</div>';
+}
+
+
+/* ==========================================================
+   WEIGHT & BALANCE  (standalone page)
+   ========================================================== */
+function renderWB(){
+  var a = AC(), e = a.env;
+  var h = '<div class="phase-head"><div class="eyebrow">Weight &amp; Balance</div>'
+    + '<h1 class="phase-title">Weight &amp; Balance</h1>'
+    + '<p class="phase-sub tail-meta">'+esc(a.tail)+(a.model?' &middot; '+esc(a.model):'')+'</p></div>';
+
+  if(!e.maxGross){
+    h += '<div class="notice hard"><b>Envelope not configured for '+esc(a.tail)+'.</b> '
+      + 'Station arms and CG limits are specific to each airplane and have not been set, so nothing here can be checked against limits. '
+      + '<button class="linkbtn" type="button" data-act="gotoSetup" data-tab="wb" style="color:var(--danger)">Set limits in Setup &rarr;</button></div>';
+  } else {
+    h += '<div class="notice"><b>A cross-check, not an approved computation.</b> '
+      + 'Enter empty weight and empty arm from <b>'+esc(a.tail)+'&rsquo;s own</b> weight &amp; balance sheet &mdash; they change with every equipment update.</div>';
+  }
+
+  /* ---- loading form ---- */
+  h += '<div class="card" style="margin-top:14px"><h3>Loading</h3><div class="wbx">'
+    + '<div class="wbx-row wbx-head"><span>Station</span><span>Weight</span><span>Arm</span><span>Moment</span></div>';
+
+  a.stations.forEach(function(s){
+    h += '<div class="wbx-row">'
+      + '<label for="wb-'+esc(s.k)+'"><span class="wbx-name">'+esc(s.label)+'</span>'
+      +   (s.note?'<small>'+esc(s.note)+'</small>':'')
+      +   '<small class="wbx-derived" id="wbd-'+esc(s.k)+'"></small></label>'
+      + '<input id="wb-'+esc(s.k)+'" type="number" inputmode="decimal" step="any" min="0" placeholder="0" data-k="'+esc(s.k)+'">'
+      + (s.arm===null
+          ? '<input id="wb-arm-'+esc(s.k)+'" class="wbx-arm-in" type="number" inputmode="decimal" step="any" placeholder="arm" data-arm="'+esc(s.k)+'">'
+          : '<span class="arm">'+s.arm+'&Prime;</span>')
+      + '<span class="wbx-mom" id="wbm-'+esc(s.k)+'">&mdash;</span>'
+      + '</div>';
+  });
+
+  h += '<div class="wbx-row wbx-total"><span>Total</span>'
+    + '<span class="wbx-tv" id="wbtW">&mdash;</span>'
+    + '<span class="wbx-tv" id="wbtC">&mdash;</span>'
+    + '<span class="wbx-tv" id="wbtM">&mdash;</span></div>';
+
+  h += '</div><div class="wb" style="padding-top:0">'
+    + '<div class="wb-out">'
+    + '<div><span>Weight</span><b id="wbW">&mdash;</b></div>'
+    + '<div><span>C.G.</span><b id="wbC">&mdash;</b></div>'
+    + '<div><span>Moment</span><b id="wbM">&mdash;</b></div>'
+    + '</div><div class="verdict" id="wbV">&mdash;</div></div></div>';
+
+  /* ---- CG envelope chart ---- */
+  h += '<div class="card" style="margin-top:14px"><h3>Centre Of Gravity Envelope</h3>'
+    + '<div class="chart-wrap" id="wbChart"></div>';
+  if(e.maxGross){
+    h += '<div class="chart-note">Max gross <b class="mono">'+e.maxGross+' lb</b> &middot; forward limit <b class="mono">'+e.fwdLow+'&Prime;</b> at or below '
+      + e.fwdLowW+' lb, sloping to <b class="mono">'+e.fwdHigh+'&Prime;</b> at '+e.fwdHighW+' lb &middot; aft limit <b class="mono">'+e.aftLimit+'&Prime;</b> throughout.</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+/* Envelope polygon + the loaded point, drawn as inline SVG so it inherits
+   the theme tokens and stays crisp at any size. */
+function drawEnvelope(W, cg, inside, havePoint){
+  var el = document.getElementById("wbChart");
+  if(!el) return;
+  var e = AC().env;
+  if(!e.maxGross){
+    el.innerHTML = '<div class="chart-empty">No envelope configured for this aircraft yet.</div>';
+    return;
+  }
+
+  var maxW  = e.maxGross;
+  var minW  = (e.minW && e.minW < maxW) ? e.minW : Math.max(0, maxW - 900);
+  var lowW  = Math.max(minW, Math.min(e.fwdLowW  || minW, maxW));
+  var highW = Math.max(lowW, Math.min(e.fwdHighW || maxW, maxW));
+  var fwdMin = Math.min(e.fwdLow, e.fwdHigh);
+  var x0 = fwdMin - 1.5, x1 = e.aftLimit + 1.5;
+  if(x1 <= x0) { el.innerHTML = '<div class="chart-empty">Envelope values look inconsistent \u2014 check them in Setup.</div>'; return; }
+
+  var Wd = 700, Hd = 400, m = { l:62, r:20, t:18, b:48 };
+  function X(v){ return m.l + (v - x0) / (x1 - x0) * (Wd - m.l - m.r); }
+  function Y(v){ return Hd - m.b - (v - minW) / (maxW - minW) * (Hd - m.t - m.b); }
+
+  var g = '';
+
+  /* gridlines */
+  var wStep = (maxW - minW) > 800 ? 200 : 100;
+  var wStart = Math.ceil(minW / wStep) * wStep;
+  for(var w = wStart; w <= maxW + 0.1; w += wStep){
+    g += '<line x1="'+m.l+'" y1="'+Y(w).toFixed(1)+'" x2="'+(Wd-m.r)+'" y2="'+Y(w).toFixed(1)+'" class="grid"/>'
+      +  '<text x="'+(m.l-9)+'" y="'+(Y(w)+4).toFixed(1)+'" class="axlbl" text-anchor="end">'+w+'</text>';
+  }
+  var cStart = Math.ceil(x0 / 2) * 2;
+  for(var c = cStart; c <= x1; c += 2){
+    g += '<line x1="'+X(c).toFixed(1)+'" y1="'+m.t+'" x2="'+X(c).toFixed(1)+'" y2="'+(Hd-m.b)+'" class="grid"/>'
+      +  '<text x="'+X(c).toFixed(1)+'" y="'+(Hd-m.b+20)+'" class="axlbl" text-anchor="middle">'+c+'&#8243;</text>';
+  }
+
+  /* envelope */
+  var poly = [[e.fwdLow,minW],[e.fwdLow,lowW],[e.fwdHigh,highW],[e.aftLimit,highW],[e.aftLimit,minW]]
+    .map(function(pt){ return X(pt[0]).toFixed(1)+","+Y(pt[1]).toFixed(1); }).join(" ");
+  g += '<polygon points="'+poly+'" class="env"/>';
+
+  /* loaded point */
+  if(havePoint){
+    var px = X(Math.max(x0, Math.min(x1, cg)));
+    var py = Y(Math.max(minW, Math.min(maxW, W)));
+    var cls = inside ? "pt-ok" : "pt-bad";
+    g += '<line x1="'+m.l+'" y1="'+py.toFixed(1)+'" x2="'+px.toFixed(1)+'" y2="'+py.toFixed(1)+'" class="cross '+cls+'"/>'
+      +  '<line x1="'+px.toFixed(1)+'" y1="'+(Hd-m.b)+'" x2="'+px.toFixed(1)+'" y2="'+py.toFixed(1)+'" class="cross '+cls+'"/>'
+      +  '<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="8" class="pt '+cls+'"/>';
+  }
+
+  /* axis titles */
+  g += '<text x="'+((m.l+Wd-m.r)/2)+'" y="'+(Hd-8)+'" class="axttl" text-anchor="middle">C.G. &#8212; inches aft of datum</text>'
+    +  '<text transform="translate(16,'+((m.t+Hd-m.b)/2)+') rotate(-90)" class="axttl" text-anchor="middle">Weight &#8212; pounds</text>';
+
+  el.innerHTML = '<svg viewBox="0 0 '+Wd+' '+Hd+'" class="cgchart" role="img" aria-label="Centre of gravity envelope chart">'
+    + '<rect x="'+m.l+'" y="'+m.t+'" width="'+(Wd-m.l-m.r)+'" height="'+(Hd-m.t-m.b)+'" class="plot"/>'
+    + g + '</svg>'
+    + (havePoint ? '' : '<div class="chart-empty">Enter a loading above to plot it.</div>');
+}
+
+
+/* ==========================================================
+   OFFLINE + VERSION CHECKING
+   The app caches itself so it opens with no signal. When a
+   connection is available it compares its own APP_VERSION
+   against version.json on the server. Nothing updates without
+   the pilot tapping Update -- a checklist must never change
+   itself out from under someone mid-flight.
+   ========================================================== */
+var isFileURL = (location.protocol === "file:");
+
+function swSupported(){
+  return ("serviceWorker" in navigator) && window.isSecureContext && !isFileURL;
+}
+
+function registerSW(){
+  if(!swSupported()) return;
+  /* updateViaCache:"none" keeps the browser from serving the worker script
+     from its HTTP cache, so an update is never delayed by edge caching. */
+  navigator.serviceWorker.register("sw.js", {updateViaCache:"none"})
+    .catch(function(){ /* offline first run */ });
+  navigator.serviceWorker.addEventListener("controllerchange", function(){
+    if(window.__updating) location.reload();
+  });
+}
+
+function lastCheckText(){
+  var t = LS.get("lastCheck", 0);
+  if(!t) return "never";
+  var d = new Date(t);
+  function two(n){ return (n<10?"0":"")+n; }
+  return d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate())+" "+two(d.getHours())+":"+two(d.getMinutes());
+}
+
+function checkForUpdate(manual){
+  if(isFileURL){
+    if(manual) toast("Running from a local file \u2014 update checks need the hosted version");
+    return;
+  }
+  if(!navigator.onLine){
+    if(manual) toast("No connection \u2014 cannot check right now");
+    return;
+  }
+  fetch("version.json", {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(d){
+      LS.set("lastCheck", Date.now());
+      LS.set("latestVersion", d.version || "");
+      if(d.version && d.version !== APP_VERSION){
+        updateInfo = d;
+        render();
+      } else {
+        updateInfo = null;
+        if(manual) toast("Up to date \u2014 version "+APP_VERSION);
+        if(view==="setup" && setupTab==="about") render();
+      }
+    })
+    .catch(function(){ if(manual) toast("Could not reach the server \u2014 try again when you have signal"); });
+}
+
+function applyUpdate(){
+  window.__updating = true;
+  toast("Downloading update\u2026");
+  if(!swSupported()){ location.reload(); return; }
+  navigator.serviceWorker.getRegistration().then(function(reg){
+    if(!reg){ location.reload(); return; }
+    reg.update().then(function(){
+      if(reg.waiting) reg.waiting.postMessage("skipWaiting");
+      /* If no new worker takes over promptly, just reload. */
+      setTimeout(function(){ location.reload(); }, 3000);
+    }).catch(function(){ location.reload(); });
+  }).catch(function(){ location.reload(); });
+}
+
+function updateBannerHTML(){
+  return '<div class="updbar">'
+    + '<div class="updtxt"><b>Update available</b><span>Version '+esc(updateInfo.version)+' is published. This iPad has '+esc(APP_VERSION)+'.'
+    + (updateInfo.notes ? ' \u2014 '+esc(updateInfo.notes) : '')
+    + '</span></div>'
+    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="doUpdate">Update now</button>'
+    + '<button class="addbtn" type="button" data-act="dismissUpdate">Later</button></div></div>';
+}
+
+/* ---------- About tab ---------- */
+function setupAbout(){
+  var latest = LS.get("latestVersion","");
+  var status, cls;
+  if(isFileURL){ status = "Running from a local file. Offline works, but update checking needs the copy hosted on sgflightschool.com."; cls="hard"; }
+  else if(!navigator.onLine){ status = "No connection right now. The checklist works fully offline; it will check for updates next time you have signal."; cls=""; }
+  else if(latest && latest !== APP_VERSION){ status = "A newer version ("+esc(latest)+") is published."; cls="hard"; }
+  else if(latest){ status = "This is the current published version."; cls=""; }
+  else { status = "Not checked yet."; cls=""; }
+
+  return '<h3>Version &amp; Updates</h3><div class="ed">'
+    + '<div class="ed-row solo" style="border-bottom:1px solid var(--line)"><div><span class="fieldlbl">This copy</span>'
+    +   '<div class="verval">'+esc(APP_VERSION)+'</div></div></div>'
+    + '<div class="ed-row solo" style="border-bottom:1px solid var(--line)"><div><span class="fieldlbl">Latest published</span>'
+    +   '<div class="verval">'+(latest?esc(latest):"\u2014")+'</div></div></div>'
+    + '<div class="ed-row solo"><div><span class="fieldlbl">Last checked</span>'
+    +   '<div class="verval">'+lastCheckText()+'</div></div></div>'
+    + '<div class="notice '+cls+'" style="margin-top:12px">'+status+'</div>'
+    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="checkNow">Check for updates now</button></div>'
+    + '<div class="lblrow">Using this offline</div>'
+    + '<p style="color:var(--ink-3);font-size:calc(13.5px * var(--fs));line-height:1.6;max-width:64ch">'
+    + 'Open the checklist once with a connection, then add it to the home screen '
+    + '(Share \u2192 Add to Home Screen). After that it opens full screen with no signal, '
+    + 'including in the air. Your aircraft, edits and loading figures are stored on the '
+    + 'device and are never lost by an update \u2014 but export them from the Backup tab anyway.'
+    + '</p></div>';
+}
+
+/* ==========================================================
+   NAVIGATION
+   ========================================================== */
+function pad2(n){ return ("0"+n).slice(-2); }
+
+function railHTML(){
+  var a = AC(), h = '<div class="rail-group">Checklist</div>';
+  if(!a.phases.length) h += '<div class="rail-group" style="color:var(--rail-ink-2);text-transform:none;letter-spacing:0">No phases yet</div>';
+  a.phases.forEach(function(p){
+    var t=0,d=0;
+    p.groups.forEach(function(g,gi){ g.items.forEach(function(it,ii){ if(it[0]==="#")return; t++; if(checks[p.id+":"+gi+":"+ii]) d++; }); });
+    h += '<button class="rail-btn'+((t&&d===t)?" done":"")+'" type="button" data-view="'+esc(p.id)+'" aria-current="'+(view===p.id)+'">'
+       + '<span class="num">'+esc(p.n)+'</span><span class="nm">'+esc(p.name)+'</span><span class="dot"></span></button>';
+  });
+  h += '<div class="rail-group">Data</div>'
+     + '<button class="rail-btn" type="button" data-view="wb" aria-current="'+(view==="wb")+'">'
+     + '<span class="num">W</span><span class="nm">Weight &amp; Bal</span><span class="dot"></span></button>'
+     + '<button class="rail-btn" type="button" data-view="ref" aria-current="'+(view==="ref")+'">'
+     + '<span class="num">R</span><span class="nm">Reference</span><span class="dot"></span></button>'
+     + '<button class="rail-btn" type="button" data-view="setup" aria-current="'+(view==="setup")+'">'
+     + '<span class="num">S</span><span class="nm">Setup</span><span class="dot"></span></button>';
+  return h;
+}
+
+function firstView(){ return AC().phases.length ? AC().phases[0].id : "setup"; }
+function isEmergView(v){ return v==="emerg" || v.indexOf("proc:")===0; }
+function clearEmergChecks(){
+  var ch=false;
+  Object.keys(checks).forEach(function(k){ if(k.indexOf("em:")===0){ delete checks[k]; ch=true; } });
+  if(ch) saveChecks();
+}
+function clearChecksFor(id){ LS.del("checks."+id); if(id===DB.active) checks = {}; }
+
+function go(v){
+  if(isEmergView(view) && !isEmergView(v)) clearEmergChecks();
+  view = v; LS.set("view", v);
+  render();
+  window.scrollTo(0,0);
+}
+
+function softRail(){
+  railEl.innerHTML = railHTML();
+  document.getElementById("acTail").textContent = AC().tail || "\u2014";
+  document.getElementById("acModel").innerHTML = esc(AC().model||"") + (AC().engine?' &middot; '+esc(AC().engine):"");
+}
+
+function render(){
+  softRail();
+  var a = AC(), title, html;
+
+  if(view==="setup"){ title='Setup <span class="crumb-ac">'+esc(a.tail||"\u2014")+'</span>'; html=renderSetup(); }
+  else if(view==="wb"){ title='Weight &amp; Balance <span class="crumb-ac">'+esc(a.tail||"\u2014")+'</span>'; html=renderWB(); }
+  else if(view==="ref"){ title="Reference"; html=renderRef(); }
+  else if(view==="emerg"){ title="Emergency"; html=renderEmergIndex(); }
+  else if(view.indexOf("proc:")===0){
+    var e = byId(a.emerg, view.slice(5));
+    if(!e){ go("emerg"); return; }
+    title = "Emergency &middot; " + esc(e.t); html = renderProc(e);
+  } else {
+    var p = byId(a.phases, view);
+    if(!p){ view = firstView(); LS.set("view",view); if(view==="setup"){ render(); return; } p = byId(a.phases, view); }
+    title = esc(p.name); html = renderChecklist(p);
+  }
+  crumb.innerHTML = title;
+  content.innerHTML = (updateInfo ? updateBannerHTML() : "") + html;
+
+  updatePhaseNav();
+  if(view==="wb") initWB();
+  if(view==="setup" && setupTab==="backup") fillIO();
+}
+
+
+/* ==========================================================
+   PHASE NAVIGATION  (mobile)
+   The horizontal rail scroller was too cramped to hit in
+   turbulence. On phones and portrait iPads it is replaced by
+   a prev / name / next bar, a full-screen picker, and
+   left-right swipes across the checklist body.
+   ========================================================== */
+function phaseIndex(){
+  var ph = AC().phases;
+  for(var i=0;i<ph.length;i++){ if(ph[i].id===view) return i; }
+  return -1;
+}
+
+function gotoPhaseDelta(d){
+  var ph = AC().phases, i = phaseIndex();
+  if(!ph.length) return;
+  if(i < 0){ go(ph[0].id); return; }
+  var j = i + d;
+  if(j < 0 || j >= ph.length) return;      /* stop at the ends, never wrap */
+  go(ph[j].id);
+}
+
+function updatePhaseNav(){
+  var t = document.getElementById("pnTitle"), c = document.getElementById("pnCount");
+  if(!t) return;
+  var ph = AC().phases, i = phaseIndex();
+  var nav = document.getElementById("phaseNav");
+  if(i >= 0){
+    t.textContent = strip(ph[i].n) + "  " + strip(ph[i].name);
+    c.textContent = (i+1) + " of " + ph.length;
+  } else {
+    var names = {ref:"Reference", wb:"Weight & Balance", setup:"Setup", emerg:"Emergency"};
+    t.textContent = names[view] || (view.indexOf("proc:")===0 ? "Emergency" : "Checklist");
+    c.textContent = "tap to choose a list";
+  }
+  var prev = nav.querySelector('[data-act="prevPhase"]'), next = nav.querySelector('[data-act="nextPhase"]');
+  prev.disabled = (i <= 0);
+  next.disabled = (i < 0 || i >= ph.length-1);
+}
+
+function openPhasePicker(){
+  var ph = AC().phases, i = phaseIndex();
+  var h = '<h2>Go to list</h2><div class="picklist">';
+  ph.forEach(function(p,n){
+    var t=0,d=0;
+    p.groups.forEach(function(g,gi){ g.items.forEach(function(it,ii){ if(it[0]==="#")return; t++; if(checks[p.id+":"+gi+":"+ii]) d++; }); });
+    h += '<button class="pick'+(n===i?" on":"")+'" type="button" data-goto="'+esc(p.id)+'">'
+      +   '<span class="pick-body"><span class="pick-phase">'+esc(p.n)+'  '+esc(p.name)+'</span></span>'
+      +   '<span class="pick-prog'+((t&&d===t)?" full":"")+'">'+d+'/'+t+'</span></button>';
+  });
+  h += '</div><div class="picklist" style="margin-top:10px">'
+    +  '<button class="pick" type="button" data-goto="wb"><span class="pick-body"><span class="pick-phase">Weight &amp; Balance</span></span></button>'
+    +  '<button class="pick" type="button" data-goto="ref"><span class="pick-body"><span class="pick-phase">Reference</span></span></button>'
+    +  '<button class="pick" type="button" data-goto="setup"><span class="pick-body"><span class="pick-phase">Setup</span></span></button>'
+    +  '</div><div class="btns"><button class="btn primary" id="cancelBtn" type="button">Close</button></div>';
+  openModal(h);
+}
+
+/* ---------- swipe between lists ---------- */
+(function(){
+  var x0=null, y0=null, t0=0, lock=false;
+
+  function ignore(el){
+    while(el && el !== content){
+      if(/^(INPUT|TEXTAREA|SELECT|OPTION)$/.test(el.tagName)) return true;
+      if(el.scrollWidth > el.clientWidth + 4) return true;   /* tables, chart */
+      el = el.parentElement;
+    }
+    return false;
+  }
+
+  content.addEventListener("touchstart", function(e){
+    if(e.touches.length !== 1 || ignore(e.target)){ x0=null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); lock = false;
+  }, {passive:true});
+
+  content.addEventListener("touchmove", function(e){
+    if(x0===null || lock) return;
+    var dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+    /* Once it is clearly a vertical scroll, stop considering it a swipe. */
+    if(Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 12){ x0 = null; }
+  }, {passive:true});
+
+  content.addEventListener("touchend", function(e){
+    if(x0===null) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - x0, dy = t.clientY - y0, dt = Date.now() - t0;
+    x0 = null;
+    if(dt > 700) return;
+    if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 2) return;
+    gotoPhaseDelta(dx < 0 ? 1 : -1);
+  }, {passive:true});
+})();
+
+/* ==========================================================
+   WEIGHT & BALANCE
+   ========================================================== */
+function initWB(){
+  var saved = LS.get("wbvals."+DB.active, {}) || {};
+  AC().stations.forEach(function(s){
+    var el = document.getElementById("wb-"+s.k);
+    if(el && saved[s.k]!=null) el.value = saved[s.k];
+    var ae = document.getElementById("wb-arm-"+s.k);
+    if(ae && saved["arm_"+s.k]!=null) ae.value = saved["arm_"+s.k];
+  });
+  calcWB();
+}
+
+function calcWB(){
+  var a = AC(), W=0, M=0, save={}, warn=[], haveEmpty=false, sawEmptyStation=false;
+
+  a.stations.forEach(function(s){
+    var el = document.getElementById("wb-"+s.k);
+    if(!el) return;
+    var raw = parseFloat(el.value); if(!isFinite(raw)) raw = 0;
+    save[s.k] = el.value;
+
+    var arm = s.arm;
+    if(s.arm===null){
+      sawEmptyStation = true;
+      var ae = document.getElementById("wb-arm-"+s.k);
+      arm = ae ? parseFloat(ae.value) : 0; if(!isFinite(arm)) arm = 0;
+      if(ae) save["arm_"+s.k] = ae.value;
+      if(raw>0 && arm>0) haveEmpty = true;
+    }
+
+    var wt  = s.gal ? raw*6 : raw;
+    var mom = wt*arm;
+    if(s.max && wt > s.max) warn.push(strip(s.label)+" over "+s.max+" lb");
+    W += wt; M += mom;
+
+    /* show the arithmetic so the pilot can check it line by line */
+    var d = document.getElementById("wbd-"+s.k);
+    if(d) d.textContent = s.gal && raw>0 ? (raw+" gal \u00d7 6 = "+Math.round(wt)+" lb") : "";
+    var mEl2 = document.getElementById("wbm-"+s.k);
+    if(mEl2) mEl2.textContent = wt ? Math.round(mom).toLocaleString() : "\u2014";
+  });
+
+  LS.set("wbvals."+DB.active, save);
+
+  var wEl=document.getElementById("wbW"), cEl=document.getElementById("wbC"),
+      mEl=document.getElementById("wbM"), vEl=document.getElementById("wbV");
+  var tW=document.getElementById("wbtW"), tC=document.getElementById("wbtC"), tM=document.getElementById("wbtM");
+  if(!wEl) return;
+
+  function blank(){
+    wEl.textContent="\u2014"; cEl.textContent="\u2014"; mEl.textContent="\u2014";
+    if(tW) tW.textContent="\u2014"; if(tC) tC.textContent="\u2014"; if(tM) tM.textContent="\u2014";
+  }
+
+  if((sawEmptyStation && !haveEmpty) || W<=0){
+    blank();
+    vEl.className="verdict"; vEl.textContent="Enter empty weight and arm to begin.";
+    drawEnvelope(0,0,false,false);
+    return;
+  }
+
+  var cg = M/W;
+  wEl.textContent = Math.round(W)+" lb";
+  cEl.textContent = cg.toFixed(2)+"\u2033";
+  mEl.textContent = Math.round(M).toLocaleString();
+  if(tW) tW.textContent = Math.round(W)+" lb";
+  if(tC) tC.textContent = cg.toFixed(2)+"\u2033";
+  if(tM) tM.textContent = Math.round(M).toLocaleString();
+
+  if(!a.env.maxGross){
+    vEl.className="verdict";
+    vEl.textContent="Envelope not configured for "+strip(a.tail)+" \u2014 set limits in Setup before relying on this.";
+    drawEnvelope(W,cg,false,false);
+    return;
+  }
+
+  var fwd = fwdLimit(a.env, W);
+  if(W > a.env.maxGross) warn.push("Over max gross by "+Math.round(W-a.env.maxGross)+" lb");
+  if(cg < fwd) warn.push("C.G. forward of limit ("+fwd.toFixed(2)+"\u2033)");
+  if(a.env.aftLimit && cg > a.env.aftLimit) warn.push("C.G. aft of limit ("+a.env.aftLimit.toFixed(2)+"\u2033)");
+
+  var inside = !warn.length;
+  if(inside){
+    vEl.className="verdict ok";
+    vEl.textContent="Within limits \u2014 envelope "+fwd.toFixed(2)+"\u2033 to "+a.env.aftLimit.toFixed(2)
+      +"\u2033 at "+Math.round(W)+" lb. "+Math.round(a.env.maxGross-W)+" lb below max gross.";
+  } else {
+    vEl.className="verdict bad";
+    vEl.textContent="Out of limits \u2014 "+warn.join(" \u00b7 ");
+  }
+  drawEnvelope(W, cg, inside, true);
+}
+
+function strip(s){ var d=document.createElement("div"); d.innerHTML=String(s==null?"":s); return d.textContent||""; }
+function fillIO(){ var b=document.getElementById("ioBox"); if(b) b.value = JSON.stringify(DB); }
+
+/* ==========================================================
+   ACTIONS
+   ========================================================== */
+var pendingConfirm = null;
+
+function structural(msg, fn){
+  snapshot(msg);
+  fn();
+  clearChecksFor(DB.active);   /* item indices shift \u2014 stale checks would mislead */
+  saveDB();
+  render();
+}
+
+/* Structural edits shift item indices and invalidate checks; content edits
+   like briefings do not, so they keep the pilot's ticks. */
+function edit(msg, fn){ snapshot(msg); fn(); saveDB(); render(); }
+
+function doAct(el){
+  var act  = el.getAttribute("data-act");
+  var path = el.getAttribute("data-path");
+  var i    = parseInt(el.getAttribute("data-i"),10);
+  var id   = el.getAttribute("data-id");
+  var a    = AC();
+
+  switch(act){
+    case "setTab": setupTab = el.getAttribute("data-tab"); render(); break;
+    case "gotoSetup": setupTab = el.getAttribute("data-tab") || "aircraft"; go("setup"); break;
+    case "gotoWB": go("wb"); break;
+    case "prevPhase": gotoPhaseDelta(-1); break;
+    case "nextPhase": gotoPhaseDelta(1); break;
+    case "openPhasePicker": openPhasePicker(); break;
+    case "checkNow": checkForUpdate(true); break;
+    case "doUpdate": applyUpdate(); break;
+    case "dismissUpdate": updateInfo = null; render(); break;
+    case "gotoSetupPhase":
+      setupTab = "list";
+      a.phases.forEach(function(p,pi){ if(p.id===id) edPhase = pi; });
+      go("setup"); break;
+
+    case "mv": structural("Moved", function(){
+        var arr = getPath(path), d = parseInt(el.getAttribute("data-d"),10), j = i+d;
+        if(j<0 || j>=arr.length) return;
+        var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+      }); break;
+
+    case "del": structural("Deleted", function(){ getPath(path).splice(i,1); }); break;
+
+    case "addItem":  structural("Item added",    function(){ getPath(path).push(["New item","Check",""]); }); break;
+    case "addHead":  structural("Heading added", function(){ getPath(path).push(["#","Condition"]); }); break;
+    case "addGroup": structural("Section added", function(){ getPath(path).push({t:"New section", items:[["New item","Check",""]]}); }); break;
+
+    case "addPhase": structural("Phase added", function(){
+        a.phases.push({ id:uid("p"), n:pad2(a.phases.length+1), name:"New phase", sub:"",
+                        groups:[{ t:"New section", items:[["New item","Check",""]] }] });
+        edPhase = a.phases.length-1;
+      }); break;
+
+    case "delPhase":
+      confirmDo("Delete phase?", "&ldquo;"+esc(a.phases[i].name)+"&rdquo; and everything in it will be removed. You can undo this straight after.",
+        "Delete phase", function(){ structural("Phase deleted", function(){ a.phases.splice(i,1); edPhase=0; }); });
+      break;
+
+    case "addProc": structural("Procedure added", function(){
+        a.emerg.push({ id:uid("e"), n:"E"+(a.emerg.length+1), t:"New procedure", sub:"", mem:false,
+                       items:[["Airspeed","65 kts",""]] });
+        edProc = a.emerg.length-1;
+      }); break;
+
+    case "delProc":
+      confirmDo("Delete procedure?", "&ldquo;"+esc(a.emerg[i].t)+"&rdquo; will be removed.",
+        "Delete procedure", function(){ structural("Procedure deleted", function(){ a.emerg.splice(i,1); edProc=0; }); });
+      break;
+
+    case "addBrief":
+      var bsel = document.getElementById("briefTarget");
+      if(!bsel || !bsel.value) break;
+      var bp = bsel.value.split(".");
+      edit("Briefing attached", function(){
+        var it = a.phases[+bp[0]].groups[+bp[1]].items[+bp[2]];
+        if(it[2]==null) it[2]="";
+        it[3] = "Replace this with your briefing.";
+      });
+      break;
+    case "delBrief":
+      edit("Briefing removed", function(){ setPath(el.getAttribute("data-path"), ""); });
+      break;
+
+    case "addVs":      structural("V-speed added", function(){ a.vspeeds.push(["V","New speed","0","kts"]); }); break;
+    case "addNum":     structural("Number added",  function(){ a.numbers.push(["New value","0",""]); }); break;
+    case "addStation": structural("Station added", function(){ a.stations.push({k:uid("s"), label:"New station", note:"", arm:0, max:0, gal:false}); }); break;
+
+    /* ---- aircraft ---- */
+    case "useAc":
+      DB.active = id; saveDB(); loadChecks();
+      edPhase = 0; edProc = 0;
+      go(firstView());
+      toast("Now flying "+strip(AC().tail));
+      break;
+
+    case "newAc": structural("Aircraft added", function(){
+        var n = blankAircraft(); DB.list.push(n); DB.active = n.id;
+        edPhase = 0; edProc = 0; setupTab = "aircraft"; view = "setup";
+      }); loadChecks(); render(); break;
+
+    case "dupAc": structural("Aircraft duplicated", function(){
+        var src = byId(DB.list, id) || a;
+        var c = clone(src);
+        c.id = uid("ac"); c.builtin = false;
+        c.tail = (src.tail||"AIRCRAFT") + " COPY";
+        DB.list.push(c); DB.active = c.id;
+        edPhase = 0; edProc = 0; setupTab = "aircraft"; view = "setup";
+      }); loadChecks(); render(); break;
+
+    case "delAc":
+      var target = byId(DB.list, id);
+      confirmDo("Delete "+esc(target.tail)+"?",
+        "This removes the aircraft, its checklist, and its saved loading figures. You can undo this straight after.",
+        "Delete aircraft", function(){
+          snapshot("Aircraft deleted");
+          var idx = DB.list.indexOf(target);
+          DB.list.splice(idx,1);
+          LS.del("checks."+target.id); LS.del("wbvals."+target.id);
+          if(DB.active===target.id){ DB.active = DB.list[0].id; loadChecks(); view = firstView(); }
+          saveDB(); render();
+        });
+      break;
+
+    /* ---- backup ---- */
+    case "fillData": fillIO(); toast("Showing current data"); break;
+
+    case "copyData":
+      fillIO();
+      var box = document.getElementById("ioBox");
+      box.focus(); box.select(); box.setSelectionRange(0, box.value.length);
+      var ok = false;
+      try{ ok = document.execCommand("copy"); }catch(e){}
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(box.value).then(
+          function(){ toast("Copied \u2014 paste it somewhere safe"); },
+          function(){ toast(ok ? "Copied" : "Press and hold the text, then Copy"); });
+      } else {
+        toast(ok ? "Copied \u2014 paste it somewhere safe" : "Press and hold the text, then Copy");
+      }
+      break;
+
+    case "importData":
+      var raw = (document.getElementById("ioBox")||{}).value || "";
+      var parsed = null;
+      try{ parsed = JSON.parse(raw); }catch(e){}
+      if(!parsed || !parsed.list || !parsed.list.length){
+        toast("That text isn't a valid backup \u2014 nothing changed"); break;
+      }
+      confirmDo("Replace everything?",
+        "All aircraft currently on this iPad will be replaced by the "+parsed.list.length+" in the pasted text. You can undo this straight after.",
+        "Replace", function(){
+          snapshot("Data replaced");
+          DB = parsed;
+          if(!byId(DB.list, DB.active)) DB.active = DB.list[0].id;
+          saveDB(); loadChecks(); edPhase=0; edProc=0; view=firstView(); render();
+          toast("Imported "+DB.list.length+" aircraft");
+        });
+      break;
+
+    case "resetChecks":
+      clearChecksFor(DB.active); saveChecks(); render(); toast("Checks cleared");
+      break;
+
+    case "restoreSeed": structural("N61574 restored", function(){
+        var s = seedAircraft(); DB.list.push(s); DB.active = s.id;
+        edPhase = 0; edProc = 0; setupTab = "aircraft"; view = "setup";
+      }); loadChecks(); render(); break;
+  }
+}
+
+/* ==========================================================
+   EVENTS
+   ========================================================== */
+content.addEventListener("click", function(ev){
+  var act = ev.target.closest("[data-act]");
+  if(act){ doAct(act); return; }
+
+  var gap = ev.target.closest(".brief-chip, .dots");
+  if(gap){
+    var gli = gap.closest("li.item");
+    var git = gli && itemFromKey(gli.getAttribute("data-key"));
+    if(hasBrief(git)){ openBrief(git[0], git[3]); return; }
+  }
+
+  var row = ev.target.closest(".row");
+  if(row){
+    var li = row.closest("li.item"), k = li.getAttribute("data-key");
+    if(checks[k]) delete checks[k]; else checks[k]=1;
+    saveChecks(); render(); return;
+  }
+  var clr = ev.target.closest("[data-clear]");
+  if(clr){
+    var pre = clr.getAttribute("data-clear")+":";
+    Object.keys(checks).forEach(function(k){ if(k.indexOf(pre)===0) delete checks[k]; });
+    saveChecks(); render(); return;
+  }
+  var pr = ev.target.closest("[data-proc]");
+  if(pr){
+    var pid = pr.getAttribute("data-proc");
+    go(pid==="__index" ? "emerg" : "proc:"+pid);
+  }
+});
+
+function applyField(t){
+  var p = t.getAttribute("data-path");
+  if(!p) return;
+  var ty = t.getAttribute("data-type");
+  var v = ty==="num" ? (parseFloat(t.value)||0) : ty==="bool" ? t.checked : t.value;
+  setPath(p, v);
+  saveDB();
+  softRail();
+  if(view==="setup") refreshSetupLabels();
+}
+
+/* Text fields save without re-rendering so focus survives typing, which
+   leaves the prominent tail labels stale. Update them in place instead. */
+function refreshSetupLabels(){
+  var cards = document.querySelectorAll(".ac-card");
+  DB.list.forEach(function(a,i){
+    var c = cards[i]; if(!c) return;
+    var t = c.querySelector(".ac-tail");
+    if(t) t.textContent = strip(a.tail) || "\u2014";
+  });
+  var ac = AC();
+  var tt = document.querySelector(".tail-title");
+  if(tt) tt.textContent = strip(ac.tail) || "\u2014";
+  var tm = document.querySelector(".tail-meta");
+  if(tm) tm.textContent = strip(ac.model) + (ac.engine ? " \u00B7 " + strip(ac.engine) : "");
+  var ca = document.querySelector(".crumb-ac");
+  if(ca) ca.textContent = strip(ac.tail) || "\u2014";
+}
+
+content.addEventListener("input", function(ev){
+  var t = ev.target;
+  if(t.getAttribute && t.getAttribute("data-path")){ applyField(t); return; }
+  if(t.matches && t.matches("[data-k],[data-arm]")) calcWB();
+});
+
+content.addEventListener("change", function(ev){
+  var t = ev.target, act = t.getAttribute && t.getAttribute("data-act");
+  if(act==="selPhase"){ edPhase = parseInt(t.value,10); render(); return; }
+  if(act==="selProc"){ edProc = parseInt(t.value,10); render(); return; }
+  if(t.type==="checkbox" && t.getAttribute("data-path")) applyField(t);
+});
+
+railEl.addEventListener("click", function(ev){
+  var b = ev.target.closest("[data-view]");
+  if(b) go(b.getAttribute("data-view"));
+});
+
+document.getElementById("emergBtn").addEventListener("click", function(){ go("emerg"); });
+
+/* The phase navigator sits in the rail, outside the content delegate. */
+document.getElementById("phaseNav").addEventListener("click", function(ev){
+  var a = ev.target.closest("[data-act]");
+  if(a && !a.disabled) doAct(a);
+});
+document.getElementById("acBtn").addEventListener("click", openAircraftMenu);
+
+function openAircraftMenu(){
+  var h = '<h2>Aircraft</h2>';
+  h += (DB.list.length>1)
+     ? '<p>Pick the airplane you are flying.</p>'
+     : '<p>Only one aircraft is set up. Add another in Setup.</p>';
+  h += '<div class="picklist">';
+  DB.list.forEach(function(a){
+    var on = (a.id===DB.active);
+    var meta = esc(a.model||"") + (a.engine ? " \u00B7 " + esc(a.engine) : "");
+    h += '<button class="pick'+(on?" on":"")+'" type="button" data-pick="'+esc(a.id)+'">'
+      +   '<span class="pick-body">'
+      +     '<span class="pick-tail">'+esc(a.tail||"\u2014")+'</span>'
+      +     (meta ? '<span class="pick-meta">'+meta+'</span>' : '')
+      +   '</span>'
+      +   (on ? '<span class="badge">In use</span>' : '')
+      + '</button>';
+  });
+  h += '</div><div class="btns">'
+    +  '<button class="btn" id="manageBtn" type="button">Manage in Setup</button>'
+    +  '<button class="btn primary" id="cancelBtn" type="button">Close</button></div>';
+  openModal(h);
+}
+
+function pickAircraft(id){
+  closeModal();
+  if(id===DB.active) return;
+  DB.active = id; saveDB(); loadChecks();
+  edPhase = 0; edProc = 0;
+  go(firstView());
+  toast("Now flying "+strip(AC().tail));
+}
+
+/* ---------- Modal ---------- */
+function openModal(html){ scrim.querySelector(".modal").innerHTML = html; scrim.hidden = false; }
+function closeModal(){ scrim.hidden = true; pendingConfirm = null; }
+function confirmDo(title, body, okLabel, fn){
+  pendingConfirm = fn;
+  openModal('<h2>'+title+'</h2><p>'+body+'</p><div class="btns">'
+    + '<button class="btn" id="cancelBtn" type="button">Cancel</button>'
+    + '<button class="btn danger" id="okBtn" type="button">'+okLabel+'</button></div>');
+}
+scrim.addEventListener("click", function(ev){
+  var jump = ev.target.closest("[data-goto]");
+  if(jump){ closeModal(); go(jump.getAttribute("data-goto")); return; }
+  var pick = ev.target.closest("[data-pick]");
+  if(pick){ pickAircraft(pick.getAttribute("data-pick")); return; }
+  var btn = ev.target.closest("button");
+  var id = btn ? btn.id : "";
+  if(id==="ackBtn"){ LS.set("ack",1); closeModal(); }
+  else if(id==="manageBtn"){ closeModal(); setupTab="aircraft"; go("setup"); }
+  else if(id==="cancelBtn"){ closeModal(); }
+  else if(id==="okBtn"){ var f=pendingConfirm; closeModal(); if(f) f(); }
+  else if(id==="confirmReset"){ checks={}; saveChecks(); closeModal(); render(); }
+});
+
+document.getElementById("resetAll").addEventListener("click", function(){
+  openModal('<h2>Reset all checks?</h2><p>Clears every checked item for '+esc(AC().tail)+'. Your checklists, aircraft and loading figures are kept.</p>'
+    + '<div class="btns"><button class="btn" id="cancelBtn" type="button">Cancel</button>'
+    + '<button class="btn danger" id="confirmReset" type="button">Reset all</button></div>');
+});
+
+/* ---------- Display mode ---------- */
+function applyMode(){
+  var r = document.documentElement;
+  if(mode==="auto"){ r.removeAttribute("data-theme"); r.setAttribute("data-mode","day"); }
+  else if(mode==="day"){ r.setAttribute("data-theme","light"); r.setAttribute("data-mode","day"); }
+  else if(mode==="dusk"){ r.setAttribute("data-theme","dark"); r.setAttribute("data-mode","day"); }
+  else { r.setAttribute("data-theme","dark"); r.setAttribute("data-mode","night"); }
+  Array.prototype.forEach.call(document.querySelectorAll(".seg button"), function(b){
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-mode")===mode));
+  });
+}
+Array.prototype.forEach.call(document.querySelectorAll(".seg button"), function(b){
+  b.addEventListener("click", function(){ mode=b.getAttribute("data-mode"); LS.set("mode",mode); applyMode(); });
+});
+
+/* ---------- Text size ---------- */
+var STEPS = [1, 1.13, 1.28];
+function applyText(){
+  document.documentElement.style.setProperty("--fs", STEPS[textStep]);
+  document.getElementById("textBtn").textContent = ["A+","A++","A"][textStep];
+}
+document.getElementById("textBtn").addEventListener("click", function(){
+  textStep = (textStep+1) % STEPS.length; LS.set("text", textStep); applyText();
+});
+
+/* ---------- Init ---------- */
+if(!view || (view!=="ref" && view!=="wb" && view!=="setup" && view!=="emerg" && view.indexOf("proc:")!==0 && !byId(AC().phases, view))){
+  view = firstView();
+}
+applyMode();
+applyText();
+render();
+registerSW();
+/* Check on launch and whenever the device comes back online. */
+checkForUpdate(false);
+window.addEventListener("online", function(){ checkForUpdate(false); });
+if(!LS.get("ack",0)) openModal(ackHTML);
+
+})();
+</script>
+
+<style>
+/* condition headings inside emergency procedures */
+.cond-item{ background:var(--surface-2); }
+.cond-head{
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(15px * var(--fs));
+  font-weight:700; text-transform:uppercase; letter-spacing:.12em;
+  color:var(--ink-2);
+  padding:9px 14px;
+}
+.memblock .cond-item{ background:color-mix(in srgb, var(--danger) 12%, transparent); }
+.memblock .cond-head{ color:var(--danger); }
+
+/* ---------- Aircraft picker ---------- */
+.picklist{ display:grid; gap:8px; margin:10px 0 2px; }
+.pick{
+  display:flex; align-items:center; gap:12px;
+  width:100%; text-align:left;
+  padding:12px 15px; min-height:66px;
+  background:var(--surface-2);
+  border:1px solid var(--line-2); border-radius:10px;
+}
+.pick.on{ border-color:var(--accent); background:var(--accent-soft); }
+.pick:active{ background:var(--surface-3); }
+.pick-body{ flex:1; min-width:0; }
+.pick-tail{
+  display:block;
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  font-weight:700; font-size:calc(19px * var(--fs)); letter-spacing:.05em;
+}
+.pick-meta{
+  display:block; margin-top:2px;
+  color:var(--ink-3); font-size:calc(13px * var(--fs));
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ---------- Setup: the aircraft you are editing ---------- */
+/* Registration marks read better in the mono face than the condensed
+   display face — same treatment as the rail header. */
+.phase-title.tail-title{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  font-size:calc(44px * var(--fs));
+  font-weight:700;
+  letter-spacing:.03em;
+  text-transform:none;
+  line-height:1.05;
+}
+.phase-sub.tail-meta{
+  margin-top:4px;
+  font-weight:600;
+  color:var(--ink-2);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  font-size:calc(12.5px * var(--fs));
+}
+/* Keeps the tail visible in the sticky bar when scrolled deep into an editor. */
+.crumb-ac{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  font-weight:700;
+  letter-spacing:.04em;
+  color:var(--accent);
+  margin-left:8px;
+}
+@media (max-width:820px){
+  .phase-title.tail-title{ font-size:calc(34px * var(--fs)); }
+}
+
+/* ---------- Weight & balance: loading table ---------- */
+.wbx{ padding:4px 14px 12px; }
+.wbx-row{
+  display:grid; grid-template-columns:1fr 108px 68px 96px;
+  gap:10px; align-items:center;
+  padding:7px 0; border-bottom:1px solid var(--line);
+}
+.wbx-row:last-child{ border-bottom:none; }
+.wbx-head{
+  border-bottom:1px solid var(--line-2);
+  font-size:calc(10.5px * var(--fs)); font-weight:700;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3);
+}
+.wbx-head span:nth-child(n+2){ text-align:right; }
+.wbx-row label{ font-size:calc(15px * var(--fs)); font-weight:500; min-width:0; }
+.wbx-name{ display:block; }
+.wbx-row label small{ display:block; color:var(--ink-3); font-size:calc(12px * var(--fs)); }
+.wbx-derived{ color:var(--accent) !important; font-variant-numeric:tabular-nums; }
+.wbx-row input{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(16px * var(--fs)); font-weight:700;
+  width:100%; padding:9px 8px; text-align:right;
+  background:var(--surface-2); color:var(--ink);
+  border:1px solid var(--line-2); border-radius:7px; min-height:46px;
+}
+.wbx-row .arm, .wbx-mom{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(13px * var(--fs)); color:var(--ink-3);
+  text-align:right; font-variant-numeric:tabular-nums;
+}
+.wbx-mom{ color:var(--ink-2); font-weight:700; }
+input.wbx-arm-in{ font-size:calc(13px * var(--fs)) !important; padding:9px 6px !important; }
+.wbx-total{
+  border-top:2px solid var(--line-2); border-bottom:none;
+  margin-top:4px; padding-top:11px;
+  font-weight:700; font-size:calc(11px * var(--fs));
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3);
+}
+.wbx-tv{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(15px * var(--fs)); font-weight:700; color:var(--ink);
+  text-align:right; letter-spacing:0; text-transform:none;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- CG envelope chart ---------- */
+.chart-wrap{ padding:14px; overflow-x:auto; }
+.cgchart{ width:100%; min-width:420px; height:auto; display:block; }
+.cgchart .plot{ fill:var(--surface-2); stroke:none; }
+.cgchart .grid{ stroke:var(--line); stroke-width:1; }
+.cgchart .env{
+  fill:color-mix(in srgb, var(--accent) 18%, transparent);
+  stroke:var(--accent); stroke-width:2.5; stroke-linejoin:round;
+}
+.cgchart .axlbl{
+  fill:var(--ink-3); font-size:12px; font-weight:600;
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+}
+.cgchart .axttl{
+  fill:var(--ink-3); font-size:12px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  font-family:"Barlow",sans-serif;
+}
+.cgchart .cross{ stroke-width:1.5; stroke-dasharray:4 4; opacity:.85; }
+.cgchart .pt{ stroke:var(--surface); stroke-width:3; }
+.cgchart .pt-ok{ fill:var(--accent); stroke-opacity:1; }
+.cgchart line.pt-ok{ stroke:var(--accent); fill:none; }
+.cgchart .pt-bad{ fill:var(--danger); }
+.cgchart line.pt-bad{ stroke:var(--danger); fill:none; }
+.chart-empty{
+  padding:14px; color:var(--ink-3);
+  font-size:calc(14px * var(--fs)); text-align:center;
+}
+.chart-note{
+  padding:0 14px 14px; color:var(--ink-3);
+  font-size:calc(13px * var(--fs)); line-height:1.5;
+}
+
+@media (max-width:820px){
+  .wbx-row{ grid-template-columns:1fr 92px 56px 78px; gap:7px; }
+  .wbx-row label{ font-size:calc(14px * var(--fs)); }
+}
+
+/* ---------- Briefings ---------- */
+.brief-chip{
+  flex:none; align-self:center; margin:0 6px;
+  background:var(--accent-soft); color:var(--accent);
+  border:1px solid var(--accent); border-radius:99px;
+  padding:3px 11px;
+  font-family:"Barlow",sans-serif;
+  font-size:calc(10.5px * var(--fs)); font-weight:700;
+  letter-spacing:.11em; text-transform:uppercase;
+  white-space:nowrap; line-height:1.35;
+}
+.memblock .brief-chip{ background:var(--danger-soft); color:var(--danger); border-color:var(--danger); }
+li.item.checked .brief-chip{ opacity:.42; }
+.brieftext{
+  white-space:pre-wrap;
+  font-size:calc(15px * var(--fs));
+  line-height:1.62;
+  color:var(--ink);
+  margin-top:6px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+textarea.f.brief{
+  font-family:"Barlow","Avenir Next",-apple-system,sans-serif;
+  font-size:calc(14.5px * var(--fs));
+  line-height:1.55;
+  min-height:300px;
+}
+
+/* ---------- Operator logo ---------- */
+/* Two versions, swapped by mode. The full-colour artwork carries a white
+   keyline meant to sit on white, so it is shown on its own white plate --
+   which is how it is drawn. That plate would be a bright block in a dark
+   cockpit, so night mode swaps to the single-colour artwork used as a mask
+   and filled with the rail's own dim red token. */
+.logo-color{
+  display:block;
+  width:152px; height:auto;
+  margin:0 0 11px;
+  background:#fff;
+  padding:7px 9px;
+  border-radius:7px;
+  box-sizing:border-box;
+}
+.logo-mono{
+  display:none;
+  width:152px; height:53px;
+  margin:0 0 11px;
+  background-color:var(--rail-ink);
+  --logo-mask:url(data:image/png;base64,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);
+  -webkit-mask-image:var(--logo-mask);
+          mask-image:var(--logo-mask);
+  -webkit-mask-repeat:no-repeat;      mask-repeat:no-repeat;
+  -webkit-mask-size:contain;          mask-size:contain;
+  -webkit-mask-position:left center;  mask-position:left center;
+}
+:root[data-mode="night"] .logo-color{ display:none; }
+:root[data-mode="night"] .logo-mono{ display:block; }
+
+@media (max-width:820px){
+  .logo-color{ width:64px; padding:3px 4px; border-radius:5px; margin:0 0 3px; }
+  .logo-mono{ width:60px; height:21px; margin:0 0 3px; }
+}
+
+/* ---------- Update banner + version rows ---------- */
+.updbar{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  background:var(--caution-soft);
+  border:1px solid var(--caution);
+  border-left-width:4px;
+  border-radius:var(--r);
+  padding:12px 15px;
+  margin-bottom:16px;
+}
+.updtxt{ flex:1; min-width:220px; }
+.updtxt b{
+  display:block;
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(19px * var(--fs)); font-weight:700;
+  text-transform:uppercase; letter-spacing:.05em; color:var(--caution);
+}
+.updtxt span{ display:block; color:var(--ink-2); font-size:calc(14px * var(--fs)); margin-top:1px; }
+.updbar .btnrow{ margin:0; }
+.updbar .addbtn{ margin:0; }
+.verval{
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  font-size:calc(17px * var(--fs)); font-weight:700;
+  padding:2px 0 4px;
+}
+
+/* ============================================================
+   iOS LAYOUT — safe areas, bottom Emergency, phase navigator
+   The app runs full-screen from the home screen with a
+   translucent status bar, so the notch / Dynamic Island and the
+   home indicator overlap the page unless we inset for them.
+   ============================================================ */
+.phasenav{ display:none; }
+
+/* Landscape / desktop: inset the chrome for a side notch. */
+.rail{ padding-top:env(safe-area-inset-top); }
+.topbar{ padding-top:max(8px, env(safe-area-inset-top)); }
+
+@media (max-width:820px){
+  /* --- top chrome clears the camera cutout --- */
+  .rail{
+    padding-top:env(safe-area-inset-top);
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+    align-items:stretch;
+  }
+  .topbar{ padding-top:8px; }
+
+  /* The cramped horizontal phase strip is replaced by the navigator. */
+  .rail-scroll{ display:none; }
+  .crumb{ display:none; }          /* the navigator already names the list */
+
+  .phasenav{
+    display:flex; align-items:stretch; flex:1; min-width:0;
+    border-left:1px solid var(--rail-line);
+  }
+  .pn-arrow{
+    flex:none; width:52px;
+    color:var(--rail-ink);
+    font-size:calc(30px * var(--fs)); line-height:1;
+    font-family:"Barlow",sans-serif;
+    display:grid; place-items:center;
+  }
+  .pn-arrow:active{ background:var(--rail-active); }
+  .pn-arrow[disabled]{ opacity:.25; }
+  .pn-name{
+    flex:1; min-width:0;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:6px 4px; text-align:center;
+    border-left:1px solid var(--rail-line);
+    border-right:1px solid var(--rail-line);
+  }
+  .pn-name:active{ background:var(--rail-active); }
+  .pn-title{
+    font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+    font-size:calc(21px * var(--fs)); font-weight:700;
+    text-transform:uppercase; letter-spacing:.03em;
+    color:var(--rail-active-ink);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    line-height:1.1;
+  }
+  .pn-count{
+    font-size:calc(10.5px * var(--fs)); font-weight:700;
+    letter-spacing:.12em; text-transform:uppercase;
+    color:var(--rail-ink-2); margin-top:1px;
+  }
+
+  /* --- Emergency: always at the bottom, always reachable --- */
+  .rail-emerg{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    border:none; border-top:1px solid rgba(0,0,0,.35);
+    background:var(--danger);
+    padding-bottom:env(safe-area-inset-bottom);
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+    display:block;
+  }
+  .emerg-btn{
+    flex-direction:row; align-items:baseline; justify-content:center; gap:10px;
+    padding:16px 12px; font-size:calc(25px * var(--fs)); letter-spacing:.1em;
+  }
+  .emerg-btn small{ display:inline; font-size:calc(11px * var(--fs)); }
+
+  /* keep the last checklist rows clear of the fixed bar */
+  .content{ padding-bottom:calc(104px + env(safe-area-inset-bottom)); }
+  .undo{ bottom:calc(88px + env(safe-area-inset-bottom)); }
+}
+
+/* Phase picker rows */
+.pick-phase{
+  display:block;
+  font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
+  font-size:calc(20px * var(--fs)); font-weight:700;
+  text-transform:uppercase; letter-spacing:.03em;
+}
+.pick-prog{
+  flex:none;
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  font-size:calc(12.5px * var(--fs)); font-weight:700;
+  color:var(--ink-3); font-variant-numeric:tabular-nums;
+}
+.pick-prog.full{ color:var(--accent); }
+</style>

@@ -7,3 +7,21 @@
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# --- N61574 checklist (offline PWA) ---
+# The service worker and version file must never be cached at the edge, or a
+# published update would be invisible to iPads already running the app.
+/checklist/sw.js
+  Cache-Control: no-cache
+
+/checklist/version.json
+  Cache-Control: no-cache
+
+/checklist/index.html
+  Cache-Control: no-cache
+
+/checklist/manifest.webmanifest
+  Cache-Control: no-cache
+
+/checklist/icon-*.png
+  Cache-Control: public, max-age=604800
