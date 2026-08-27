@@ -1339,7 +1339,26 @@ function withFieldProcs(phases){
    ========================================================== */
 /* Bumped on every published build. version.json on the server carries the
    same string; the app compares the two to know whether it is current. */
-var APP_VERSION = "2026.08.26-2";
+var APP_VERSION = "2026.08.26-4";
+
+/* ----------------------------------------------------------
+   Setup password.
+   The credential lives on the server as a PBKDF2 hash; no
+   plaintext and no hash ships in this file. Online, the
+   password is checked by /checklist/auth, which returns a
+   signed 12-hour token.
+   Because the whole point of this app is working with no
+   signal, a successful online unlock also caches a PBKDF2
+   hash locally so the same password still opens Setup when
+   offline. That local path is weaker -- it lives on the
+   device and a determined person could tamper with it -- but
+   it still requires knowing the password, and the server
+   stays authoritative whenever there is a connection.
+   ---------------------------------------------------------- */
+var AUTH_URL = "auth";              /* resolves to /checklist/auth */
+var PBKDF2_ITER = 150000;
+var setupUnlocked = false;
+try{ setupUnlocked = sessionStorage.getItem("n61574.setupUnlocked") === "1"; }catch(e){}
 var updateInfo = null;
 
 var LS = {
@@ -2214,7 +2233,20 @@ function setupAbout(){
     + '<div class="ed-row solo"><div><span class="fieldlbl">Last checked</span>'
     +   '<div class="verval">'+lastCheckText()+'</div></div></div>'
     + '<div class="notice '+cls+'" style="margin-top:12px">'+status+'</div>'
-    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="checkNow">Check for updates now</button></div>'
+    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="checkNow">Check for updates now</button>'
+    + '<button class="addbtn" type="button" data-act="lockSetup">Lock setup</button></div>'
+    + '<div class="lblrow">Setup password</div>'
+    + '<div class="notice" style="margin-bottom:10px">The password is stored on the server as a hash &mdash; '
+    + 'it is not in this file. Changing it here applies to <b>every device</b> the next time each one unlocks. '
+    + 'Needs a connection.</div>'
+    + '<div class="ed-row solo"><div><span class="fieldlbl">Current password</span>'
+    +   '<input class="f" id="pwCur" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false"></div></div>'
+    + '<div class="ed-row solo"><div><span class="fieldlbl">New password</span>'
+    +   '<input class="f" id="pwNew" type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false"></div></div>'
+    + '<div class="ed-row solo"><div><span class="fieldlbl">Repeat new password</span>'
+    +   '<input class="f" id="pwNew2" type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false"></div></div>'
+    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="changePw">Change password</button></div>'
+    + '<div id="pwMsg" style="margin-top:8px"></div>'
     + '<div class="lblrow">Using this offline</div>'
     + '<p style="color:var(--ink-3);font-size:calc(13.5px * var(--fs));line-height:1.6;max-width:64ch">'
     + 'Open the checklist once with a connection, then add it to the home screen '
@@ -2258,6 +2290,7 @@ function clearEmergChecks(){
 function clearChecksFor(id){ LS.del("checks."+id); if(id===DB.active) checks = {}; }
 
 function go(v){
+  if(v === "setup" && !setupUnlocked){ openSetupGate(null, false); return; }
   if(isEmergView(view) && !isEmergView(v)) clearEmergChecks();
   view = v; LS.set("view", v);
   render();
@@ -2334,6 +2367,137 @@ function updatePhaseNav(){
   var prev = nav.querySelector('[data-act="prevPhase"]'), next = nav.querySelector('[data-act="nextPhase"]');
   prev.disabled = (i <= 0);
   next.disabled = (i < 0 || i >= ph.length-1);
+}
+
+/* ---------- crypto helpers (offline verifier) ---------- */
+function b64(buf){ var b=new Uint8Array(buf), o=""; for(var i=0;i<b.length;i++) o+=String.fromCharCode(b[i]); return btoa(o); }
+function unb64(str){ var bin=atob(str), a=new Uint8Array(bin.length); for(var i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i); return a; }
+
+function pbkdf2(password, salt, iter){
+  return crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"])
+    .then(function(k){
+      return crypto.subtle.deriveBits({name:"PBKDF2", salt:salt, iterations:iter, hash:"SHA-256"}, k, 256);
+    }).then(function(bits){ return new Uint8Array(bits); });
+}
+
+/* Cache a local verifier so the same password works with no signal. */
+function cacheLocalVerifier(password){
+  if(!window.crypto || !crypto.subtle) return Promise.resolve();
+  var salt = crypto.getRandomValues(new Uint8Array(16));
+  return pbkdf2(password, salt, PBKDF2_ITER).then(function(hash){
+    LS.set("pwLocal", {salt:b64(salt), hash:b64(hash), iter:PBKDF2_ITER});
+  }).catch(function(){});
+}
+
+function verifyLocally(password){
+  var c = LS.get("pwLocal", null);
+  if(!c || !window.crypto || !crypto.subtle) return Promise.resolve(false);
+  return pbkdf2(password, unb64(c.salt), c.iter || PBKDF2_ITER).then(function(got){
+    var want = unb64(c.hash);
+    if(got.length !== want.length) return false;
+    var diff = 0;
+    for(var i=0;i<got.length;i++) diff |= got[i] ^ want[i];
+    return diff === 0;
+  }).catch(function(){ return false; });
+}
+
+/* ---------- the gate ---------- */
+function openSetupGate(msg, busy){
+  var offline = !navigator.onLine || isFileURL;
+  openModal('<h2>Setup is locked</h2>'
+    + '<p>Enter the password to change checklists, aircraft, briefings or weight &amp; balance limits.</p>'
+    + (msg ? '<div class="notice hard" style="margin-bottom:12px">'+esc(msg)+'</div>' : '')
+    + (offline && !msg ? '<div class="notice" style="margin-bottom:12px">No connection &mdash; checking against this device&rsquo;s saved password.</div>' : '')
+    + '<input class="f" id="gatePw" type="password" autocomplete="current-password" autocapitalize="off" '
+    + 'autocorrect="off" spellcheck="false" placeholder="Password"'+(busy?' disabled':'')+'>'
+    + '<div class="btns"><button class="btn" id="cancelBtn" type="button">Cancel</button>'
+    + '<button class="btn primary" id="gateGo" type="button"'+(busy?' disabled':'')+'>'
+    + (busy?'Checking&hellip;':'Unlock')+'</button></div>');
+  if(!busy) setTimeout(function(){ var i=document.getElementById("gatePw"); if(i) i.focus(); }, 60);
+}
+
+function unlockSetup(){
+  setupUnlocked = true;
+  try{ sessionStorage.setItem("n61574.setupUnlocked","1"); }catch(e){}
+  closeModal();
+  go("setup");
+}
+
+function trySetupPassword(){
+  var i = document.getElementById("gatePw");
+  if(!i) return;
+  var pw = i.value;
+  if(!pw){ openSetupGate("Enter the password."); return; }
+
+  /* No server reachable: fall back to the locally cached verifier. */
+  if(isFileURL || !navigator.onLine){
+    verifyLocally(pw).then(function(ok){
+      if(ok) unlockSetup();
+      else openSetupGate(LS.get("pwLocal",null)
+        ? "That password is not right."
+        : "No connection, and this device has not been unlocked before. Connect once to set it up.");
+    });
+    return;
+  }
+
+  openSetupGate(null, true);
+  fetch(AUTH_URL, {
+    method:"POST",
+    headers:{"content-type":"application/json"},
+    body: JSON.stringify({action:"unlock", password:pw})
+  }).then(function(r){ return r.json().then(function(d){ return {status:r.status, d:d}; }); })
+    .then(function(res){
+      if(res.status === 200 && res.d.token){
+        LS.set("setupToken", {token:res.d.token, exp: Date.now() + (res.d.ttl||43200)*1000});
+        return cacheLocalVerifier(pw).then(unlockSetup);
+      }
+      openSetupGate(res.d.error || "That password is not right.");
+    })
+    .catch(function(){
+      /* Server unreachable mid-request \u2014 try the offline verifier rather than
+         locking the pilot out of their own checklist. */
+      verifyLocally(pw).then(function(ok){
+        if(ok) unlockSetup();
+        else openSetupGate("Could not reach the server. Try again when you have signal.");
+      });
+    });
+}
+
+function lockSetup(){
+  setupUnlocked = false;
+  try{ sessionStorage.removeItem("n61574.setupUnlocked"); }catch(e){}
+  go(firstView());
+  toast("Setup locked");
+}
+
+/* ---------- change the password ---------- */
+function changePassword(){
+  var cur = document.getElementById("pwCur"), a = document.getElementById("pwNew"), b = document.getElementById("pwNew2");
+  var msg = document.getElementById("pwMsg");
+  function say(t, bad){ if(msg){ msg.textContent = t; msg.className = "verdict" + (bad ? " bad" : " ok"); } }
+  if(!cur || !a || !b) return;
+  if(a.value !== b.value){ say("The new passwords do not match.", true); return; }
+  if(a.value.length < 6){ say("Use at least 6 characters.", true); return; }
+  if(isFileURL || !navigator.onLine){ say("Changing the password needs a connection.", true); return; }
+
+  say("Saving\u2026", false);
+  var newPw = a.value;
+  fetch(AUTH_URL, {
+    method:"POST",
+    headers:{"content-type":"application/json"},
+    body: JSON.stringify({action:"change", password:cur.value, newPassword:newPw})
+  }).then(function(r){ return r.json().then(function(d){ return {status:r.status, d:d}; }); })
+    .then(function(res){
+      if(res.status === 200 && res.d.ok){
+        if(res.d.token) LS.set("setupToken", {token:res.d.token, exp: Date.now() + (res.d.ttl||43200)*1000});
+        return cacheLocalVerifier(newPw).then(function(){
+          cur.value = a.value = b.value = "";
+          say("Password changed. It applies on every device.", false);
+        });
+      }
+      say(res.d.error || "Could not change the password.", true);
+    })
+    .catch(function(){ say("Could not reach the server. Try again when you have signal.", true); });
 }
 
 function openPhasePicker(){
@@ -2520,6 +2684,8 @@ function doAct(el){
     case "nextPhase": gotoPhaseDelta(1); break;
     case "openPhasePicker": openPhasePicker(); break;
     case "checkNow": checkForUpdate(true); break;
+    case "lockSetup": lockSetup(); break;
+    case "changePw": changePassword(); break;
     case "doUpdate": applyUpdate(); break;
     case "dismissUpdate": updateInfo = null; render(); break;
     case "gotoSetupPhase":
@@ -2801,9 +2967,17 @@ scrim.addEventListener("click", function(ev){
   var id = btn ? btn.id : "";
   if(id==="ackBtn"){ LS.set("ack",1); closeModal(); }
   else if(id==="manageBtn"){ closeModal(); setupTab="aircraft"; go("setup"); }
+  else if(id==="gateGo"){ trySetupPassword(); }
   else if(id==="cancelBtn"){ closeModal(); }
   else if(id==="okBtn"){ var f=pendingConfirm; closeModal(); if(f) f(); }
   else if(id==="confirmReset"){ checks={}; saveChecks(); closeModal(); render(); }
+});
+
+scrim.addEventListener("keydown", function(ev){
+  if(ev.key === "Enter" && ev.target && ev.target.id === "gatePw"){
+    ev.preventDefault();
+    trySetupPassword();
+  }
 });
 
 document.getElementById("resetAll").addEventListener("click", function(){
@@ -2841,6 +3015,8 @@ document.getElementById("textBtn").addEventListener("click", function(){
 if(!view || (view!=="ref" && view!=="wb" && view!=="setup" && view!=="emerg" && view.indexOf("proc:")!==0 && !byId(AC().phases, view))){
   view = firstView();
 }
+/* Reopening the app must not land straight back inside Setup. */
+if(view === "setup" && !setupUnlocked) view = firstView();
 applyMode();
 applyText();
 render();

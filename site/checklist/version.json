@@ -1,4 +1,4 @@
 {
-  "version": "2026.08.26-2",
-  "notes": "iPhone and iPad layout: Emergency pinned to the bottom, swipe between lists, clears the camera cutout."
+  "version": "2026.08.26-4",
+  "notes": "Setup password is now verified on the server and can be changed in Setup."
 }
