@@ -202,7 +202,7 @@ HOME = {
     </div>
     <div class="grid grid--2">
       <div class="card card--media">
-        <img src="/assets/img/kraken-ramp.jpg" width="1000" height="508" alt="N61574 &quot;Kraken&quot;, a Cessna 172M SkyHawk II, on the ramp at Falcon Field" loading="lazy">
+        <img src="/assets/img/kraken-ramp.jpg" width="1100" height="825" alt="N61574 &quot;Kraken&quot;, a Cessna 172M SkyHawk II, on the ramp at Falcon Field" loading="lazy">
         <div class="card__inner">
           <span class="aircraft__tail">N61574 &middot; "Kraken"</span>
           <h3>Cessna 172M SkyHawk II</h3>
@@ -215,7 +215,7 @@ HOME = {
         </div>
       </div>
       <div class="card card--media">
-        <img src="/assets/img/nessie-sunset.jpg" width="1000" height="534" alt="N1287U &quot;Nessie&quot; on the Falcon Field ramp at sunset, cabin door open" loading="lazy">
+        <img src="/assets/img/nessie-sunset.jpg" width="1100" height="825" alt="N1287U &quot;Nessie&quot; on the Falcon Field ramp at sunset, cabin door open" loading="lazy">
         <div class="card__inner">
           <span class="aircraft__tail">N1287U &middot; "Nessie"</span>
           <h3>Cessna 172M SkyHawk II</h3>
@@ -623,7 +623,7 @@ AIRCRAFT = {
 <section class="section">
   <div class="wrap">
     <div class="aircraft">
-      <img src="/assets/img/kraken-ramp.jpg" width="1000" height="508" alt="Cessna 172M SkyHawk II, N61574, known as Kraken">
+      <img src="/assets/img/kraken-ramp.jpg" width="1100" height="825" alt="Cessna 172M SkyHawk II, N61574, known as Kraken">
       <div>
         <span class="aircraft__tail">N61574 &middot; "Kraken"</span>
         <h2>Cessna 172M SkyHawk II</h2>
@@ -641,7 +641,7 @@ AIRCRAFT = {
       </div>
     </div>
     <div class="aircraft">
-      <img src="/assets/img/nessie-sunset.jpg" width="1000" height="534" alt="Cessna 172M SkyHawk II, N1287U, known as Nessie">
+      <img src="/assets/img/nessie-sunset.jpg" width="1100" height="825" alt="Cessna 172M SkyHawk II, N1287U, known as Nessie">
       <div>
         <span class="aircraft__tail">N1287U &middot; "Nessie"</span>
         <h2>Cessna 172M SkyHawk II</h2>
@@ -1041,8 +1041,8 @@ ABOUT = {
     ) + f"""
 <section class="section">
   <div class="wrap narrow">
-    <figure class="shot">
-      <img src="/assets/img/team-booth.jpg" width="1100" height="825" alt="The SG Flight School team at a community event with branded merchandise and the Silly Goose logo" loading="lazy">
+    <figure class="shot shot--tall">
+      <img src="/assets/img/team-booth.jpg" width="675" height="900" alt="The SG Flight School team at a community event with branded merchandise and the Silly Goose logo" loading="lazy">
       <figcaption>Out in the community. The goose gets everywhere.</figcaption>
     </figure>
     <p class="lead" style="margin-top:34px">At SG Flight School, "SG" stands for <strong>Silly Goose</strong>
@@ -1505,7 +1505,7 @@ CHANDLER = location_page(
 <section class="section section--alt">
   <div class="wrap narrow">
     <figure class="shot">
-      <img src="/assets/img/falcon-sunset.jpg" width="1100" height="825" alt="N1287U on the Falcon Field ramp at sunset, with the runway 4R-22L sign lit behind it" loading="lazy">
+      <img src="/assets/img/falcon-sunset.jpg" width="1600" height="1200" alt="N1287U on the Falcon Field ramp at sunset, with the runway 4R-22L sign lit behind it" loading="lazy">
       <figcaption>Evening at Falcon Field. Winter is the best flying weather Arizona has, and the light at the end of the day is worth showing up for.</figcaption>
     </figure>
   </div>
@@ -1615,7 +1615,7 @@ PHOENIX = location_page(
 <section class="section section--alt">
   <div class="wrap narrow">
     <figure class="shot shot--tall">
-      <img src="/assets/img/first-solo.jpg" width="1100" height="825" alt="A student celebrating on the cowling of N1287U with the Falcon Field control tower behind" loading="lazy">
+      <img src="/assets/img/first-solo.jpg" width="675" height="900" alt="A student celebrating on the cowling of N1287U with the Falcon Field control tower behind" loading="lazy">
       <figcaption>First solo. Whatever brought you to a flight school in the first place, this is the moment it becomes real.</figcaption>
     </figure>
   </div>
@@ -1852,6 +1852,115 @@ COST = {
 """,
 }
 
+
+# ------------------------------------------------------------------ GALLERY
+# Dimensions are read from the files at build time so they can never drift from
+# what's actually on disk — that mismatch causes layout shift.
+GALLERY = [
+    ("falcon-sunset.jpg", "N1287U on the Falcon Field ramp at sunset, runway 4R-22L sign behind",
+     "Evening on the ramp at Falcon Field."),
+    ("first-solo.jpg", "A student celebrating on the cowling of N1287U, control tower behind",
+     "First solo. Nothing else in training feels like it."),
+    ("first-solo-2.jpg", "A student sitting on the cowling of N1287U at dusk, control tower behind",
+     "Same evening, once it had sunk in."),
+    ("kraken-ramp.jpg", "N61574 on the ramp at Falcon Field with a pilot standing beside it",
+     "N61574 &mdash; “Kraken”. Dual Garmin G5s and a GNS 650."),
+    ("nessie-sunset.jpg", "N1287U at sunset with the cabin door open",
+     "N1287U &mdash; “Nessie”. The most affordable way to build hours in our fleet."),
+    ("backcountry.jpg", "N1287U parked at a remote Arizona airstrip at golden hour with a tent beside it",
+     "A licence is a door. Strips you can only reach by air are what's behind it."),
+    ("sedona-trip.jpg", "Two students beside N1287U on the ramp at Sedona, red rock cliffs behind",
+     "Sedona &mdash; a long drive, a short and spectacular flight."),
+    ("sedona.webp", "View from a Cessna wing over the red rocks near Sedona, Arizona",
+     "Sedona from the air."),
+    ("az-aerial.webp", "Aerial view over the Superstition Mountains and Salt River near Mesa",
+     "The Superstitions and the Salt River, a few minutes from the field."),
+    ("ferry-enroute.jpg", "En route in a Cessna with another aircraft in sight over the Phoenix valley",
+     "En route, traffic in sight."),
+    ("coastline.webp", "View from a Cessna over the Long Beach, California coastline",
+     "Long Beach, California. We ferry aircraft coast to coast."),
+    ("night-flight.jpg", "City lights seen from the air at night during a night training flight",
+     "Night flying. Required for your certificate, and worth it on its own."),
+    ("dual-instruction.webp", "An instructor and student in the cockpit of a Cessna 172 on approach",
+     "On approach, dual instruction."),
+    ("student-controls.webp", "A student flying a Cessna 172 over the Arizona desert",
+     "Hands on the yoke. That happens on your first flight, not your tenth."),
+    ("student-smile.webp", "A smiling student in the cockpit before takeoff",
+     "Before takeoff on a discovery flight."),
+    ("team-booth.jpg", "The SG Flight School team at a community event with branded merchandise",
+     "Out in the community. The goose gets everywhere."),
+    ("jensen.jpg", "Jensen Beard, Certified Flight Instructor, flying a Cessna above the clouds",
+     "Jensen Beard, CFI."),
+]
+
+
+def gallery_grid():
+    import os as _os
+    import re as _re
+    import subprocess as _sp
+    base = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "site", "assets", "img")
+    out = []
+    for src, alt, cap in GALLERY:
+        path = _os.path.join(base, src)
+        if not _os.path.exists(path):
+            continue
+        try:
+            info = _sp.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", path],
+                           capture_output=True, text=True).stdout
+            w = int(_re.search(r"pixelWidth: (\d+)", info).group(1))
+            h = int(_re.search(r"pixelHeight: (\d+)", info).group(1))
+        except Exception:
+            w = h = 0
+        portrait = " gal__item--tall" if h > w else ""
+        dims = f' width="{w}" height="{h}"' if w else ""
+        out.append(f"""
+      <figure class="gal__item{portrait}">
+        <button type="button" class="gal__btn" data-full="/assets/img/{src}"
+                data-cap="{cap}" aria-label="View larger: {cap}">
+          <img src="/assets/img/{src}"{dims} alt="{alt}" loading="lazy">
+        </button>
+        <figcaption>{cap}</figcaption>
+      </figure>""")
+    return "".join(out)
+
+
+GALLERY_PAGE = {
+    "slug": "gallery",
+    "title": "Photo Gallery",
+    "description": (
+        "Photographs from SG Flight School at Falcon Field in Mesa, Arizona — our "
+        "Cessna 172s, students on their first solo, and where flying around Arizona "
+        "actually takes you."
+    ),
+    "og_image": "first-solo.jpg",
+    "scripts": ["/assets/js/gallery.js"],
+    "body": pagehead(
+        "Photos",
+        "Our aircraft, our students, and the places an Arizona licence takes you.",
+        image="falcon-sunset.jpg",
+    ) + f"""
+<section class="section">
+  <div class="wrap">
+    <div class="gal">{gallery_grid()}
+    </div>
+    <p class="center" style="margin-top:44px;color:#6b7a88">
+      Every photo here was taken by us or our students at Falcon Field and around
+      Arizona. Want to be in the next one?
+      <a href="{BOOK}">Book a discovery flight.</a></p>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lightbox__close" id="lightbox-close"
+          aria-label="Close">&times;</button>
+  <figure class="lightbox__inner">
+    <img id="lightbox-img" src="" alt="">
+    <figcaption id="lightbox-cap"></figcaption>
+  </figure>
+</div>
+"""
+}
+
 LOCATIONS = [GILBERT, SCOTTSDALE, CHANDLER, TEMPE, PHOENIX]
 
 # ---------------------------------------------------------------------- BOOK
@@ -1949,7 +2058,7 @@ BOOK_PAGE = {
 <section class="section section--alt">
   <div class="wrap narrow">
     <figure class="shot shot--tall">
-      <img src="/assets/img/first-solo.jpg" width="1100" height="825" alt="A student celebrating on the cowling of N1287U with the Falcon Field control tower behind" loading="lazy">
+      <img src="/assets/img/first-solo.jpg" width="675" height="900" alt="A student celebrating on the cowling of N1287U with the Falcon Field control tower behind" loading="lazy">
       <figcaption>The bit everyone remembers. First solo at Falcon Field.</figcaption>
     </figure>
     <h2 style="margin-top:38px">What happens next</h2>
@@ -2081,4 +2190,4 @@ FALCON_FIELD = {
 }
 
 PAGES = [HOME, COURSES, GETTING_STARTED, AIRCRAFT, INSTRUCTORS, MEDICAL, FAQ,
-         FERRY, ABOUT, CONTACT, FALCON_FIELD, BOOK_PAGE, COST] + LOCATIONS
+         FERRY, ABOUT, CONTACT, FALCON_FIELD, BOOK_PAGE, COST, GALLERY_PAGE] + LOCATIONS

@@ -13,6 +13,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 
 from siteconfig import SITE, address_html, phone_html
 
@@ -111,6 +112,35 @@ def check_function_constants():
 ASSET_MAP = {}
 
 
+def check_image_dimensions(markup, page_slug):
+    """Warn if a declared width/height doesn't match the file on disk.
+
+    Wrong values cause layout shift as the real image loads, and they quietly
+    break any aspect-ratio the CSS derives from them.
+    """
+    problems = []
+    for m in re.finditer(r'<img[^>]*src="/assets/img/([^"]+)"[^>]*>', markup, re.S):
+        tag, src = m.group(0), m.group(1)
+        path = os.path.join(OUT, "assets", "img", src)
+        dw = re.search(r'width="(\d+)"', tag)
+        dh = re.search(r'height="(\d+)"', tag)
+        if not (os.path.exists(path) and dw and dh):
+            continue
+        try:
+            out = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", path],
+                                 capture_output=True, text=True).stdout
+            aw = int(re.search(r"pixelWidth: (\d+)", out).group(1))
+            ah = int(re.search(r"pixelHeight: (\d+)", out).group(1))
+        except Exception:
+            continue
+        if (int(dw.group(1)), int(dh.group(1))) != (aw, ah):
+            problems.append(
+                f"    {page_slug}: {src} declared "
+                f"{dw.group(1)}x{dh.group(1)}, file is {aw}x{ah}"
+            )
+    return problems
+
+
 def hash_asset(rel):
     """Write a content-hashed copy of an asset and return its href.
 
@@ -166,6 +196,7 @@ FOOTER_TRAINING = [
 FOOTER_MORE = [
     ("/getting-started", "How to Start"),
     ("/cost-of-private-pilot-license-arizona", "What It Costs"),
+    ("/gallery", "Photo Gallery"),
     ("/faq", "Questions & Answers"),
     ("/falcon-field", "About Falcon Field"),
     ("/faa-medical-exam", "FAA Medical Exam"),
@@ -408,9 +439,11 @@ def main():
 
     os.makedirs(OUT, exist_ok=True)
     check_function_constants()
+    img_problems = []
     print("stylesheet:", hash_css())
-    if os.path.exists(os.path.join(OUT, "assets", "js", "book.js")):
-        print("script:    ", hash_asset("/assets/js/book.js"))
+    for js in ("book.js", "gallery.js"):
+        if os.path.exists(os.path.join(OUT, "assets", "js", js)):
+            print("script:    ", hash_asset("/assets/js/" + js))
     for page in content.PAGES:
         slug = page["slug"]
         if slug == "index":
@@ -419,6 +452,7 @@ def main():
             os.makedirs(os.path.join(OUT, slug), exist_ok=True)
             dest = os.path.join(OUT, slug, "index.html")
         markup, n_ext = external_new_tab(render(page))
+        img_problems.extend(check_image_dimensions(markup, slug))
         with open(dest, "w", encoding="utf-8") as f:
             f.write(markup)
         print("wrote", os.path.relpath(dest, ROOT), f"({n_ext} external links -> new tab)")
@@ -447,6 +481,12 @@ def main():
         + "\n".join(urls)
         + "\n</urlset>\n"
     )
+    if img_problems:
+        print("\n*** image dimensions do not match the files ***")
+        for p_ in img_problems:
+            print(p_)
+        print()
+
     with open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(sitemap)
     print("wrote site/sitemap.xml")
