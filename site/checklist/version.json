@@ -1,4 +1,4 @@
 {
-  "version": "2026.08.26-4",
-  "notes": "Setup password is now verified on the server and can be changed in Setup."
+  "version": "2026.08.26-5",
+  "notes": "Publish a checklist from Setup and every device is offered it."
 }

@@ -87,3 +87,28 @@ Changing the password always requires a connection.
 
 The unlock lasts the browsing session only. Force-quitting re-locks it, and
 Setup -> About has a "Lock setup" button.
+
+## Sharing a checklist with every device
+
+`functions/checklist/fleet.js` at `/checklist/fleet` holds one shared
+checklist in KV under `checklist:fleet`, with an incrementing revision.
+
+- **Publishing** (`POST`) requires a valid unlock token from
+  `/checklist/auth`, so anyone with the Setup password can push. Do it from
+  **Setup -> Backup -> Publish to all devices**, with an optional note
+  saying what changed.
+- **Reading** (`GET`) is open. The checklist is not a secret, and a device
+  with no credential still has to be able to pull the current one.
+  `?head=1` returns just the revision, note and tail numbers for a cheap poll.
+- Every device polls on launch and when it regains signal. A newer revision
+  shows a green banner; it is applied only when someone taps **Review and
+  apply**, and the confirmation says plainly that local edits are replaced.
+  Nothing is ever applied silently.
+
+Applying replaces every aircraft, edit, briefing and W&B limit on that
+device and clears its ticked items. Export from Backup first if a device
+has local changes worth keeping.
+
+Publishing does not require an app update — the checklist and the app
+version are independent. A device can be on an older app build and still
+receive a newer checklist.

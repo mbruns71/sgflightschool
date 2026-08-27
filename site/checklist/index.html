@@ -1339,7 +1339,7 @@ function withFieldProcs(phases){
    ========================================================== */
 /* Bumped on every published build. version.json on the server carries the
    same string; the app compares the two to know whether it is current. */
-var APP_VERSION = "2026.08.26-4";
+var APP_VERSION = "2026.08.26-5";
 
 /* ----------------------------------------------------------
    Setup password.
@@ -1355,7 +1355,9 @@ var APP_VERSION = "2026.08.26-4";
    it still requires knowing the password, and the server
    stays authoritative whenever there is a connection.
    ---------------------------------------------------------- */
-var AUTH_URL = "auth";              /* resolves to /checklist/auth */
+var AUTH_URL  = "auth";             /* resolves to /checklist/auth  */
+var FLEET_URL = "fleet";            /* resolves to /checklist/fleet */
+var fleetInfo = null;               /* set when the server has a newer revision */
 var PBKDF2_ITER = 150000;
 var setupUnlocked = false;
 try{ setupUnlocked = sessionStorage.getItem("n61574.setupUnlocked") === "1"; }catch(e){}
@@ -1978,6 +1980,14 @@ function setupBackup(){
     + '<button class="addbtn" type="button" data-act="fillData">Show current data</button>'
     + '<button class="addbtn" type="button" data-act="importData">Replace everything with pasted text</button>'
     + '</div>'
+    + '<div class="lblrow">Share with every device</div>'
+    + '<div class="notice" style="margin-bottom:10px">Publishing sends <b>this device\'s</b> checklists, briefings and '
+    + 'weight &amp; balance limits to the server. Every other device is offered them the next time it has signal, '
+    + 'and applies them only when someone taps to accept. Anyone with the Setup password can publish.</div>'
+    + '<span class="fieldlbl">What changed (optional, shown on the other devices)</span>'
+    + '<input class="f" id="pubNote" type="text" maxlength="200" placeholder="e.g. corrected run-up RPM">'
+    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="publishFleet">Publish to all devices</button></div>'
+    + '<div id="pubMsg" style="margin-top:8px"></div>'
     + '<div class="lblrow">Reset</div><div class="btnrow">'
     + '<button class="addbtn" type="button" data-act="resetChecks">Clear all checks</button>'
     + '<button class="addbtn warn" type="button" data-act="restoreSeed">Add a fresh N61574 from the original card</button>'
@@ -2256,6 +2266,115 @@ function setupAbout(){
     + '</p></div>';
 }
 
+
+/* ==========================================================
+   FLEET SYNC
+   One shared checklist for every device. Whoever has the
+   Setup password can publish; every other device is offered
+   it the next time it has signal. Never applied silently --
+   same rule as an app update.
+   ========================================================== */
+
+function setupToken(){
+  var t = LS.get("setupToken", null);
+  if(t && t.token && t.exp > Date.now()) return t.token;
+  return null;
+}
+
+/* Cheap poll. Runs alongside the version check, never blocks anything. */
+function checkFleet(manual){
+  if(isFileURL){ if(manual) toast("Running from a local file \u2014 publishing needs the hosted version"); return; }
+  if(!navigator.onLine){ if(manual) toast("No connection \u2014 cannot check right now"); return; }
+
+  fetch(FLEET_URL + "?head=1", {cache:"no-store"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var mine = LS.get("fleetRev", 0);
+      if(d && d.rev && d.rev > mine){
+        fleetInfo = d;
+        render();
+      } else {
+        fleetInfo = null;
+        if(manual) toast("This device already has the current checklist");
+      }
+    })
+    .catch(function(){ if(manual) toast("Could not reach the server"); });
+}
+
+function fleetBannerHTML(){
+  var when = "";
+  try{
+    var d = new Date(fleetInfo.published);
+    function two(n){ return (n<10?"0":"")+n; }
+    when = d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate())+" "+two(d.getHours())+":"+two(d.getMinutes());
+  }catch(e){}
+  var craft = (fleetInfo.aircraft && fleetInfo.aircraft.length) ? fleetInfo.aircraft.join(", ") : "";
+  return '<div class="updbar fleetbar">'
+    + '<div class="updtxt"><b>Updated checklist available</b><span>'
+    +   'Published ' + esc(when) + (craft ? ' \u00b7 ' + esc(craft) : '')
+    +   (fleetInfo.note ? ' \u2014 ' + esc(fleetInfo.note) : '')
+    + '</span></div>'
+    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="applyFleet">Review and apply</button>'
+    + '<button class="addbtn" type="button" data-act="dismissFleet">Later</button></div></div>';
+}
+
+function applyFleet(){
+  confirmDo("Replace this device\u2019s checklists?",
+    "Every aircraft, edit, briefing and weight &amp; balance limit on this iPad will be replaced by the published version. "
+    + "Your ticked items are cleared. This cannot be undone from here \u2014 export from Backup first if you have local changes worth keeping.",
+    "Replace",
+    function(){
+      toast("Downloading\u2026");
+      fetch(FLEET_URL, {cache:"no-store"})
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if(!d || !d.db || !d.db.list || !d.db.list.length) throw 0;
+          DB = d.db;
+          if(!byId(DB.list, DB.active)) DB.active = DB.list[0].id;
+          DB.list.forEach(function(a){ LS.del("checks."+a.id); });
+          LS.set("fleetRev", d.rev);
+          saveDB();
+          checks = {}; loadChecks();
+          fleetInfo = null; edPhase = 0; edProc = 0;
+          view = firstView();
+          render();
+          toast("Checklist updated to revision " + d.rev);
+        })
+        .catch(function(){ toast("Could not download the checklist \u2014 try again with signal"); });
+    });
+}
+
+function publishFleet(){
+  var msg = document.getElementById("pubMsg");
+  function say(t, bad){ if(msg){ msg.textContent = t; msg.className = "verdict" + (bad ? " bad" : " ok"); } }
+  if(isFileURL || !navigator.onLine){ say("Publishing needs a connection.", true); return; }
+  var tok = setupToken();
+  if(!tok){ say("Your unlock has expired. Lock Setup, unlock it again, then publish.", true); return; }
+
+  var noteEl = document.getElementById("pubNote");
+  say("Publishing\u2026", false);
+  fetch(FLEET_URL, {
+    method:"POST",
+    headers:{"content-type":"application/json"},
+    body: JSON.stringify({action:"publish", token:tok, db:DB, note: noteEl ? noteEl.value : ""})
+  }).then(function(r){ return r.json().then(function(d){ return {status:r.status, d:d}; }); })
+    .then(function(res){
+      if(res.status === 200 && res.d.ok){
+        LS.set("fleetRev", res.d.rev);       /* so this device does not offer itself the update */
+        fleetInfo = null;
+        /* Drop any banner left over from a pre-publish check, without a full
+           re-render that would wipe the message we are about to show. */
+        var stale = document.querySelector(".fleetbar");
+        if(stale) stale.remove();
+        if(noteEl) noteEl.value = "";
+        say("Published as revision " + res.d.rev + ". Other devices will be offered it when they have signal.", false);
+      } else {
+        say(res.d.error || "Could not publish.", true);
+      }
+    })
+    .catch(function(){ say("Could not reach the server. Try again when you have signal.", true); });
+}
+
 /* ==========================================================
    NAVIGATION
    ========================================================== */
@@ -2321,7 +2440,8 @@ function render(){
     title = esc(p.name); html = renderChecklist(p);
   }
   crumb.innerHTML = title;
-  content.innerHTML = (updateInfo ? updateBannerHTML() : "") + html;
+  content.innerHTML = (updateInfo ? updateBannerHTML() : "")
+                    + (fleetInfo ? fleetBannerHTML() : "") + html;
 
   updatePhaseNav();
   if(view==="wb") initWB();
@@ -2683,7 +2803,10 @@ function doAct(el){
     case "prevPhase": gotoPhaseDelta(-1); break;
     case "nextPhase": gotoPhaseDelta(1); break;
     case "openPhasePicker": openPhasePicker(); break;
-    case "checkNow": checkForUpdate(true); break;
+    case "checkNow": checkForUpdate(true); checkFleet(true); break;
+    case "applyFleet": applyFleet(); break;
+    case "dismissFleet": fleetInfo = null; render(); break;
+    case "publishFleet": publishFleet(); break;
     case "lockSetup": lockSetup(); break;
     case "changePw": changePassword(); break;
     case "doUpdate": applyUpdate(); break;
@@ -3023,7 +3146,8 @@ render();
 registerSW();
 /* Check on launch and whenever the device comes back online. */
 checkForUpdate(false);
-window.addEventListener("online", function(){ checkForUpdate(false); });
+checkFleet(false);
+window.addEventListener("online", function(){ checkForUpdate(false); checkFleet(false); });
 if(!LS.get("ack",0)) openModal(ackHTML);
 
 })();
@@ -3365,4 +3489,8 @@ textarea.f.brief{
   color:var(--ink-3); font-variant-numeric:tabular-nums;
 }
 .pick-prog.full{ color:var(--accent); }
+
+/* Fleet update banner — distinct from an app update. */
+.updbar.fleetbar{ border-color:var(--accent); background:var(--accent-soft); }
+.updbar.fleetbar .updtxt b{ color:var(--accent); }
 </style>
