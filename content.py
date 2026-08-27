@@ -235,6 +235,38 @@ HOME = {
 </section>
 
 
+
+<section class="section">
+  <div class="wrap">
+    <div class="narrow center" style="margin:0 auto 34px">
+      <span class="eyebrow">From the ramp</span>
+      <h2>What it actually looks like</h2>
+      <p class="lead">Our aircraft, our students, and the places an Arizona
+         certificate takes you &mdash; all real photos, all taken by us.</p>
+    </div>
+    <div class="strip">
+      <a class="strip__item" href="/gallery">
+        <img src="/assets/img/first-solo.jpg" width="675" height="900"
+             alt="A student celebrating on the cowling of N1287U after a first solo"
+             loading="lazy"></a>
+      <a class="strip__item" href="/gallery">
+        <img src="/assets/img/falcon-sunset.jpg" width="1600" height="1200"
+             alt="N1287U on the Falcon Field ramp at sunset" loading="lazy"></a>
+      <a class="strip__item" href="/gallery">
+        <img src="/assets/img/backcountry.jpg" width="1100" height="825"
+             alt="N1287U parked at a remote Arizona airstrip with a tent beside it"
+             loading="lazy"></a>
+      <a class="strip__item" href="/gallery">
+        <img src="/assets/img/sedona-trip.jpg" width="1100" height="825"
+             alt="Two students beside N1287U at Sedona with red rocks behind"
+             loading="lazy"></a>
+      <a class="strip__item strip__item--more" href="/gallery">
+        <span>See all<br>17 photos<br><span aria-hidden="true">&rarr;</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="section section--alt" id="enquire">
   <div class="wrap narrow">
     <div class="center" style="margin-bottom:30px">
@@ -699,6 +731,7 @@ AIRCRAFT = {
        fleets across the country, so the certificate you earn here stays useful
        wherever you travel.</p>
     <p style="color:#6b7a88;font-size:.95rem;margin-top:28px">
+      More photos of both aircraft are in the <a href="/gallery">gallery</a>.<br>
       Rates are current as of 2026 and subject to change.
       <a href="/contact">Contact us</a> to confirm pricing before you schedule.</p>
   </div>
@@ -1043,7 +1076,7 @@ ABOUT = {
   <div class="wrap narrow">
     <figure class="shot shot--tall">
       <img src="/assets/img/team-booth.jpg" width="675" height="900" alt="The SG Flight School team at a community event with branded merchandise and the Silly Goose logo" loading="lazy">
-      <figcaption>Out in the community. The goose gets everywhere.</figcaption>
+      <figcaption>Out in the community. The goose gets everywhere. <a href="/gallery">More photos &rarr;</a></figcaption>
     </figure>
     <p class="lead" style="margin-top:34px">At SG Flight School, "SG" stands for <strong>Silly Goose</strong>
        &mdash; a reflection of our belief that learning to fly should be both
@@ -2059,7 +2092,7 @@ BOOK_PAGE = {
   <div class="wrap narrow">
     <figure class="shot shot--tall">
       <img src="/assets/img/first-solo.jpg" width="675" height="900" alt="A student celebrating on the cowling of N1287U with the Falcon Field control tower behind" loading="lazy">
-      <figcaption>The bit everyone remembers. First solo at Falcon Field.</figcaption>
+      <figcaption>The bit everyone remembers. First solo at Falcon Field. <a href="/gallery">More photos &rarr;</a></figcaption>
     </figure>
     <h2 style="margin-top:38px">What happens next</h2>
     <ol class="steps">
@@ -2179,6 +2212,7 @@ FALCON_FIELD = {
        <a href="https://www.azcaf.org/" rel="noopener">Airbase Arizona</a>
        museum at Falcon Field, including a memorial to the RAF cadets who trained
        here. Worth an hour if you're bringing someone along to your lesson.</p>
+    <p>See more of the field and our aircraft in the <a href="/gallery">photo gallery</a>.</p>
   </div>
 </section>
 

@@ -534,3 +534,28 @@ li{margin-bottom:.4em}
 }
 .lightbox__close:hover{background:rgba(255,255,255,.12)}
 .lightbox__close:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* ---------- Homepage photo strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media (max-width:900px){.strip{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.strip{grid-template-columns:repeat(2,1fr)}}
+.strip__item{
+  display:block;border-radius:var(--radius);overflow:hidden;line-height:0;
+  background:var(--bg-alt);
+}
+.strip__item img{
+  width:100%;height:auto;aspect-ratio:1;object-fit:cover;
+  transition:transform .35s ease;
+}
+.strip__item:hover img{transform:scale(1.06)}
+.strip__item:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.strip__item--more{
+  display:flex;align-items:center;justify-content:center;aspect-ratio:1;
+  background:var(--blue-deep);color:#fff;text-decoration:none;font-weight:700;
+  text-align:center;line-height:1.45;font-size:1rem;transition:background .15s;
+}
+.strip__item--more:hover{background:var(--blue-dark);color:#fff;text-decoration:none}
+@media (max-width:560px){
+  /* five cells across two columns leaves an orphan; hide the fourth photo */
+  .strip__item:nth-child(4){display:none}
+}
