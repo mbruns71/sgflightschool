@@ -65,6 +65,17 @@ def pagehead(title, sub, badge=False, image="az-aerial.webp"):
 </section>"""
 
 
+def turnstile_widget():
+    """Turnstile widget markup, or nothing when no site key is configured."""
+    key = SITE.get("turnstile_site_key", "")
+    if not key:
+        return ""
+    return (
+        f'<div class="cf-turnstile form__row" data-sitekey="{key}"'
+        ' data-theme="light" data-size="flexible"></div>'
+    )
+
+
 def sportys_dealer(body):
     """Authorized Sporty's Dealer callout.
 
@@ -314,6 +325,7 @@ HOME = {
         <label for="h-website">Website</label>
         <input id="h-website" name="website" type="text" tabindex="-1" autocomplete="off">
       </div>
+      {turnstile_widget()}
       <button class="btn btn--primary" type="submit" id="book-submit">Send &mdash; we'll be in touch</button>
       <p class="form__note">No mailing list, and we won't pass your details on.
          Prefer the longer form? <a href="{BOOK}">Full booking page.</a></p>
@@ -2079,6 +2091,7 @@ BOOK_PAGE = {
         <input id="f-website" name="website" type="text" tabindex="-1"
                autocomplete="off">
       </div>
+      {turnstile_widget()}
       <button class="btn btn--primary" type="submit" id="book-submit">
         Send &mdash; we'll be in touch</button>
       <p class="form__note">We'll only use this to contact you about flying. No

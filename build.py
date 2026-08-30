@@ -300,6 +300,12 @@ def render(page):
         f'<script src="{ASSET_MAP.get(src, src)}" defer></script>'
         for src in page.get("scripts", [])
     )
+    # Turnstile's script is only fetched where the widget is actually rendered.
+    if SITE.get("turnstile_site_key") and 'class="cf-turnstile' in page["body"]:
+        page_scripts += (
+            '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"'
+            ' async defer></script>'
+        )
 
     return f"""<!doctype html>
 <html lang="en">

@@ -167,6 +167,30 @@ hardcoded there. `build.py` compares them against siteconfig and **fails the
 build** if they drift, so changing the phone number in one place can't leave the
 emails quoting the old one. When you switch to the 480 number, update both.
 
+### Spam protection
+
+Four layers, in the order a request hits them:
+
+1. **Honeypot** — a hidden `website` field. Anything that fills it gets a silent 200 so it doesn't retry.
+2. **Turnstile** — Cloudflare's free CAPTCHA alternative, invisible to most real visitors. **Not enabled yet** — see below.
+3. **Phone validation** — must be a valid North American number, or explicitly international with a leading `+`. This alone blocked 100% of the August 2026 spam wave, which used bare 11-digit numbers starting with 8.
+4. **Rate limit** — 5 submissions per IP per hour.
+
+#### Turning on Turnstile
+
+1. Cloudflare dashboard → **Turnstile** → **Add widget**. Domain `sgflightschool.com`, mode **Managed**.
+2. Put the **site key** (public) into `turnstile_site_key` in `siteconfig.py`, then rebuild.
+3. Store the **secret key** — never in the repo:
+
+```bash
+npx wrangler pages secret put TURNSTILE_SECRET --project-name=sgflightschool
+```
+
+The widget only renders when the site key is set, and the Function only verifies
+when the secret is set, so the form keeps working at every stage. Turnstile fails
+*closed* once configured (a missing token is rejected) but fails *open* if
+Cloudflare's verify endpoint is unreachable, so an outage can't take the form down.
+
 ### How the form fails safely
 
 1. Submission is **stored in KV first**, before any email is attempted

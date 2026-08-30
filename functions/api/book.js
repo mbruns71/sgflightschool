@@ -42,11 +42,33 @@ function clean(v, max) {
   return v.replace(/[\x00-\x1F\x7F]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 }
 
+/**
+ * Phone validation.
+ *
+ * Accepts a North American number, or an explicitly international one written
+ * with a leading +. The spam we were getting used bare 11-digit strings
+ * beginning with 8, which are valid as neither — that alone blocked every one
+ * of them. A genuine overseas enquiry can still get through by writing +.
+ */
+function validPhone(raw) {
+  const s = (raw || "").trim();
+  const digits = s.replace(/\D/g, "");
+  if (s.startsWith("+")) return digits.length >= 8 && digits.length <= 15;
+  let d = digits;
+  if (d.length === 11 && d[0] === "1") d = d.slice(1);
+  if (d.length !== 10) return false;
+  // NANP: neither the area code nor the exchange may begin with 0 or 1
+  return !"01".includes(d[0]) && !"01".includes(d[3]);
+}
+
 function validate(data) {
   const errors = {};
   if (!data.name || data.name.length < 2) errors.name = "Please tell us your name.";
-  const digits = (data.phone || "").replace(/\D/g, "");
-  if (digits.length < 10) errors.phone = "Please enter a phone number we can reach you on.";
+  if (!validPhone(data.phone)) {
+    errors.phone =
+      "Please enter a phone number we can reach you on \u2014 e.g. (480) 555-0123. " +
+      "Outside the US, include your country code with a +.";
+  }
   if (data.email && !/^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(data.email)) {
     errors.email = "That email address doesn't look right.";
   }
@@ -149,6 +171,40 @@ function asText(r) {
   ].join("\n");
 }
 
+/**
+ * Cloudflare Turnstile. Free, and invisible to most real visitors — it only
+ * shows a challenge when the request looks suspicious.
+ *
+ * Fails CLOSED when configured (a missing or bad token is rejected) but stays
+ * entirely inactive until TURNSTILE_SECRET is set, so the form keeps working
+ * before the keys exist.
+ */
+async function turnstileOk(env, token, ip) {
+  if (!env.TURNSTILE_SECRET) return { skipped: true, ok: true };
+  if (!token) return { skipped: false, ok: false, reason: "no token" };
+  try {
+    const body = new FormData();
+    body.append("secret", env.TURNSTILE_SECRET);
+    body.append("response", token);
+    if (ip) body.append("remoteip", ip);
+    const res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      { method: "POST", body }
+    );
+    const data = await res.json();
+    return {
+      skipped: false,
+      ok: !!data.success,
+      reason: (data["error-codes"] || []).join(",") || "",
+    };
+  } catch (e) {
+    // A Turnstile outage must not take the booking form down with it.
+    console.error("turnstile check failed open:", e.message);
+    return { skipped: false, ok: true, reason: "verify unreachable" };
+  }
+}
+
+
 async function notify(env, record) {
   const subject = `Discovery flight enquiry — ${record.name}`;
   const text = asText(record);
@@ -236,10 +292,13 @@ export async function onRequestPost({ request, env }) {
       const raw = await request.json();
       for (const f of FIELDS) data[f] = clean(raw[f], LIMITS[f]);
       data.website = clean(raw.website, 100);
+      data.turnstile = typeof raw["cf-turnstile-response"] === "string"
+        ? raw["cf-turnstile-response"] : "";
     } else {
       const form = await request.formData();
       for (const f of FIELDS) data[f] = clean(form.get(f), LIMITS[f]);
       data.website = clean(form.get("website"), 100);
+      data.turnstile = clean(form.get("cf-turnstile-response"), 4000);
     }
   } catch {
     return json(400, { ok: false, error: "Could not read that submission." });
@@ -247,6 +306,18 @@ export async function onRequestPost({ request, env }) {
 
   // Honeypot filled → almost certainly a bot. Accept silently so it doesn't retry.
   if (data.website) return json(200, { ok: true });
+
+  const ipEarly = request.headers.get("cf-connecting-ip") || "";
+  const ts = await turnstileOk(env, data.turnstile, ipEarly);
+  if (!ts.ok) {
+    console.warn("turnstile rejected:", ts.reason, ipEarly);
+    return json(403, {
+      ok: false,
+      error:
+        "We couldn't verify that submission. Please reload the page and try " +
+        `again, or just call ${PHONE}.`,
+    });
+  }
 
   const errors = validate(data);
   if (Object.keys(errors).length) return json(422, { ok: false, errors });
@@ -266,6 +337,7 @@ export async function onRequestPost({ request, env }) {
     received_at: new Date().toISOString(),
     ...FIELDS.reduce((o, f) => ((o[f] = data[f]), o), {}),
     ip_country: request.headers.get("cf-ipcountry") || "",
+    turnstile: ts.skipped ? "not configured" : "passed",
     user_agent: (request.headers.get("user-agent") || "").slice(0, 200),
   };
 

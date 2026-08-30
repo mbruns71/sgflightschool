@@ -17,6 +17,9 @@ SITE = {
     "zip": "85215",
     "airport": "Falcon Field Airport (KFFZ)",
     "airport_url": "https://www.falconfieldairport.com/",
+    # Cloudflare Turnstile public site key. Blank = widget not rendered and the
+    # Function skips verification, so the form keeps working until it is set.
+    "turnstile_site_key": "",
     "instagram_url": "https://www.instagram.com/sgflightschool/",
     "instagram_handle": "@sgflightschool",
     "facebook_url": "https://www.facebook.com/profile.php?id=61572830633972",
