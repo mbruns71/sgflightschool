@@ -72,7 +72,7 @@ def turnstile_widget():
         return ""
     return (
         f'<div class="cf-turnstile form__row" data-sitekey="{key}"'
-        ' data-theme="light" data-size="flexible"></div>'
+        ' data-theme="light"></div>'
     )
 
 

@@ -181,7 +181,17 @@ function asText(r) {
  */
 async function turnstileOk(env, token, ip) {
   if (!env.TURNSTILE_SECRET) return { skipped: true, ok: true };
-  if (!token) return { skipped: false, ok: false, reason: "no token" };
+  if (!token) {
+    // A token that is PRESENT but bad is always rejected. A token that is
+    // ABSENT is only fatal once TURNSTILE_STRICT is set.
+    //
+    // Until the widget is confirmed rendering in real browsers, treating
+    // "absent" as fatal risks silently killing the booking form — a far worse
+    // outcome than the spam, which the phone validation already stops. Set
+    // TURNSTILE_STRICT=1 once you have seen the widget work.
+    const strict = env.TURNSTILE_STRICT === "1";
+    return { skipped: !strict, ok: !strict, reason: "no token" };
+  }
   try {
     const body = new FormData();
     body.append("secret", env.TURNSTILE_SECRET);

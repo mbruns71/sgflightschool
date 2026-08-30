@@ -47,6 +47,10 @@
         if (el) payload[f] = el.value;
       }
     );
+    // Turnstile injects this hidden input into the form once it solves. It must
+    // be forwarded or the Function rejects the submission.
+    var ts = form.querySelector('[name="cf-turnstile-response"]');
+    if (ts) payload["cf-turnstile-response"] = ts.value;
 
     fetch(form.action, {
       method: "POST",
