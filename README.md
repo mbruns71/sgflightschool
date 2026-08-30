@@ -176,20 +176,38 @@ Four layers, in the order a request hits them:
 3. **Phone validation** — must be a valid North American number, or explicitly international with a leading `+`. This alone blocked 100% of the August 2026 spam wave, which used bare 11-digit numbers starting with 8.
 4. **Rate limit** — 5 submissions per IP per hour.
 
-#### Turning on Turnstile
+#### Turnstile — configured and enforcing
 
-1. Cloudflare dashboard → **Turnstile** → **Add widget**. Domain `sgflightschool.com`, mode **Managed**.
-2. Put the **site key** (public) into `turnstile_site_key` in `siteconfig.py`, then rebuild.
-3. Store the **secret key** — never in the repo:
+Widget `0x4AAAAAAEiOLHF1QlFM81yz`, managed mode, domains `sgflightschool.com`,
+`www.sgflightschool.com`, `localhost`, `127.0.0.1`.
+
+Three secrets live on the Pages project, none of them in this repo:
+
+| Secret | Purpose |
+|---|---|
+| `RESEND_API_KEY` | notification and confirmation email |
+| `TURNSTILE_SECRET` | server-side token verification |
+| `TURNSTILE_STRICT` | `1` — a missing token is rejected, not just an invalid one |
+
+**If the form ever starts rejecting real people**, the first thing to try is
+removing strict mode. That restores the pre-Turnstile behaviour (missing token
+allowed, invalid token still rejected) while leaving the other three layers
+intact:
 
 ```bash
-npx wrangler pages secret put TURNSTILE_SECRET --project-name=sgflightschool
+npx wrangler pages secret delete TURNSTILE_STRICT --project-name=sgflightschool
 ```
 
-The widget only renders when the site key is set, and the Function only verifies
-when the secret is set, so the form keeps working at every stage. Turnstile fails
-*closed* once configured (a missing token is rejected) but fails *open* if
-Cloudflare's verify endpoint is unreachable, so an outage can't take the form down.
+Two things that bit during setup and are worth remembering:
+
+- **`www` must be in the widget's domain list.** The site serves on `www`, and a
+  widget scoped only to the apex fails for every real visitor.
+- **The client must forward `cf-turnstile-response`.** `book.js` builds its JSON
+  payload from an explicit field list, so a new field is not picked up
+  automatically.
+
+Turnstile will not solve in an automated browser, so this cannot be verified
+end-to-end from a script — it needs a real browser.
 
 ### How the form fails safely
 
