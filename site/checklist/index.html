@@ -846,6 +846,54 @@ var PAX_BRIEF = [
 "\u2022 Any questions before we start?"
 ].join("\n");
 
+
+/* Departure briefing, attached to the "Departure" item in the run-up.
+   Speeds are the card's own. The turn-back altitude is deliberately a
+   blank -- it belongs to the operation and the instructor, not to me. */
+var DEPARTURE_BRIEF = [
+"RUNWAY AND CONDITIONS",
+"\u2022 Runway ________ . Length ________ . Surface ________ .",
+"\u2022 Wind ________ . Crosswind component ________ (15 kt max demonstrated).",
+"\u2022 Density altitude ________ . Distance required ________ , available ________ .",
+"\u2022 Flaps ________ \u2014 0\u00b0 normal, 10\u00b0 short or soft field.",
+"",
+"DEPARTURE",
+"\u2022 Expected: ________ (straight out / crosswind / published procedure).",
+"\u2022 Initial heading ________ . Initial altitude ________ .",
+"\u2022 Frequencies: departure ________ , next ________ .",
+"\u2022 Obstacles and terrain: ________ .",
+"",
+"ABORT \u2014 BEFORE ROTATION",
+"\u2022 I will abort for: any power loss or roughness, static RPM below expectation,",
+"  an engine instrument out of the green, a door or window open, a warning light,",
+"  an airspeed indication I cannot resolve, or anything that does not feel right.",
+"\u2022 Abort actions: throttle idle, brakes as required, stop straight ahead on the centreline.",
+"\u2022 Airborne by ________ (abeam ________ ) or abort.",
+"",
+"ENGINE FAILURE \u2014 AFTER ROTATION, BELOW ________ FT AGL",
+"\u2022 LAND STRAIGHT AHEAD. Do not attempt to turn back.",
+"\u2022 Pitch for 65 kts. Turns limited to roughly 30\u00b0 either side of the nose,",
+"  and only to reach a better surface.",
+"\u2022 Mixture idle cutoff \u00b7 fuel selector off \u00b7 magnetos off \u00b7 flaps as required \u00b7 master off.",
+"",
+"ENGINE FAILURE \u2014 ABOVE ________ FT AGL",
+"\u2022 65 kts best glide. Return to ________ , or land at ________ .",
+"\u2022 Restart if altitude allows: carb heat on, fuel selector both, mixture rich,",
+"  magnetos both or start, primer in and locked.",
+"\u2022 Declare on ________ or 121.5. Squawk 7700. ELT as required.",
+"",
+"OTHER FAILURES ON DEPARTURE",
+"\u2022 Fire: mixture idle cutoff, fuel off, master off, cabin heat and air off,",
+"  100 KIAS or more, then forced landing.",
+"\u2022 Door open in flight: fly the aeroplane first. Return and land. Do not reach for it.",
+"\u2022 Rough running: carb heat on, mixture, magnetos \u2014 then land as soon as practical.",
+"",
+"CREW AND CABIN",
+"\u2022 Passengers briefed. Belts and harnesses secure. Doors and windows latched.",
+"\u2022 Sterile cockpit until ________ ft AGL.",
+"\u2022 Any questions before we go?"
+].join("\n");
+
 var SEED_CL = [
 {id:"preflight", n:"01", name:"Preflight", sub:"Walkaround flow: cabin first, then left wing, empennage, right wing, nose.", groups:[
   {t:"Cabin", items:[
@@ -964,7 +1012,7 @@ var SEED_CL = [
     ["Idle","Check"],
     ["Throttle","1000 RPM"],
     ["Radios","Set"],
-    ["Departure","Brief"],
+    ["Departure","Brief","",DEPARTURE_BRIEF],
     ["Abort Plan","Ready"]
   ]}
 ]},
@@ -1339,7 +1387,7 @@ function withFieldProcs(phases){
    ========================================================== */
 /* Bumped on every published build. version.json on the server carries the
    same string; the app compares the two to know whether it is current. */
-var APP_VERSION = "2026.08.26-5";
+var APP_VERSION = "2026.08.26-6";
 
 /* ----------------------------------------------------------
    Setup password.
@@ -1473,6 +1521,18 @@ if(!DB.mig.paxBrief2){
     }); }); });
   });
   DB.mig.paxBrief2 = 1;
+}
+/* Departure briefing for profiles already in storage. */
+if(!DB.mig.depBrief){
+  DB.list.forEach(function(a){
+    a.phases.forEach(function(p){ p.groups.forEach(function(g){ g.items.forEach(function(it){
+      if(it[0]==="Departure" && !(it[3] && String(it[3]).trim())){
+        if(it[2]==null) it[2]="";
+        it[3] = DEPARTURE_BRIEF;
+      }
+    }); }); });
+  });
+  DB.mig.depBrief = 1;
 }
 /* Envelope floor for the CG chart, derived so it suits any aircraft. */
 DB.list.forEach(function(a){
