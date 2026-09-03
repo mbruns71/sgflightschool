@@ -1387,7 +1387,7 @@ function withFieldProcs(phases){
    ========================================================== */
 /* Bumped on every published build. version.json on the server carries the
    same string; the app compares the two to know whether it is current. */
-var APP_VERSION = "2026.08.26-6";
+var APP_VERSION = "2026.08.26-7";
 
 /* ----------------------------------------------------------
    Setup password.
@@ -2046,8 +2046,11 @@ function setupBackup(){
     + 'and applies them only when someone taps to accept. Anyone with the Setup password can publish.</div>'
     + '<span class="fieldlbl">What changed (optional, shown on the other devices)</span>'
     + '<input class="f" id="pubNote" type="text" maxlength="200" placeholder="e.g. corrected run-up RPM">'
-    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="publishFleet">Publish to all devices</button></div>'
+    + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="publishFleet">Publish to all devices</button>'
+    + '<button class="addbtn" type="button" data-act="fleetStatus">Check what\'s published</button>'
+    + '<button class="addbtn" type="button" data-act="applyFleet">Pull from server</button></div>'
     + '<div id="pubMsg" style="margin-top:8px"></div>'
+    + '<div id="fleetStat" style="margin-top:8px"></div>'
     + '<div class="lblrow">Reset</div><div class="btnrow">'
     + '<button class="addbtn" type="button" data-act="resetChecks">Clear all checks</button>'
     + '<button class="addbtn warn" type="button" data-act="restoreSeed">Add a fresh N61574 from the original card</button>'
@@ -2361,13 +2364,53 @@ function checkFleet(manual){
     .catch(function(){ if(manual) toast("Could not reach the server"); });
 }
 
-function fleetBannerHTML(){
-  var when = "";
+
+function fleetWhen(iso){
   try{
-    var d = new Date(fleetInfo.published);
+    var d = new Date(iso);
     function two(n){ return (n<10?"0":"")+n; }
-    when = d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate())+" "+two(d.getHours())+":"+two(d.getMinutes());
-  }catch(e){}
+    return d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate())+" "+two(d.getHours())+":"+two(d.getMinutes());
+  }catch(e){ return "unknown"; }
+}
+
+/* Shows what is actually on the server, so a mismatch is visible rather
+   than guessed at. KV reads can lag a publish by up to a minute, so this
+   can briefly show the previous revision right after publishing. */
+function refreshFleetStatus(){
+  var el = document.getElementById("fleetStat");
+  if(!el) return;
+  if(isFileURL || !navigator.onLine){
+    el.className = "verdict";
+    el.textContent = "No connection \u2014 cannot check what is published.";
+    return;
+  }
+  el.className = "verdict";
+  el.textContent = "Checking\u2026";
+  fetch(FLEET_URL + "?head=1", {cache:"no-store"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(!d || !d.rev){
+        el.className = "verdict";
+        el.textContent = "Nothing has been published yet.";
+        return;
+      }
+      var mine = LS.get("fleetRev", 0);
+      var same = (d.rev === mine);
+      el.className = "verdict" + (same ? " ok" : "");
+      el.textContent = "Server has the copy published " + fleetWhen(d.published)
+        + (d.aircraft && d.aircraft.length ? " \u00b7 " + d.aircraft.join(", ") : "")
+        + (d.note ? " \u2014 \u201c" + d.note + "\u201d" : "")
+        + (same ? ". That is this device's copy."
+                : ". This device is on a different revision \u2014 publish to overwrite it, or pull to take it.");
+    })
+    .catch(function(){
+      el.className = "verdict bad";
+      el.textContent = "Could not reach the server.";
+    });
+}
+
+function fleetBannerHTML(){
+  var when = fleetWhen(fleetInfo.published);
   var craft = (fleetInfo.aircraft && fleetInfo.aircraft.length) ? fleetInfo.aircraft.join(", ") : "";
   return '<div class="updbar fleetbar">'
     + '<div class="updtxt"><b>Updated checklist available</b><span>'
@@ -2398,7 +2441,7 @@ function applyFleet(){
           fleetInfo = null; edPhase = 0; edProc = 0;
           view = firstView();
           render();
-          toast("Checklist updated to revision " + d.rev);
+          toast("Checklist updated to the copy published " + fleetWhen(d.published));
         })
         .catch(function(){ toast("Could not download the checklist \u2014 try again with signal"); });
     });
@@ -2427,7 +2470,8 @@ function publishFleet(){
         var stale = document.querySelector(".fleetbar");
         if(stale) stale.remove();
         if(noteEl) noteEl.value = "";
-        say("Published as revision " + res.d.rev + ". Other devices will be offered it when they have signal.", false);
+        say("Published " + fleetWhen(res.d.published) + ". Other devices will be offered it when they have signal.", false);
+        setTimeout(refreshFleetStatus, 1200);
       } else {
         say(res.d.error || "Could not publish.", true);
       }
@@ -2505,7 +2549,7 @@ function render(){
 
   updatePhaseNav();
   if(view==="wb") initWB();
-  if(view==="setup" && setupTab==="backup") fillIO();
+  if(view==="setup" && setupTab==="backup"){ fillIO(); refreshFleetStatus(); }
 }
 
 
@@ -2867,6 +2911,7 @@ function doAct(el){
     case "applyFleet": applyFleet(); break;
     case "dismissFleet": fleetInfo = null; render(); break;
     case "publishFleet": publishFleet(); break;
+    case "fleetStatus": refreshFleetStatus(); break;
     case "lockSetup": lockSetup(); break;
     case "changePw": changePassword(); break;
     case "doUpdate": applyUpdate(); break;

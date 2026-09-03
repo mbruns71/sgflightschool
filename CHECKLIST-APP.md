@@ -112,3 +112,18 @@ has local changes worth keeping.
 Publishing does not require an app update — the checklist and the app
 version are independent. A device can be on an older app build and still
 receive a newer checklist.
+
+### Why the revision is a timestamp
+
+`rev` is `Date.now()` at publish, not previous + 1. The original code read
+the current record, added one and wrote it back — but KV is eventually
+consistent and caches reads at the edge for ~60s, so two publishes a few
+seconds apart both read the same stale record and wrote the SAME revision.
+The second publish's edits then became permanently invisible to any device
+that had already taken the first, because the client only accepts
+`rev > its own`. A timestamp needs no read, so the race cannot occur.
+
+A consequence worth knowing: a `?head=1` poll can lag a publish by up to a
+minute, so the Backup panel may briefly show the previous revision straight
+after publishing. **Check what's published** re-reads it, and **Pull from
+server** takes the current copy regardless of revision comparison.

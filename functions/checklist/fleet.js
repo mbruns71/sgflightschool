@@ -51,6 +51,17 @@ async function tokenValid(env, token) {
   }
 }
 
+/** Cheap content hash (FNV-1a), so a device can tell "same content" from
+ *  "different content" without comparing the whole checklist. */
+function fingerprint(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = (h + (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24)) >>> 0;
+  }
+  return h.toString(16);
+}
+
 /** Summary so a device can describe the update without pulling all of it. */
 function summarise(db) {
   try {
@@ -67,7 +78,7 @@ export async function onRequestGet({ request, env }) {
     if (!raw) return json(200, { rev: 0 });
     const rec = JSON.parse(raw);
     if (new URL(request.url).searchParams.get("head")) {
-      return json(200, { rev: rec.rev, published: rec.published, note: rec.note, aircraft: rec.aircraft });
+      return json(200, { rev: rec.rev, published: rec.published, note: rec.note, aircraft: rec.aircraft, fingerprint: rec.fingerprint });
     }
     return json(200, rec);
   } catch (err) {
@@ -94,18 +105,26 @@ export async function onRequestPost({ request, env }) {
     const payload = JSON.stringify(body.db);
     if (payload.length > MAX_BYTES) return json(413, { error: "That checklist is too large to publish." });
 
-    const prev = await env.ENQUIRIES.get(KEY);
-    const rev = (prev ? JSON.parse(prev).rev || 0 : 0) + 1;
+    // The revision is the publish time, NOT previous + 1.
+    //
+    // KV is eventually consistent and caches reads at the edge for ~60s, so a
+    // read-modify-write here silently collided: two publishes a few seconds
+    // apart both read the same stale record, both wrote the same revision, and
+    // the second one's edits became invisible to any device that had already
+    // taken the first (the client only accepts rev > its own). A timestamp is
+    // monotonic and needs no read, so the race cannot happen.
+    const rev = Date.now();
 
     const rec = {
       rev,
-      published: new Date().toISOString(),
+      published: new Date(rev).toISOString(),
       note: typeof body.note === "string" ? body.note.slice(0, 200) : "",
       aircraft: summarise(body.db),
+      fingerprint: fingerprint(payload),
       db: body.db,
     };
     await env.ENQUIRIES.put(KEY, JSON.stringify(rec));
-    return json(200, { ok: true, rev, published: rec.published });
+    return json(200, { ok: true, rev, published: rec.published, fingerprint: rec.fingerprint });
   } catch (err) {
     console.log("fleet publish error: " + (err && err.stack ? err.stack : err));
     return json(500, { error: "The server could not publish that right now." });
