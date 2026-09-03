@@ -5,7 +5,7 @@
    VERSION installs a fresh cache and drops the old one.
    Bump VERSION and version.json together on every deploy.
    ============================================================ */
-var VERSION = "2026.08.26-7";
+var VERSION = "2026.08.26-8";
 var CACHE   = "n61574-" + VERSION;
 
 var ASSETS = [

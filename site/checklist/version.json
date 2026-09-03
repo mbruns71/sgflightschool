@@ -1,4 +1,4 @@
 {
-  "version": "2026.08.26-7",
-  "notes": "Fixes publishing sometimes not sending your latest edits."
+  "version": "2026.08.26-8",
+  "notes": "Day mode: the phase name in the header is readable again."
 }

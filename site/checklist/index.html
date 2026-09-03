@@ -1387,7 +1387,7 @@ function withFieldProcs(phases){
    ========================================================== */
 /* Bumped on every published build. version.json on the server carries the
    same string; the app compares the two to know whether it is current. */
-var APP_VERSION = "2026.08.26-7";
+var APP_VERSION = "2026.08.26-8";
 
 /* ----------------------------------------------------------
    Setup password.
@@ -3549,14 +3549,17 @@ textarea.f.brief{
     font-family:"Barlow Condensed","Avenir Next Condensed",sans-serif;
     font-size:calc(21px * var(--fs)); font-weight:700;
     text-transform:uppercase; letter-spacing:.03em;
-    color:var(--rail-active-ink);
+    /* --rail-active-ink is for text on the LIGHT active-row background; on the
+       always-dark rail it is near-black in day mode (1.12:1, unreadable).
+       --rail-title is light in every theme, like the tail number above it. */
+    color:var(--rail-title);
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     line-height:1.1;
   }
   .pn-count{
     font-size:calc(10.5px * var(--fs)); font-weight:700;
     letter-spacing:.12em; text-transform:uppercase;
-    color:var(--rail-ink-2); margin-top:1px;
+    color:var(--rail-ink); margin-top:1px;   /* small uppercase — needs the brighter ink */
   }
 
   /* --- Emergency: always at the bottom, always reachable --- */
