@@ -894,6 +894,25 @@ var DEPARTURE_BRIEF = [
 "\u2022 Any questions before we go?"
 ].join("\n");
 
+
+/* Emergency radio call. Standard distress format with the tail filled in.
+   Editable in Setup > Briefs; {TAIL} is replaced at render time. */
+var MAYDAY_DEFAULT = [
+"MAYDAY, MAYDAY, MAYDAY",
+"{TAIL}, {TAIL}, {TAIL}",
+"",
+"POSITION     ________ miles ________ of ________ , ________ feet",
+"PROBLEM      ________",
+"INTENTIONS   ________ (forced landing / returning to ________)",
+"SOULS        ________ on board",
+"FUEL         ________ hours remaining",
+"",
+"On the frequency in use, or 121.5. Squawk 7700.",
+"Then FLY THE AEROPLANE \u2014 talk only when it costs nothing.",
+"",
+"PAN PAN, PAN PAN, PAN PAN \u2014 for urgency that is not yet distress. Same format."
+].join("\n");
+
 var SEED_CL = [
 {id:"preflight", n:"01", name:"Preflight", sub:"Walkaround flow: cabin first, then left wing, empennage, right wing, nose.", groups:[
   {t:"Cabin", items:[
@@ -1387,7 +1406,7 @@ function withFieldProcs(phases){
    ========================================================== */
 /* Bumped on every published build. version.json on the server carries the
    same string; the app compares the two to know whether it is current. */
-var APP_VERSION = "2026.08.26-9";
+var APP_VERSION = "2026.08.26-10";
 
 /* ----------------------------------------------------------
    Setup password.
@@ -1441,6 +1460,7 @@ function blankAircraft(){
     id: uid("ac"),
     tail:"NEW", model:"", engine:"",
     builtin:false,
+    mayday: MAYDAY_DEFAULT,
     phases: [ { id:uid("p"), n:"01", name:"Preflight", sub:"",
                 groups:[ { t:"Cabin", items:[ ["Documents","Check",""] ] } ] } ],
     emerg: [],
@@ -1534,6 +1554,8 @@ if(!DB.mig.depBrief){
   });
   DB.mig.depBrief = 1;
 }
+/* Emergency radio call for profiles already in storage. */
+DB.list.forEach(function(a){ if(a.mayday == null) a.mayday = MAYDAY_DEFAULT; });
 /* Envelope floor for the CG chart, derived so it suits any aircraft. */
 DB.list.forEach(function(a){
   if(a.env && a.env.minW == null){
@@ -1703,7 +1725,15 @@ function renderEmergIndex(){
     h += '<button class="ecard'+(e.mem?" memory":"")+'" type="button" data-proc="'+esc(e.id)+'">'
        + '<span class="en">'+esc(e.n)+'</span><span class="et">'+esc(e.t)+'</span></button>';
   });
-  return h + '</div>';
+  h += '</div>';
+  /* Radio comes last on purpose: aviate, navigate, then communicate. */
+  var a = AC();
+  if(a.mayday && String(a.mayday).trim()){
+    h += '<section class="proc"><div class="proc-head"><div class="tag">Radio</div><h2>Declaring an emergency</h2></div>'
+      +  '<div class="memblock" style="border-radius:0 0 var(--r) var(--r)">'
+      +  '<div class="mayday">'+esc(String(a.mayday).replace(/\{TAIL\}/g, a.tail || "________"))+'</div></div></section>';
+  }
+  return h;
 }
 
 function renderProc(e){
@@ -1742,7 +1772,29 @@ function renderRef(){
     +   '<p style="color:var(--ink-3);font-size:calc(13px * var(--fs));margin-top:6px;max-width:62ch">'
     +   'The app checks on its own when it starts and when it regains signal. Use this if it has been '
     +   'open a while and someone has just published a change.</p>'
-    + '</div></div><div class="ref-grid">';
+    +   '<div class="ed-row solo" style="border-top:1px solid var(--line);margin-top:10px;padding-top:10px">'
+    +     '<div><span class="fieldlbl">Keep screen awake</span>'
+    +     '<div style="font-size:calc(14px * var(--fs));color:var(--ink-2)">'+wakeStatusText()+'</div></div>'
+    +     (("wakeLock" in navigator) ? '<button class="addbtn" type="button" data-act="toggleWake">'+(wakeWanted?"Turn off":"Turn on")+'</button>' : '')
+    +   '</div>'
+    + '</div></div><div class="ref-grid">'
+    + '<div class="card"><h3>Crosswind</h3><div class="ed">'
+    +   '<div class="ed-row trio" style="border:none">'
+    +   '<div><span class="fieldlbl">Runway</span><input class="f num" id="cx-rwy" inputmode="numeric" placeholder="22" data-calc></div>'
+    +   '<div><span class="fieldlbl">Wind from (&deg;)</span><input class="f num" id="cx-dir" inputmode="numeric" placeholder="250" data-calc></div>'
+    +   '<div><span class="fieldlbl">Speed (kt)</span><input class="f num" id="cx-spd" inputmode="numeric" placeholder="12" data-calc></div><div></div></div>'
+    +   '<div class="ed-row solo" style="border:none"><div><span class="fieldlbl">Gusting to (kt, optional)</span><input class="f num" id="cx-gst" inputmode="numeric" placeholder="" data-calc></div><div></div></div>'
+    +   '<div class="verdict" id="cx-out"></div>'
+    +   '<p style="color:var(--ink-3);font-size:calc(12.5px * var(--fs));margin:8px 0 0">Limit is the max demonstrated crosswind from this aircraft&rsquo;s V-speeds. A gust value, if given, is used for both components.</p>'
+    + '</div></div>'
+    + '<div class="card"><h3>Density Altitude</h3><div class="ed">'
+    +   '<div class="ed-row trio" style="border:none">'
+    +   '<div><span class="fieldlbl">Field elevation (ft)</span><input class="f num" id="da-elev" inputmode="numeric" placeholder="1394" data-calc></div>'
+    +   '<div><span class="fieldlbl">Altimeter (inHg)</span><input class="f num" id="da-alt" inputmode="decimal" placeholder="29.92" data-calc></div>'
+    +   '<div><span class="fieldlbl">Temperature (&deg;C)</span><input class="f num" id="da-oat" inputmode="numeric" placeholder="35" data-calc></div><div></div></div>'
+    +   '<div class="verdict" id="da-out"></div>'
+    +   '<p style="color:var(--ink-3);font-size:calc(12.5px * var(--fs));margin:8px 0 0">Standard approximation: pressure altitude from the altimeter setting, then 118.8 ft per &deg;C above ISA. Falcon Field is 1,394 ft.</p>'
+    + '</div></div>';
 
   if(a.vspeeds.length){
     h += '<div class="card"><h3>V-Speeds</h3><div class="tbl-wrap"><table><tbody>';
@@ -1940,6 +1992,10 @@ function setupBriefs(){
   var h = '<h3>Briefings</h3><div class="ed">'
     + '<div class="notice" style="margin-bottom:4px">A briefing is long-form text attached to a checklist item. '
     + 'In flight, that item shows a <b>Brief</b> chip in the gap between the item and its response &mdash; tap it to read the briefing without checking the item off.</div>';
+
+  h += '<div class="lblrow">Emergency radio call</div>'
+    +  '<textarea class="f brief" data-path="'+apath("mayday")+'" spellcheck="true" style="min-height:230px">'+esc(a.mayday||"")+'</textarea>'
+    +  '<p style="color:var(--ink-3);font-size:calc(13px * var(--fs));margin:6px 0 0">Shown at the bottom of the Emergency page. {TAIL} is replaced by the aircraft&rsquo;s tail number.</p>';
 
   var any = false;
   a.phases.forEach(function(p,pi){
@@ -2390,7 +2446,7 @@ function refreshFleetStatus(){
   var els = document.querySelectorAll(".fleet-stat");
   if(!els.length) return;
   function set(cls, txt){
-    /* Keep the hook class — assigning className alone would strip it and the
+    /* Keep the hook class \u2014 assigning className alone would strip it and the
        panel could never be found again after its first update. */
     [].forEach.call(els, function(e){ e.className = "fleet-stat " + cls; e.textContent = txt; });
   }
@@ -2526,6 +2582,143 @@ document.addEventListener("visibilitychange", function(){
   checkEverything(false);
 });
 
+
+/* ==========================================================
+   KEEP THE SCREEN AWAKE
+   A checklist that locks its screen mid-run-up is useless. iOS
+   Safari has supported the Screen Wake Lock API since 16.4. The
+   lock is dropped whenever the page is hidden, so re-request it
+   every time the app comes back to the foreground. Default on;
+   a switch on the Reference page turns it off for desk use.
+   ========================================================== */
+var wakeLock = null;
+var wakeWanted = LS.get("wake", true);
+
+function holdScreen(){
+  if(!wakeWanted || !("wakeLock" in navigator) || document.visibilityState !== "visible") return;
+  if(wakeLock) return;
+  navigator.wakeLock.request("screen").then(function(l){
+    wakeLock = l;
+    l.addEventListener("release", function(){ wakeLock = null; });
+  }).catch(function(){ /* low battery or denied \u2014 nothing to do */ });
+}
+function releaseScreen(){
+  if(wakeLock){ wakeLock.release().catch(function(){}); wakeLock = null; }
+}
+function setWake(on){
+  wakeWanted = !!on; LS.set("wake", wakeWanted);
+  if(wakeWanted) holdScreen(); else releaseScreen();
+  render();
+}
+function wakeStatusText(){
+  if(!("wakeLock" in navigator)) return "Not supported on this device \u2014 set Auto-Lock to Never before flying.";
+  return wakeWanted ? "On \u2014 the screen stays on while this app is open." : "Off \u2014 the device will lock as usual.";
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "visible") holdScreen();
+});
+
+/* ==========================================================
+   STALE TICKS
+   Ticks survive an app close on purpose -- a phone call mid-
+   preflight must not wipe the list. But ticks from yesterday
+   look exactly like ticks from today. If the last tick is old,
+   offer a clean start on launch. Never forced: a pilot who
+   relaunches mid-cruise can keep what they have.
+   ========================================================== */
+var STALE_AFTER_MS = 3 * 60 * 60 * 1000;
+
+function ago(ts){
+  var m = Math.round((Date.now() - ts) / 60000);
+  if(m < 60) return m + " minute" + (m===1?"":"s") + " ago";
+  var h = Math.round(m / 60);
+  if(h < 36) return h + " hour" + (h===1?"":"s") + " ago";
+  var d = Math.round(h / 24);
+  return d + " day" + (d===1?"":"s") + " ago";
+}
+
+function offerFreshFlight(){
+  var last = LS.get("lastTick", 0);
+  var n = Object.keys(checks).filter(function(k){ return k.indexOf("em:") !== 0; }).length;
+  if(!n || !last || Date.now() - last < STALE_AFTER_MS) return;
+  confirmDo("Start a new flight?",
+    "There are " + n + " items still ticked from " + ago(last) + ". Clear them so this flight starts from a clean list?",
+    "Clear ticks",
+    function(){ checks = {}; saveChecks(); render(); toast("Ticks cleared \u2014 clean list"); },
+    "Keep them");
+}
+
+
+/* ==========================================================
+   CROSSWIND + DENSITY ALTITUDE
+   Pure arithmetic, no aircraft data to get wrong. The crosswind
+   limit is read from the aircraft's own V-speed table.
+   ========================================================== */
+function maxCrosswind(){
+  var v = AC().vspeeds || [];
+  for(var i=0;i<v.length;i++){
+    if(/crosswind/i.test(strip(v[i][1]))){ var n = parseFloat(String(v[i][2]).replace(/[^\d.]/g,"")); if(n) return n; }
+  }
+  return 15;
+}
+function num(id){ var e=document.getElementById(id); var v=e?parseFloat(e.value):NaN; return isFinite(v)?v:null; }
+
+function runCalcs(){
+  var save = {};
+  ["cx-rwy","cx-dir","cx-spd","cx-gst","da-elev","da-alt","da-oat"].forEach(function(id){
+    var e=document.getElementById(id); if(e) save[id]=e.value;
+  });
+  LS.set("calc", save);
+
+  /* --- crosswind --- */
+  var out = document.getElementById("cx-out");
+  if(out){
+    var rwy = num("cx-rwy"), dir = num("cx-dir"), spd = num("cx-spd"), gst = num("cx-gst");
+    if(rwy===null || dir===null || spd===null){
+      out.className="verdict"; out.textContent="Enter runway, wind direction and speed.";
+    } else {
+      var hdg = rwy <= 36 ? rwy*10 : rwy;               /* "22" -> 220, "225" stays */
+      var d = ((dir - hdg) % 360 + 540) % 360 - 180;     /* -180..180 */
+      var rad = d*Math.PI/180;
+      var use = (gst && gst > spd) ? gst : spd;
+      var head = use*Math.cos(rad), cross = use*Math.sin(rad);
+      var lim = maxCrosswind();
+      var side = cross > 0.5 ? "from the right" : cross < -0.5 ? "from the left" : "";
+      var txt = "Crosswind " + Math.abs(cross).toFixed(0) + " kt" + (side ? " " + side : "")
+        + (gst && gst > spd ? " (using gust " + gst + " kt)" : "")
+        + " \u00b7 " + (head >= 0 ? "Headwind " + head.toFixed(0) + " kt" : "TAILWIND " + Math.abs(head).toFixed(0) + " kt")
+        + " \u00b7 limit " + lim + " kt";
+      var bad = Math.abs(cross) > lim || head < -0.5;
+      out.className = "verdict " + (bad ? "bad" : "ok");
+      out.textContent = txt + (Math.abs(cross) > lim ? " \u2014 EXCEEDS max demonstrated" : head < -0.5 ? " \u2014 tailwind component" : "");
+    }
+  }
+
+  /* --- density altitude --- */
+  var o2 = document.getElementById("da-out");
+  if(o2){
+    var elev = num("da-elev"), alt = num("da-alt"), oat = num("da-oat");
+    if(elev===null || alt===null || oat===null){
+      o2.className="verdict"; o2.textContent="Enter field elevation, altimeter setting and temperature.";
+    } else {
+      var pa  = elev + (29.92 - alt) * 1000;
+      var isa = 15 - 1.98 * (pa/1000);
+      var da  = pa + 118.8 * (oat - isa);
+      var hot = da >= 3000;
+      o2.className = "verdict " + (da > elev + 2000 ? "bad" : "ok");
+      o2.textContent = "Density altitude " + Math.round(da).toLocaleString() + " ft"
+        + " \u00b7 pressure altitude " + Math.round(pa).toLocaleString() + " ft"
+        + " \u00b7 ISA " + (oat - isa >= 0 ? "+" : "") + Math.round(oat - isa) + " \u00b0C"
+        + (hot ? " \u2014 above 3,000 ft: lean for max RPM before takeoff" : "");
+    }
+  }
+}
+function initCalcs(){
+  var saved = LS.get("calc", {}) || {};
+  Object.keys(saved).forEach(function(id){ var e=document.getElementById(id); if(e && saved[id]!=null) e.value = saved[id]; });
+  runCalcs();
+}
+
 /* ==========================================================
    NAVIGATION
    ========================================================== */
@@ -2597,7 +2790,7 @@ function render(){
   updatePhaseNav();
   if(view==="wb") initWB();
   if(view==="setup" && setupTab==="backup"){ fillIO(); refreshFleetStatus(); }
-  if(view==="ref") refreshFleetStatus();
+  if(view==="ref"){ refreshFleetStatus(); initCalcs(); }
 }
 
 
@@ -2961,6 +3154,7 @@ function doAct(el){
     case "publishFleet": publishFleet(); break;
     case "fleetStatus": refreshFleetStatus(); break;
     case "checkEverything": checkEverything(true); break;
+    case "toggleWake": setWake(!wakeWanted); break;
     case "lockSetup": lockSetup(); break;
     case "changePw": changePassword(); break;
     case "doUpdate": applyUpdate(); break;
@@ -3123,6 +3317,7 @@ content.addEventListener("click", function(ev){
   if(row){
     var li = row.closest("li.item"), k = li.getAttribute("data-key");
     if(checks[k]) delete checks[k]; else checks[k]=1;
+    LS.set("lastTick", Date.now());
     saveChecks(); render(); return;
   }
   var clr = ev.target.closest("[data-clear]");
@@ -3171,6 +3366,7 @@ content.addEventListener("input", function(ev){
   var t = ev.target;
   if(t.getAttribute && t.getAttribute("data-path")){ applyField(t); return; }
   if(t.matches && t.matches("[data-k],[data-arm]")) calcWB();
+  if(t.matches && t.matches("[data-calc]")) runCalcs();
 });
 
 content.addEventListener("change", function(ev){
@@ -3229,10 +3425,10 @@ function pickAircraft(id){
 /* ---------- Modal ---------- */
 function openModal(html){ scrim.querySelector(".modal").innerHTML = html; scrim.hidden = false; }
 function closeModal(){ scrim.hidden = true; pendingConfirm = null; }
-function confirmDo(title, body, okLabel, fn){
+function confirmDo(title, body, okLabel, fn, cancelLabel){
   pendingConfirm = fn;
   openModal('<h2>'+title+'</h2><p>'+body+'</p><div class="btns">'
-    + '<button class="btn" id="cancelBtn" type="button">Cancel</button>'
+    + '<button class="btn" id="cancelBtn" type="button">'+(cancelLabel||"Cancel")+'</button>'
     + '<button class="btn danger" id="okBtn" type="button">'+okLabel+'</button></div>');
 }
 scrim.addEventListener("click", function(ev){
@@ -3297,11 +3493,12 @@ if(view === "setup" && !setupUnlocked) view = firstView();
 applyMode();
 applyText();
 render();
+holdScreen();
 registerSW();
 /* Check on launch and whenever the device comes back online. */
 checkEverything(false);
 window.addEventListener("online", function(){ checkEverything(false); });
-if(!LS.get("ack",0)) openModal(ackHTML);
+if(!LS.get("ack",0)) openModal(ackHTML); else offerFreshFlight();
 
 })();
 </script>
@@ -3649,4 +3846,12 @@ textarea.f.brief{
 /* Fleet update banner — distinct from an app update. */
 .updbar.fleetbar{ border-color:var(--accent); background:var(--accent-soft); }
 .updbar.fleetbar .updtxt b{ color:var(--accent); }
+
+/* ---------- Emergency radio call ---------- */
+.mayday{
+  white-space:pre-wrap;
+  font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  font-size:calc(15px * var(--fs)); line-height:1.65;
+  color:var(--ink); padding:14px 16px;
+}
 </style>

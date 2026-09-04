@@ -1,4 +1,4 @@
 {
-  "version": "2026.08.26-9",
-  "notes": "A Check for updates button on the Reference page, and the app re-checks when you return to it."
+  "version": "2026.08.26-10",
+  "notes": "Screen stays awake, crosswind and density altitude calculators, a clean-list prompt for old ticks, and a MAYDAY script on the Emergency page."
 }
