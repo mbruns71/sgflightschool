@@ -1387,7 +1387,7 @@ function withFieldProcs(phases){
    ========================================================== */
 /* Bumped on every published build. version.json on the server carries the
    same string; the app compares the two to know whether it is current. */
-var APP_VERSION = "2026.08.26-8";
+var APP_VERSION = "2026.08.26-9";
 
 /* ----------------------------------------------------------
    Setup password.
@@ -1732,7 +1732,17 @@ function renderProc(e){
 function renderRef(){
   var a = AC();
   var h = '<div class="phase-head"><div class="eyebrow">Reference &middot; '+esc(a.tail)+'</div>'
-    + '<h1 class="phase-title">Reference</h1></div><div class="ref-grid">';
+    + '<h1 class="phase-title">Reference</h1></div>'
+    + '<div class="card"><h3>Updates</h3><div class="ed" style="padding-bottom:12px">'
+    +   '<div class="ed-row solo" style="border-bottom:1px solid var(--line)"><div>'
+    +     '<span class="fieldlbl">This app copy</span><div class="verval">'+esc(APP_VERSION)+'</div></div></div>'
+    +   '<div class="fleet-stat verdict" style="margin-top:10px">\u2014</div>'
+    +   '<div class="btnrow"><button class="addbtn solid" type="button" data-act="checkEverything">Check for updates</button>'
+    +   '<button class="addbtn" type="button" data-act="applyFleet">Get the latest checklist</button></div>'
+    +   '<p style="color:var(--ink-3);font-size:calc(13px * var(--fs));margin-top:6px;max-width:62ch">'
+    +   'The app checks on its own when it starts and when it regains signal. Use this if it has been '
+    +   'open a while and someone has just published a change.</p>'
+    + '</div></div><div class="ref-grid">';
 
   if(a.vspeeds.length){
     h += '<div class="card"><h3>V-Speeds</h3><div class="tbl-wrap"><table><tbody>';
@@ -2050,7 +2060,7 @@ function setupBackup(){
     + '<button class="addbtn" type="button" data-act="fleetStatus">Check what\'s published</button>'
     + '<button class="addbtn" type="button" data-act="applyFleet">Pull from server</button></div>'
     + '<div id="pubMsg" style="margin-top:8px"></div>'
-    + '<div id="fleetStat" style="margin-top:8px"></div>'
+    + '<div id="fleetStat" class="fleet-stat" style="margin-top:8px"></div>'
     + '<div class="lblrow">Reset</div><div class="btnrow">'
     + '<button class="addbtn" type="button" data-act="resetChecks">Clear all checks</button>'
     + '<button class="addbtn warn" type="button" data-act="restoreSeed">Add a fresh N61574 from the original card</button>'
@@ -2248,7 +2258,7 @@ function checkForUpdate(manual){
     if(manual) toast("No connection \u2014 cannot check right now");
     return;
   }
-  fetch("version.json", {cache:"no-store"})
+  return fetch("version.json", {cache:"no-store"})
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(d){
       LS.set("lastCheck", Date.now());
@@ -2281,7 +2291,7 @@ function applyUpdate(){
 
 function updateBannerHTML(){
   return '<div class="updbar">'
-    + '<div class="updtxt"><b>Update available</b><span>Version '+esc(updateInfo.version)+' is published. This iPad has '+esc(APP_VERSION)+'.'
+    + '<div class="updtxt"><b>Update available</b><span>Version '+esc(updateInfo.version)+' is published. This device has '+esc(APP_VERSION)+'.'
     + (updateInfo.notes ? ' \u2014 '+esc(updateInfo.notes) : '')
     + '</span></div>'
     + '<div class="btnrow"><button class="addbtn solid" type="button" data-act="doUpdate">Update now</button>'
@@ -2349,7 +2359,7 @@ function checkFleet(manual){
   if(isFileURL){ if(manual) toast("Running from a local file \u2014 publishing needs the hosted version"); return; }
   if(!navigator.onLine){ if(manual) toast("No connection \u2014 cannot check right now"); return; }
 
-  fetch(FLEET_URL + "?head=1", {cache:"no-store"})
+  return fetch(FLEET_URL + "?head=1", {cache:"no-store"})
     .then(function(r){ return r.json(); })
     .then(function(d){
       var mine = LS.get("fleetRev", 0);
@@ -2377,36 +2387,32 @@ function fleetWhen(iso){
    than guessed at. KV reads can lag a publish by up to a minute, so this
    can briefly show the previous revision right after publishing. */
 function refreshFleetStatus(){
-  var el = document.getElementById("fleetStat");
-  if(!el) return;
+  var els = document.querySelectorAll(".fleet-stat");
+  if(!els.length) return;
+  function set(cls, txt){
+    /* Keep the hook class — assigning className alone would strip it and the
+       panel could never be found again after its first update. */
+    [].forEach.call(els, function(e){ e.className = "fleet-stat " + cls; e.textContent = txt; });
+  }
   if(isFileURL || !navigator.onLine){
-    el.className = "verdict";
-    el.textContent = "No connection \u2014 cannot check what is published.";
+    set("verdict", "No connection \u2014 cannot check what is published.");
     return;
   }
-  el.className = "verdict";
-  el.textContent = "Checking\u2026";
-  fetch(FLEET_URL + "?head=1", {cache:"no-store"})
+  set("verdict", "Checking\u2026");
+  return fetch(FLEET_URL + "?head=1", {cache:"no-store"})
     .then(function(r){ return r.json(); })
     .then(function(d){
-      if(!d || !d.rev){
-        el.className = "verdict";
-        el.textContent = "Nothing has been published yet.";
-        return;
-      }
+      if(!d || !d.rev){ set("verdict", "Nothing has been published yet."); return; }
       var mine = LS.get("fleetRev", 0);
       var same = (d.rev === mine);
-      el.className = "verdict" + (same ? " ok" : "");
-      el.textContent = "Server has the copy published " + fleetWhen(d.published)
+      set("verdict" + (same ? " ok" : ""),
+        "Server has the copy published " + fleetWhen(d.published)
         + (d.aircraft && d.aircraft.length ? " \u00b7 " + d.aircraft.join(", ") : "")
         + (d.note ? " \u2014 \u201c" + d.note + "\u201d" : "")
-        + (same ? ". That is this device's copy."
-                : ". This device is on a different revision \u2014 publish to overwrite it, or pull to take it.");
+        + (same ? ". That is this device\u2019s copy."
+                : ". This device is on a different revision \u2014 pull to take it."));
     })
-    .catch(function(){
-      el.className = "verdict bad";
-      el.textContent = "Could not reach the server.";
-    });
+    .catch(function(){ set("verdict bad", "Could not reach the server."); });
 }
 
 function fleetBannerHTML(){
@@ -2423,7 +2429,7 @@ function fleetBannerHTML(){
 
 function applyFleet(){
   confirmDo("Replace this device\u2019s checklists?",
-    "Every aircraft, edit, briefing and weight &amp; balance limit on this iPad will be replaced by the published version. "
+    "Every aircraft, edit, briefing and weight &amp; balance limit on this device will be replaced by the published version. "
     + "Your ticked items are cleared. This cannot be undone from here \u2014 export from Backup first if you have local changes worth keeping.",
     "Replace",
     function(){
@@ -2478,6 +2484,47 @@ function publishFleet(){
     })
     .catch(function(){ say("Could not reach the server. Try again when you have signal.", true); });
 }
+
+
+/* ==========================================================
+   ONE PLACE TO CHECK FOR ANYTHING NEW
+   Polling only ran at launch and on regaining signal, so a device
+   left open never noticed a freshly published checklist. This adds
+   an explicit check reachable WITHOUT the Setup password, plus a
+   re-check when the app returns to the foreground -- on iOS a
+   home-screen app is usually backgrounded, not relaunched.
+   ========================================================== */
+function checkEverything(manual){
+  if(isFileURL){
+    if(manual) toast("Running from a local file \u2014 checking needs the hosted version");
+    return;
+  }
+  if(!navigator.onLine){
+    if(manual) toast("No connection \u2014 cannot check right now");
+    return;
+  }
+  if(manual) toast("Checking\u2026");
+  Promise.all([checkForUpdate(false), checkFleet(false)]).then(function(){
+    render();
+    if(document.querySelector(".fleet-stat")) refreshFleetStatus();
+    if(manual){
+      var found = [];
+      if(updateInfo) found.push("a new app version");
+      if(fleetInfo)  found.push("an updated checklist");
+      toast(found.length
+        ? "Found " + found.join(" and ") + " \u2014 see the banner at the top."
+        : "Everything is up to date.");
+    }
+  });
+}
+
+var lastAutoCheck = 0;
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState !== "visible") return;
+  if(Date.now() - lastAutoCheck < 60000) return;   /* throttle */
+  lastAutoCheck = Date.now();
+  checkEverything(false);
+});
 
 /* ==========================================================
    NAVIGATION
@@ -2550,6 +2597,7 @@ function render(){
   updatePhaseNav();
   if(view==="wb") initWB();
   if(view==="setup" && setupTab==="backup"){ fillIO(); refreshFleetStatus(); }
+  if(view==="ref") refreshFleetStatus();
 }
 
 
@@ -2907,11 +2955,12 @@ function doAct(el){
     case "prevPhase": gotoPhaseDelta(-1); break;
     case "nextPhase": gotoPhaseDelta(1); break;
     case "openPhasePicker": openPhasePicker(); break;
-    case "checkNow": checkForUpdate(true); checkFleet(true); break;
+    case "checkNow": checkEverything(true); break;
     case "applyFleet": applyFleet(); break;
     case "dismissFleet": fleetInfo = null; render(); break;
     case "publishFleet": publishFleet(); break;
     case "fleetStatus": refreshFleetStatus(); break;
+    case "checkEverything": checkEverything(true); break;
     case "lockSetup": lockSetup(); break;
     case "changePw": changePassword(); break;
     case "doUpdate": applyUpdate(); break;
@@ -3035,7 +3084,7 @@ function doAct(el){
         toast("That text isn't a valid backup \u2014 nothing changed"); break;
       }
       confirmDo("Replace everything?",
-        "All aircraft currently on this iPad will be replaced by the "+parsed.list.length+" in the pasted text. You can undo this straight after.",
+        "All aircraft currently on this device will be replaced by the "+parsed.list.length+" in the pasted text. You can undo this straight after.",
         "Replace", function(){
           snapshot("Data replaced");
           DB = parsed;
@@ -3250,9 +3299,8 @@ applyText();
 render();
 registerSW();
 /* Check on launch and whenever the device comes back online. */
-checkForUpdate(false);
-checkFleet(false);
-window.addEventListener("online", function(){ checkForUpdate(false); checkFleet(false); });
+checkEverything(false);
+window.addEventListener("online", function(){ checkEverything(false); });
 if(!LS.get("ack",0)) openModal(ackHTML);
 
 })();
