@@ -1,4 +1,4 @@
 {
-  "version": "2026.08.26-10",
-  "notes": "Screen stays awake, crosswind and density altitude calculators, a clean-list prompt for old ticks, and a MAYDAY script on the Emergency page."
+  "version": "2026.08.26-11",
+  "notes": "Performance page for each aircraft: photograph your POH performance section and view it offline with pinch-zoom."
 }

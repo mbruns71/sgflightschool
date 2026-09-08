@@ -127,3 +127,31 @@ A consequence worth knowing: a `?head=1` poll can lag a publish by up to a
 minute, so the Backup panel may briefly show the previous revision straight
 after publishing. **Check what's published** re-reads it, and **Pull from
 server** takes the current copy regardless of revision comparison.
+
+## Performance pages (POH photographs)
+
+Each aircraft has a **Performance** page showing photographs of its own POH
+performance section — the printed tables, not a transcription. Add them from
+**Setup -> Performance** (camera or photo library); reorder, retitle or delete
+there too. Pinch or double-tap to zoom in the viewer.
+
+Storage: images live in **IndexedDB** on the device (localStorage is far too
+small), resized to ~1800 px and recompressed to roughly 300 KB each. The
+aircraft record carries only a manifest (ids, titles, sizes), so the fleet
+JSON stays small and the Backup text carries titles only.
+
+Sharing: `functions/checklist/perf.js` at `/checklist/perf` stores each page
+as a binary KV value under `checklist:perf:<aircraft>:<page>`. On **Publish to
+all devices**, pages the server has not seen are uploaded FIRST, then the
+server prunes pages no longer in the manifest, then the checklist itself is
+published — so a device pulling the new manifest can always fetch the pages
+it lists. Reading is open (like the checklist); writing needs the Setup
+token. Other devices download pages in the background after applying a
+published checklist, and again on launch / regaining signal, so they are
+there offline. Page ids are unique per upload, so cached images never go stale.
+
+Size: a full performance section is a few MB. Publishing and first pull use
+that much data; after that, nothing.
+
+The viewer dims and red-tints pages in night mode. The POH carried in the
+aircraft remains the authoritative document; the app says so on the page.
