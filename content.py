@@ -790,19 +790,24 @@ INSTRUCTORS = {
       </div>
       <div>
         <p>Hello! I'm Jensen Beard, and I'm delighted to be your flight instructor.
-           Aviation has been my lifelong passion, and with nine years of flying
+           Aviation has been my lifelong passion, and with over a decade of flying
            experience under my belt, I'm excited to share it with you. My flying has
            taken me across a number of states and a wide range of environments,
            which gives me plenty of real-world experience to pass along.</p>
-        <p>From a young age I was captivated by the idea of flying, and that
-           fascination has only grown. Alongside my aviation experience, I've honed
-           my teaching skills as a substitute teacher and through my time teaching in
-           the Army. Those experiences shaped a positive, adaptable teaching method
-           that works with any learning style, so every student gets instruction
-           tailored to them.</p>
+        <p>One of my earliest experiences with aviation was attending an air show
+           here in Mesa, AZ, and that experience left a lasting impression on me.
+           I've always had a particular passion for aerobatic flying, and I'm now
+           beginning to build experience and develop my skills in that realm. One of
+           my dreams is to eventually demonstrate aerobatics at an air show myself,
+           and I hope to bring that passion and experience back to the school as my
+           skills continue to develop to share with you.</p>
+        <p>Alongside my aviation experience, I've honed my teaching skills as a
+           substitute teacher and through my time teaching in the Army. Those
+           experiences shaped a positive, adaptable teaching method that works with
+           any learning style, so every student gets instruction tailored to them.</p>
         <p>My mission is to help you become not just a pilot, but a confident and
            safe pilot. I want each lesson to be engaging and supportive, guiding you
-           past your goals while building the skills, knowledge and confidence you
+           past your goals while building the skills, knowledge, and confidence you
            need in the cockpit. Beyond training pilots, I'm passionate about helping
            people join and thrive in the aviation community. I look forward to
            turning your dreams of flying into reality.</p>
