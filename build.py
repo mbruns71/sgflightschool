@@ -450,10 +450,12 @@ def main():
     for js in ("book.js", "gallery.js"):
         if os.path.exists(os.path.join(OUT, "assets", "js", js)):
             print("script:    ", hash_asset("/assets/js/" + js))
-    for page in content.PAGES:
+    for page in content.PAGES + [content.NOT_FOUND]:
         slug = page["slug"]
         if slug == "index":
             dest = os.path.join(OUT, "index.html")
+        elif slug == "404":
+            dest = os.path.join(OUT, "404.html")
         else:
             os.makedirs(os.path.join(OUT, slug), exist_ok=True)
             dest = os.path.join(OUT, slug, "index.html")

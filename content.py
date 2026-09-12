@@ -2241,5 +2241,35 @@ FALCON_FIELD = {
     ),
 }
 
+# ---------------------------------------------------------------------------
+# 404 -- written to site/404.html; Cloudflare Pages serves it with a real 404
+# status for any unknown path (otherwise every bad URL returns the homepage
+# as a 200, which search engines treat as a soft 404).
+NOT_FOUND = {
+    "slug": "404",
+    "title": "Page Not Found",
+    "description": "That page doesn't exist on sgflightschool.com. Head back to the homepage or book a discovery flight.",
+    "body": pagehead(
+        "Page not found",
+        "That link has flown the coop. The page you're after isn't here.",
+    ) + """
+<section class="section">
+  <div class="wrap narrow">
+    <p>The address may be mistyped, or the page moved when we rebuilt the site.
+       These are the pages most people are looking for:</p>
+    <ul>
+      <li><a href="/courses">Flight training courses and pricing</a></li>
+      <li><a href="/getting-started">How to get started</a></li>
+      <li><a href="/instructors">Meet your instructor</a></li>
+      <li><a href="/aircraft">Our aircraft</a></li>
+      <li><a href="/faq">Frequently asked questions</a></li>
+      <li><a href="/contact">Contact us</a></li>
+    </ul>
+  </div>
+</section>
+""" + cta("Ready to fly?",
+          "Book a discovery flight at Falcon Field and see what training here is like."),
+}
+
 PAGES = [HOME, COURSES, GETTING_STARTED, AIRCRAFT, INSTRUCTORS, MEDICAL, FAQ,
          FERRY, ABOUT, CONTACT, FALCON_FIELD, BOOK_PAGE, COST, GALLERY_PAGE] + LOCATIONS
