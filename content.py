@@ -796,7 +796,7 @@ INSTRUCTORS = {
              alt="Jensen Beard, Certified Flight Instructor at SG Flight School, flying a Cessna above the clouds">
         <h3>Jensen Beard</h3>
         <p class="bio__role">Certified Flight Instructor</p>
-        <p style="margin:0"><a href="mailto:jbeard@sgflightschool.com">jbeard@sgflightschool.com</a></p>
+        <p class="bio__email"><a href="mailto:jbeard@sgflightschool.com">jbeard@sgflightschool.com</a></p>
       </div>
       <div>
         <p>Hello! I'm Jensen Beard, and I'm delighted to be your flight instructor.
@@ -830,7 +830,7 @@ INSTRUCTORS = {
              alt="Cassidy Britt, Certified Flight Instructor at SG Flight School, in the hangar at Falcon Field">
         <h3>Cassidy Britt</h3>
         <p class="bio__role">Certified Flight Instructor</p>
-        <p style="margin:0"><a href="mailto:info@sgflightschool.com">info@sgflightschool.com</a></p>
+        <p class="bio__email"><a href="mailto:info@sgflightschool.com">info@sgflightschool.com</a></p>
       </div>
       <div>
         <p>Cassidy's full bio is coming soon.</p>

@@ -245,9 +245,10 @@ li{margin-bottom:.4em}
   background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--radius);
   padding:0;overflow:hidden;
 }
-.bio__meta > :not(.bio__photo){margin-left:22px;margin-right:22px}
+.bio__meta > :not(.bio__photo){margin-left:22px;margin-right:22px;text-align:center}
 .bio__meta > h3{margin-top:20px}
 .bio__meta > p:last-child{padding-bottom:22px}
+.bio__email{margin:0;font-size:.92rem;overflow-wrap:anywhere}
 /* The source is a wide cockpit selfie with the subject right of centre, so the
    frame is set with object-position rather than by cropping the file. */
 .bio__photo{
