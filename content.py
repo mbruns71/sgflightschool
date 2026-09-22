@@ -779,6 +779,7 @@ INSTRUCTORS = {
         "name": "Cassidy Britt",
         "jobTitle": "Certified Flight Instructor",
         "image": SITE["url"] + "/assets/img/cassidy.jpg",
+        "email": "info@sgflightschool.com",
         "worksFor": {"@id": SITE["url"] + "/#organization"},
     }],
     "body": pagehead(
@@ -829,7 +830,7 @@ INSTRUCTORS = {
              alt="Cassidy Britt, Certified Flight Instructor at SG Flight School, in the hangar at Falcon Field">
         <h3>Cassidy Britt</h3>
         <p class="bio__role">Certified Flight Instructor</p>
-        <p style="margin:0"><a href="/contact">Contact the school</a></p>
+        <p style="margin:0"><a href="mailto:info@sgflightschool.com">info@sgflightschool.com</a></p>
       </div>
       <div>
         <p>Cassidy's full bio is coming soon.</p>
