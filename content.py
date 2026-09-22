@@ -188,7 +188,7 @@ HOME = {
            finish are the ones who still want to show up on week thirty.</p>
         <p><strong>You'll fly with the same instructor every lesson.</strong> Not
            a rotating cast, not someone counting hours until the airlines call.
-           He'll remember what you struggled with last time, so nothing gets
+           They'll remember what you struggled with last time, so nothing gets
            re-explained and no lesson is spent catching somebody new up.</p>
         <p>We are also straightforward about money. Our rates are published, and
            our <a href="/cost-of-private-pilot-license-arizona">full cost
@@ -758,10 +758,11 @@ AIRCRAFT = {
 # -------------------------------------------------------------- INSTRUCTORS
 INSTRUCTORS = {
     "slug": "instructors",
-    "title": "Your Flight Instructor",
+    "title": "Your Flight Instructors",
     "description": (
         "At SG Flight School you fly with the same instructor every lesson — not a "
-        "rotating cast. Meet Jensen Beard, CFI, at Falcon Field in Mesa, Arizona."
+        "rotating cast. Meet Jensen Beard and Cassidy Britt, CFIs, at Falcon Field "
+        "in Mesa, Arizona."
     ),
     "og_image": "jensen.jpg",
     "schema": [{
@@ -772,10 +773,18 @@ INSTRUCTORS = {
         "image": SITE["url"] + "/assets/img/jensen.jpg",
         "email": "jbeard@sgflightschool.com",
         "worksFor": {"@id": SITE["url"] + "/#organization"},
+    }, {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Cassidy Britt",
+        "jobTitle": "Certified Flight Instructor",
+        "image": SITE["url"] + "/assets/img/cassidy.jpg",
+        "worksFor": {"@id": SITE["url"] + "/#organization"},
     }],
     "body": pagehead(
-        "Your instructor",
-        "The same one, every lesson — not whoever happens to be on the roster.",
+        "Your instructors",
+        "You're paired with one of them, and you fly with that person every lesson — "
+        "not whoever happens to be on the roster.",
         image="dual-instruction.webp",
     ) + f"""
 <section class="section">
@@ -813,6 +822,22 @@ INSTRUCTORS = {
            turning your dreams of flying into reality.</p>
       </div>
     </div>
+
+    <div class="bio" style="margin-top:44px">
+      <div class="bio__meta">
+        <img class="bio__photo bio__photo--portrait" src="/assets/img/cassidy.jpg" width="900" height="1200"
+             alt="Cassidy Britt, Certified Flight Instructor at SG Flight School, in the hangar at Falcon Field">
+        <h3>Cassidy Britt</h3>
+        <p class="bio__role">Certified Flight Instructor</p>
+        <p style="margin:0"><a href="/contact">Contact the school</a></p>
+      </div>
+      <div>
+        <p>Cassidy's full bio is coming soon.</p>
+        <p>In the meantime, the best way to get to know your instructor is in the
+           airplane. <a href="{BOOK}">Book a discovery flight</a> and you'll spend
+           about an hour at the controls with one of us alongside you.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -826,9 +851,9 @@ INSTRUCTORS = {
        honest career path &mdash; but it means your training is handed off, often
        more than once, and each new instructor spends time re-learning where you
        are before you make progress again.</p>
-    <p>That doesn't happen here. Jensen flies with you from your first lesson to
-       your checkride. He knows which maneuver you struggled with three weeks ago
-       and what finally made it click. Nothing gets re-explained because nobody
+    <p>That doesn't happen here. Your instructor flies with you from your first
+       lesson to your checkride. They know which maneuver you struggled with three
+       weeks ago and what finally made it click. Nothing gets re-explained because nobody
        new has to catch up.</p>
     <div class="grid grid--2" style="margin-top:26px">
       <div class="card">
@@ -839,7 +864,7 @@ INSTRUCTORS = {
       </div>
       <div class="card">
         <h3>We're honest about the trade</h3>
-        <p>One instructor and two aircraft means we can't take unlimited students
+        <p>Two instructors and two aircraft means we can't take unlimited students
            or promise a fixed finish date. If you need a rigid timeline, a larger
            academy may genuinely suit you better &mdash; and we'll say so.</p>
       </div>
