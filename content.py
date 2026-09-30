@@ -1988,6 +1988,8 @@ GALLERY = [
      "Night flying. Required for your certificate, and worth it on its own."),
     ("ifr-rain.jpg", "A pilot flying a Cessna 172 through rain and low visibility over Mesa, with the Garmin G5 and GPS lit on the panel",
      "Rain over the East Valley. The kind of day the instrument rating is for."),
+    ("above-clouds.jpg", "A pilot in a Cessna 172 cruising above a solid layer of white clouds under a blue sky, iPad chart mounted on the yoke",
+     "On top. A cloud deck below and blue sky above is one of flying’s great rewards."),
     ("dual-instruction.webp", "An instructor and student in the cockpit of a Cessna 172 on approach",
      "On approach, dual instruction."),
     ("student-controls.webp", "A student flying a Cessna 172 over the Arizona desert",
