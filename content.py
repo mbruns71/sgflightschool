@@ -358,7 +358,7 @@ COURSE_DATA = [
      "Designated Pilot Examiner. A PPL lets you fly privately and carry passengers "
      "for non-commercial purposes.",
      False),
-    ("Instrument Rating (IFR)", "Next step", "dual-instruction.webp",
+    ("Instrument Rating (IFR)", "Next step", "ifr-rain-card.jpg",
      "The next level of training, teaching you to fly solely by reference to "
      "instruments. Essential for flying in clouds or low visibility, and a strong "
      "way to sharpen the skills you built during your private pilot training. "
@@ -387,6 +387,7 @@ COURSE_ALT = {
     "student-smile.webp": "A smiling student in the cockpit of a Cessna 172 before a discovery flight",
     "student-controls.webp": "A student pilot flying a Cessna 172 over the Arizona desert",
     "dual-instruction.webp": "A flight instructor and student flying together in a Cessna 172",
+    "ifr-rain-card.jpg": "A pilot flying a Cessna 172 through rain and low visibility over Mesa, Arizona",
     "sedona.webp": "View from a Cessna wing over the red rock formations near Sedona, Arizona",
 }
 
@@ -1985,6 +1986,8 @@ GALLERY = [
      "Long Beach, California. We ferry aircraft coast to coast."),
     ("night-flight.jpg", "City lights seen from the air at night during a night training flight",
      "Night flying. Required for your certificate, and worth it on its own."),
+    ("ifr-rain.jpg", "A pilot flying a Cessna 172 through rain and low visibility over Mesa, with the Garmin G5 and GPS lit on the panel",
+     "Rain over the East Valley. The kind of day the instrument rating is for."),
     ("dual-instruction.webp", "An instructor and student in the cockpit of a Cessna 172 on approach",
      "On approach, dual instruction."),
     ("student-controls.webp", "A student flying a Cessna 172 over the Arizona desert",
