@@ -4,6 +4,7 @@ from siteconfig import SITE, address_html, phone_html
 
 SCHED = SITE["schedule_url"]
 BOOK = SITE["book_path"]
+PPL_COURSE = SITE["ppl_course_url"]
 EMAIL = SITE["email"]
 
 
@@ -501,10 +502,16 @@ COURSES = {
         <p>Every course here has a ground-school component, and you'll need books,
            a headset and a few other things along the way. We're an authorized
            Sporty's dealer, so you can get all of it through us.</p>
-        <p>Same products, same prices &mdash; but with your instructor telling you
-           what's worth buying now and what can wait.
-           <a href="/getting-started">More on ground school options.</a></p>
-""") + f"""
+        <p>The one most students ask about is the <strong>Sporty's Learn to Fly
+           Course</strong> &mdash; the online ground school for the Private Pilot
+           certificate. You can buy it directly from us below. Same products, same
+           prices &mdash; but with your instructor telling you what's worth buying
+           now and what can wait.</p>
+        <div class="btn-row" style="margin-top:18px">
+          <a class="btn btn--primary" href="{PPL_COURSE}" rel="noopener">Buy the Sporty's Private Pilot Course</a>
+          <a class="btn btn--ghost" href="/getting-started">Ground school options</a>
+        </div>
+""".replace("{PPL_COURSE}", PPL_COURSE)) + f"""
 {cta("Not sure which course is right for you?",
      "Tell us your goals and we'll map out the fastest, most affordable path to "
      "get you there.")}
@@ -577,10 +584,10 @@ GETTING_STARTED = {
         <ul>
           <li><strong>With your SG instructor.</strong> The most thorough option, and
               the most expensive &mdash; but you'll have the strongest grasp of the material.</li>
-          <li><strong>Online, at your own pace.</strong>
-              <a href="https://www.sportys.com/" rel="noopener">Sporty's</a> is a great
-              option with well-built guides, practice tests and study aids for the
-              FAA knowledge test.
+          <li><strong>Online, at your own pace.</strong> The
+              <a href="{PPL_COURSE}" rel="noopener">Sporty's Learn to Fly Course</a>
+              is the one we recommend and sell directly &mdash; well-built video
+              lessons, practice tests and study aids for the FAA knowledge test.
               <a href="https://www.gleimaviation.com/" rel="noopener">Gleim</a> is
               another solid choice.</li>
         </ul>
@@ -629,8 +636,13 @@ GETTING_STARTED = {
            difference is that your instructor can tell you what you actually
            need before you buy it, and what you can happily skip until later.
            New students routinely spend hundreds on gear they never use.</p>
-        <p><a href="/contact">Ask us</a> what to get before you order anything.</p>
-""") + f"""
+        <p>The Sporty's Private Pilot ground school is the one thing worth buying
+           early, and you can get it from us right now.
+           <a href="/contact">Ask us</a> about everything else before you order.</p>
+        <div class="btn-row" style="margin-top:18px">
+          <a class="btn btn--primary" href="{PPL_COURSE}" rel="noopener">Buy the Sporty's Private Pilot Course</a>
+        </div>
+""".replace("{PPL_COURSE}", PPL_COURSE)) + f"""
 <section class="section section--alt">
   <div class="wrap narrow">
     <h2>Where this leads</h2>
@@ -1283,7 +1295,8 @@ FAQ_DATA = [
      "<li><strong>Instruction:</strong> about 45 hours &times; $60/hour "
      "&asymp; $2,700</li>"
      "<li><strong>Ground school:</strong> $300&ndash;500 for a self-paced online "
-     "course, more if you do it one-on-one with your instructor</li>"
+     "course such as <a href=\"" + PPL_COURSE + "\" rel=\"noopener\">Sporty's</a>, "
+     "more if you do it one-on-one with your instructor</li>"
      "<li><strong>Written test:</strong> around $175, paid at the testing center</li>"
      "<li><strong>Checkride:</strong> paid directly to the examiner, commonly "
      "$800&ndash;1,200 in the Phoenix area</li>"
@@ -1347,6 +1360,14 @@ FAQ_DATA = [
      "headset &mdash; borrowed ones get uncomfortable &mdash; and a logbook, but "
      "there's no reason to spend money on equipment before you know you're going to "
      "stick with it."),
+
+    ("Where do I buy the Sporty's ground school course?",
+     "Right here. We're an authorized Sporty's dealer, and the "
+     "<a href=\"" + PPL_COURSE + "\" rel=\"noopener\">Sporty's Learn to Fly "
+     "Course</a> for the Private Pilot certificate is sold through our online shop. "
+     "It's the same price as buying from Sporty's directly. Your instructor will "
+     "tell you which lessons to watch before each flight so the ground school and "
+     "the flying reinforce each other."),
 
     ("What if I get airsick or find out I'm scared of heights?",
      "Both are more common than people admit, and neither is disqualifying. Fear of "
@@ -1808,7 +1829,8 @@ COST = {
         <tr>
           <td><strong>Ground school</strong></td>
           <td>$300&ndash;500</td>
-          <td>Self-paced online. More if you do it one-on-one with your instructor.</td>
+          <td>Self-paced online, such as the <a href="{PPL_COURSE}" rel="noopener">Sporty's
+              course we sell</a>. More if you do it one-on-one with your instructor.</td>
         </tr>
         <tr>
           <td><strong>FAA medical exam</strong></td>

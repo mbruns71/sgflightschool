@@ -9,3 +9,7 @@
 /ferry             /ferry-service    301
 /gear              https://www.flightcircle.com/shop/dd15a6da8a75  301
 /store             https://www.flightcircle.com/shop/dd15a6da8a75  301
+
+# Short, speakable links to the Sporty's Private Pilot ground school in our shop.
+/ground-school     https://www.flightcircle.com/shop/dd15a6da8a75/4000036471  302
+/sportys           https://www.flightcircle.com/shop/dd15a6da8a75/4000036471  302

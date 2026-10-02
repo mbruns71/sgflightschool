@@ -30,6 +30,8 @@ SITE = {
     "schedule_url": "https://flightcircle.com/associate/dd15a6da8a75",
     "book_path": "/book",
     "shop_url": "https://www.flightcircle.com/shop/dd15a6da8a75",
+    # Sporty's Learn to Fly (Private Pilot) course, sold through our FlightCircle shop.
+    "ppl_course_url": "https://www.flightcircle.com/shop/dd15a6da8a75/4000036471",
     "lat": 33.4608,
     "lon": -111.7283,
 }

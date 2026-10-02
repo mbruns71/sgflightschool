@@ -203,6 +203,7 @@ FOOTER_MORE = [
     ("/aircraft", "Our Fleet"),
     ("/ferry-service", "Aircraft Ferry Service"),
     (SITE["shop_url"], "Buy SG Flight School Gear"),
+    (SITE["ppl_course_url"], "Sporty's Private Pilot Course"),
     ("/checklist/", "Aircraft Checklists (offline)"),
     (SITE["schedule_url"], "Student Login (FlightCircle)"),
 ]
