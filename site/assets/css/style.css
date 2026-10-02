@@ -565,3 +565,16 @@ li{margin-bottom:.4em}
   /* five cells across two columns leaves an orphan; hide the fourth photo */
   .strip__item:nth-child(4){display:none}
 }
+
+/* ---------- Gear strip (shop) ---------- */
+.gear{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:900px;margin:0 auto}
+.gear__item{
+  display:block;background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 14px 18px;text-align:center;text-decoration:none;color:var(--ink);
+  transition:transform .15s,box-shadow .15s;
+}
+.gear__item:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(8,59,77,.12);text-decoration:none;color:var(--ink)}
+.gear__item img{width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;border-radius:8px;display:block;margin-bottom:12px}
+.gear__name{display:block;font-weight:700}
+.gear__price{display:block;color:var(--muted);font-size:.92rem;margin-top:2px}
+@media (max-width:640px){.gear{grid-template-columns:1fr 1fr;gap:14px}.gear__item{padding:10px 10px 14px}}

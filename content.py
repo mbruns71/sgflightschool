@@ -5,6 +5,7 @@ from siteconfig import SITE, address_html, phone_html
 SCHED = SITE["schedule_url"]
 BOOK = SITE["book_path"]
 PPL_COURSE = SITE["ppl_course_url"]
+SHOP = SITE["shop_url"]
 EMAIL = SITE["email"]
 
 
@@ -96,6 +97,40 @@ def sportys_dealer(body):
         <h2>We're a Sporty's dealer</h2>
         {body}
       </div>
+    </div>
+  </div>
+</section>"""
+
+
+def gear_section(alt=False):
+    """SG gear strip: three product photos linking to the FlightCircle shop."""
+    items = [
+        ("gear-cap.jpg", "SG Trucker SnapBack Cap", "$25",
+         "A grey heather trucker cap with the SG Flight School goose logo"),
+        ("gear-hoodie.jpg", "SG Hooded Sweatshirt", "$70",
+         "A charcoal Carhartt hooded sweatshirt with the SG Flight School logo"),
+        ("gear-tee.jpg", "SG T-Shirt", "$25",
+         "A charcoal T-shirt with the SG Flight School goose logo across the chest"),
+    ]
+    cards = "".join(f"""
+      <a class="gear__item" href="{SHOP}" rel="noopener">
+        <img src="/assets/img/{img}" width="800" height="800" alt="{alt_}" loading="lazy">
+        <span class="gear__name">{name}</span>
+        <span class="gear__price">{price}</span>
+      </a>""" for img, name, price, alt_ in items)
+    return f"""
+<section class="section{' section--alt' if alt else ''}">
+  <div class="wrap">
+    <div class="narrow center" style="margin:0 auto 34px">
+      <span class="eyebrow">SG gear</span>
+      <h2>Wear the goose</h2>
+      <p class="lead">Caps, shirts and hoodies with the Silly Goose on them, plus the
+         Sporty's ground school course &mdash; all in our online shop.</p>
+    </div>
+    <div class="gear">{cards}
+    </div>
+    <div class="center" style="margin-top:30px">
+      <a class="btn btn--primary" href="{SHOP}" rel="noopener">Shop SG Flight School Gear</a>
     </div>
   </div>
 </section>"""
@@ -279,7 +314,9 @@ HOME = {
   </div>
 </section>
 
-<section class="section section--alt" id="enquire">
+{gear_section(alt=True)}
+
+<section class="section" id="enquire">
   <div class="wrap narrow">
     <div class="center" style="margin-bottom:30px">
       <span class="eyebrow">Get in touch</span>
@@ -509,9 +546,10 @@ COURSES = {
            now and what can wait.</p>
         <div class="btn-row" style="margin-top:18px">
           <a class="btn btn--primary" href="{PPL_COURSE}" rel="noopener">Buy the Sporty's Private Pilot Course</a>
+          <a class="btn btn--ghost" href="{SHOP}" rel="noopener">Shop SG Gear</a>
           <a class="btn btn--ghost" href="/getting-started">Ground school options</a>
         </div>
-""".replace("{PPL_COURSE}", PPL_COURSE)) + f"""
+""".replace("{PPL_COURSE}", PPL_COURSE).replace("{SHOP}", SHOP)) + f"""
 {cta("Not sure which course is right for you?",
      "Tell us your goals and we'll map out the fastest, most affordable path to "
      "get you there.")}
@@ -641,8 +679,9 @@ GETTING_STARTED = {
            <a href="/contact">Ask us</a> about everything else before you order.</p>
         <div class="btn-row" style="margin-top:18px">
           <a class="btn btn--primary" href="{PPL_COURSE}" rel="noopener">Buy the Sporty's Private Pilot Course</a>
+          <a class="btn btn--ghost" href="{SHOP}" rel="noopener">Shop SG Gear</a>
         </div>
-""".replace("{PPL_COURSE}", PPL_COURSE)) + f"""
+""".replace("{PPL_COURSE}", PPL_COURSE).replace("{SHOP}", SHOP)) + f"""
 <section class="section section--alt">
   <div class="wrap narrow">
     <h2>Where this leads</h2>
@@ -1211,6 +1250,8 @@ ABOUT = {
   </div>
 </section>
 
+{gear_section(alt=True)}
+
 {cta("Come see if we're a fit",
      "The best way to know whether a flight school is right for you is to fly with "
      "them. Start with a discovery flight.")}
@@ -1359,7 +1400,8 @@ FAQ_DATA = [
      "No. Come to your first lesson with nothing. Eventually you'll want your own "
      "headset &mdash; borrowed ones get uncomfortable &mdash; and a logbook, but "
      "there's no reason to spend money on equipment before you know you're going to "
-     "stick with it."),
+     "stick with it. When you do want to look the part, SG caps, shirts and hoodies "
+     "are in <a href=\"" + SHOP + "\" rel=\"noopener\">our online shop</a>."),
 
     ("Where do I buy the Sporty's ground school course?",
      "Right here. We're an authorized Sporty's dealer, and the "
